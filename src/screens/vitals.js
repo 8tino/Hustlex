@@ -70,6 +70,12 @@ function renderVitals(s) {
   const addWater = ml => { STATE.day.water = Math.max(0, Math.min(STATE.day.water + ml, 8000)); saveDay(); wfill.style.width = Math.min(100, (STATE.day.water / wGoal) * 100) + '%'; wv.textContent = (STATE.day.water / 1000).toFixed(1) + 'L / ' + (wGoal / 1000).toFixed(1) + 'L'; updateStatusBar(); };
   const wbtns = div('');
   wbtns.style.cssText = 'display:flex;gap:6px;margin-top:10px;';
+  // minus (undo) button first
+  const minus = h('button', { textContent: '−250' }, '');
+  minus.className = 'tap';
+  minus.style.cssText = 'width:52px;flex:none;padding:10px 2px;background:rgba(255,69,58,.12);border:1px solid rgba(255,69,58,.25);border-radius:var(--r-sm);color:#FF453A;font-size:12px;font-weight:600;';
+  minus.onclick = () => addWater(-250);
+  wbtns.appendChild(minus);
   [150, 250, 500, 750].forEach(ml => {
     const b = h('button', { textContent: '+' + ml }, '');
     b.className = 'tap';
@@ -79,8 +85,9 @@ function renderVitals(s) {
   });
   const custom = h('button', { textContent: '✎' }, '');
   custom.className = 'tap';
-  custom.style.cssText = 'width:40px;padding:10px 2px;background:var(--glass-2);border:1px solid var(--edge);border-radius:var(--r-sm);color:var(--t-2);font-size:13px;';
-  custom.onclick = () => { const v = parseInt(prompt('Menge in ml (negativ zum Abziehen):') || ''); if (v) addWater(v); };
+  custom.style.cssText = 'width:40px;flex:none;padding:10px 2px;background:var(--glass-2);border:1px solid var(--edge);border-radius:var(--r-sm);color:var(--t-2);font-size:13px;';
+  custom.title = 'Genaue Menge (negativ = abziehen)';
+  custom.onclick = () => { const v = parseInt(prompt(LANG === 'en' ? 'Amount in ml (negative to subtract):' : 'Menge in ml (negativ zum Abziehen):') || ''); if (v) addWater(v); };
   wbtns.appendChild(custom);
   wc.appendChild(wbtns); s.appendChild(wc);
 

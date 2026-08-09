@@ -2,7 +2,7 @@
 // STORAGE · localStorage helper + service worker
 // ═══════════════════════════════════════════════════════
 
-const SW_VERSION = 'los-v48'; // bump on each release to invalidate cache
+const SW_VERSION = 'los-v49'; // bump on each release to invalidate cache
 
 const ls = (k, v) => {
   if (v === undefined) {

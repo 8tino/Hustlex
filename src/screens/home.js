@@ -138,6 +138,12 @@ function renderHome(s) {
       '<div style="flex:1;min-width:0;"><div style="font-size:14px;color:var(--t-1);">' + it.title + '</div>' +
       '<div style="font-size:12px;color:var(--t-3);margin-top:1px;">' + it.sub + '</div></div>');
     if (it.water) {
+      // minus (undo) + plus, so water can always be corrected
+      const mb = h('button', { textContent: '−' }, '');
+      mb.className = 'tap';
+      mb.style.cssText = 'width:36px;height:36px;flex:none;border-radius:99px;font-size:16px;font-weight:700;background:rgba(255,69,58,.12);border:1px solid rgba(255,69,58,.25);color:#FF453A;';
+      mb.onclick = () => { STATE.day.water = Math.max(0, STATE.day.water - 250); saveDay(); updateStatusBar(); renderScreen('home'); };
+      row.appendChild(mb);
       const b = h('button', { textContent: '+250' }, '');
       b.className = 'btn-gold tap';
       b.style.cssText = 'width:auto;padding:8px 14px;border-radius:99px;font-size:13px;font-weight:700;flex:none;';
