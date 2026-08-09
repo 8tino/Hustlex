@@ -28,6 +28,8 @@ function renderScreen(v) {
   }
   // Prepend the section's hub navigation (sub-tabs or back link).
   if (typeof renderHubNav === 'function') renderHubNav(v, s);
+  // Translate synchronously (no flash of German) when English is active.
+  if (typeof translateTree === 'function') translateTree(s);
 }
 
 // Shared screen header: small label + serif headline with a gold accent word.

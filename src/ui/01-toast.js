@@ -7,6 +7,7 @@ function showToast(msg, icon) {
   t.className = 'toast';
   t.style.left = '50%';
   t.textContent = (icon || '') + ' ' + msg;
+  if (typeof translateTree === 'function') translateTree(t);
   document.body.appendChild(t);
   setTimeout(() => t.remove(), 2900);
 }

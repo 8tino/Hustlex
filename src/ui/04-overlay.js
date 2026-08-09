@@ -3,6 +3,7 @@
 // ═══════════════════════════════════════════════════════
 
 function openOverlay() {
+  if (typeof translateTree === 'function') translateTree(el('overlay_inner'));
   el('overlay').classList.add('on');
 }
 function closeOverlay() {

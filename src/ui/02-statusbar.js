@@ -89,4 +89,5 @@ function updateStatusBar() {
   // ─── Streak ───
   el('sb_streak').innerHTML = streak + '<span style="font-size:10px;"> 🔥</span>';
   el('sb_streak').style.color = streak === 0 ? 'var(--t-3)' : streak >= 7 ? 'var(--green)' : 'var(--gold)';
+  if (typeof translateTree === 'function') translateTree(el('statusbar'));
 }

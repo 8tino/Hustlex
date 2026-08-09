@@ -77,9 +77,70 @@ function t(key, de) {
 
 function setLang(l) {
   if (!LANGS.some(x => x.id === l)) return;
+  const prev = LANG;
   LANG = l;
   try { localStorage.setItem('los_lang', l); } catch (e) {}
+  // Switching back to German: the cleanest way to restore the original source
+  // strings (the DOM translator replaced them in place) is a reload.
+  if (prev === 'en' && l === 'de') { location.reload(); return; }
   applyLang();
+  startI18nTranslator();
+}
+
+// ─── Full-app DOM translation (DE source → EN) ────────────
+// Instead of wrapping every string with t(), a MutationObserver watches the
+// DOM and swaps known German text/placeholders for English from I18N_PHRASES.
+// The user's own data (not in the dictionary) is left untouched.
+let _i18nObs = null;
+function _trExact(raw) {
+  const d = (typeof I18N_PHRASES !== 'undefined' && I18N_PHRASES.en) || {};
+  const lead = (raw.match(/^\s*/) || [''])[0];
+  const trail = (raw.match(/\s*$/) || [''])[0];
+  const core = raw.trim().replace(/\s+/g, ' ');
+  if (core && d[core] != null) return lead + d[core] + trail;
+  return null;
+}
+function _trWords(raw) {
+  const w = (typeof I18N_WORDS !== 'undefined' && I18N_WORDS.en) || {};
+  let out = raw, changed = false;
+  for (const k in w) { const re = new RegExp('(^|[^\\p{L}])' + k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '(?=$|[^\\p{L}])', 'gu'); const nx = out.replace(re, (m, p1) => p1 + w[k]); if (nx !== out) { out = nx; changed = true; } }
+  return changed ? out : null;
+}
+function _trTextNode(n) {
+  const raw = n.nodeValue;
+  if (!raw || !/[A-Za-zÀ-ÿ]/.test(raw)) return;
+  const ex = _trExact(raw); if (ex != null && ex !== raw) { n.nodeValue = ex; return; }
+  const wd = _trWords(raw); if (wd != null && wd !== raw) n.nodeValue = wd;
+}
+function _trAttr(elm, attr) {
+  const v = elm.getAttribute(attr); if (!v) return;
+  const ex = _trExact(v); if (ex != null && ex !== v) elm.setAttribute(attr, ex);
+}
+function translateTree(root) {
+  if (LANG !== 'en' || !root) return;
+  if (root.nodeType === 3) { _trTextNode(root); return; }
+  if (root.nodeType !== 1) return;
+  const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  const nodes = []; let n; while ((n = w.nextNode())) nodes.push(n);
+  nodes.forEach(_trTextNode);
+  ['placeholder', 'title'].forEach(a => {
+    if (root.hasAttribute && root.hasAttribute(a)) _trAttr(root, a);
+    root.querySelectorAll && root.querySelectorAll('[' + a + ']').forEach(e => _trAttr(e, a));
+  });
+}
+function startI18nTranslator() {
+  if (LANG !== 'en') return;
+  translateTree(document.body);
+  if (_i18nObs) return;
+  _i18nObs = new MutationObserver(muts => {
+    if (LANG !== 'en') return;
+    for (const m of muts) {
+      if (m.type === 'childList') m.addedNodes.forEach(nd => translateTree(nd));
+      else if (m.type === 'characterData') _trTextNode(m.target);
+      else if (m.type === 'attributes') _trAttr(m.target, m.attributeName);
+    }
+  });
+  _i18nObs.observe(document.body, { subtree: true, childList: true, characterData: true, attributes: true, attributeFilter: ['placeholder', 'title'] });
 }
 
 // Re-render the language-dependent surfaces after a switch.
@@ -127,4 +188,11 @@ function langPicker(compact) {
     wrap.appendChild(b);
   });
   return wrap;
+}
+
+// Kick off the DOM translator on load for returning English users.
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => { if (LANG === 'en') startI18nTranslator(); });
+} else if (LANG === 'en') {
+  startI18nTranslator();
 }
