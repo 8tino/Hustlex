@@ -113,26 +113,29 @@ function renderManifest(s) {
   });
 
   // ── 5. 🧠 SO FUNKTIONIERT DEIN GEHIRN DABEI ───────────
-  s.appendChild(div('label', '🧠 WARUM DAS FUNKTIONIERT'));
-  BRAIN_BITS.forEach((bit, i) => {
-    const det = document.createElement('details');
-    det.className = 'glass'; det.style.cssText = 'padding:12px 14px;margin-bottom:8px;';
-    det.innerHTML = '<summary style="cursor:pointer;font-size:13px;font-weight:600;color:var(--t-1);">' + bit.ic + ' ' + esc(bit.t) + '</summary>' +
-      '<div style="font-size:13px;color:var(--t-2);line-height:1.65;margin-top:8px;">' + bit.body + '</div>' +
-      '<div style="font-size:12px;color:var(--gold);margin-top:8px;line-height:1.5;">→ ' + esc(bit.use) + '</div>';
-    s.appendChild(det);
-  });
-  const courseBtn = h('button', { textContent: '🎓  Ganzen Gehirn-Kurs öffnen' });
-  courseBtn.className = 'btn btn-glass tap'; courseBtn.style.marginTop = '4px';
-  courseBtn.onclick = () => {
-    // Öffne den Kurrikulum-Kurs "Gehirn" falls vorhanden, sonst Kurse-Übersicht.
-    if (typeof KURR === 'function' && KURR()) {
-      const g = (KURR().kurse || []).find(k => k.id === 'm13');
-      if (g && typeof KURS_OPEN !== 'undefined') { KURS_OPEN = 'kurr:m13'; navTo('kurse'); return; }
-    }
-    navTo('kurse');
-  };
-  s.appendChild(courseBtn);
+  // Curated brain-science explainer + course link — owner build only (stripped
+  // from the public/tester build together with the rest of the loaded content).
+  if (typeof HUSTLEX_PUBLIC === 'undefined' || !HUSTLEX_PUBLIC) {
+    s.appendChild(div('label', '🧠 WARUM DAS FUNKTIONIERT'));
+    BRAIN_BITS.forEach((bit, i) => {
+      const det = document.createElement('details');
+      det.className = 'glass'; det.style.cssText = 'padding:12px 14px;margin-bottom:8px;';
+      det.innerHTML = '<summary style="cursor:pointer;font-size:13px;font-weight:600;color:var(--t-1);">' + bit.ic + ' ' + esc(bit.t) + '</summary>' +
+        '<div style="font-size:13px;color:var(--t-2);line-height:1.65;margin-top:8px;">' + bit.body + '</div>' +
+        '<div style="font-size:12px;color:var(--gold);margin-top:8px;line-height:1.5;">→ ' + esc(bit.use) + '</div>';
+      s.appendChild(det);
+    });
+    const courseBtn = h('button', { textContent: '🎓  Ganzen Gehirn-Kurs öffnen' });
+    courseBtn.className = 'btn btn-glass tap'; courseBtn.style.marginTop = '4px';
+    courseBtn.onclick = () => {
+      if (typeof KURR === 'function' && KURR()) {
+        const g = (KURR().kurse || []).find(k => k.id === 'm13');
+        if (g && typeof KURS_OPEN !== 'undefined') { KURS_OPEN = 'kurr:m13'; navTo('kurse'); return; }
+      }
+      navTo('kurse');
+    };
+    s.appendChild(courseBtn);
+  }
 }
 
 // Kompakte, ehrliche Neuro-Erklärungen (kein Eso — belegte Mechanismen),

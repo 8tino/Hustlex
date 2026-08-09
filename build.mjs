@@ -85,7 +85,10 @@ export function build() {
   ];
   // Embedded curriculum first, so KURSE_DATA is defined before any screen runs.
   const kurseData = buildKurseData();
-  const js = (kurseData ? '// === kurse-data (generated) ===\n' + kurseData + '\n\n' : '') +
+  // Public/tester build flag — screens use it to ship blank, user-fillable areas
+  // instead of the owner's curated Knowledge / Skill-Tree / Manifest content.
+  const publicFlag = 'const HUSTLEX_PUBLIC = ' + (process.env.HUSTLEX_PUBLIC === '1' ? 'true' : 'false') + ';\n';
+  const js = publicFlag + '\n' + (kurseData ? '// === kurse-data (generated) ===\n' + kurseData + '\n\n' : '') +
     jsModules.map(f => `// === ${f.name} ===\n${f.content}`).join('\n\n');
 
   // Inject. NOTE: use replacer FUNCTIONS so the payload is inserted verbatim —

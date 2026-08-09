@@ -107,10 +107,27 @@ function cycleSkill(p, i) {
   return nv;
 }
 
+// Skill tree = owner's curated SKILL_TREE (hidden in public build) + the user's
+// own skills, grouped into a "My skills" phase (n:90). Everyone can add their own.
+function userSkills() { return ls('los_user_skills') || []; }
+function saveUserSkills(a) { ls('los_user_skills', a); }
+function getSkillTree() {
+  const base = (typeof HUSTLEX_PUBLIC !== 'undefined' && HUSTLEX_PUBLIC) ? [] : SKILL_TREE;
+  const us = userSkills();
+  if (!us.length) return base;
+  return base.concat([{ n: 90, mode: '', user: true, title: (typeof LANG !== 'undefined' && LANG === 'en') ? 'My skills' : 'Meine Skills', why: '', s: us }]);
+}
+function addUserSkill() {
+  const EN = (typeof LANG !== 'undefined' && LANG === 'en');
+  const name = prompt(EN ? 'Skill name:' : 'Skill-Name:'); if (!name || !name.trim()) return;
+  const note = prompt(EN ? 'Short description (optional):' : 'Kurze Beschreibung (optional):', '') || '';
+  const a = userSkills(); a.push({ name: name.trim(), note: note.trim(), core: [], lvl: [] }); saveUserSkills(a); renderScreen('skills');
+}
+
 // Overall + per-phase progress (0..1 of max = 3 per skill).
 function skillTotals() {
   let sum = 0, cnt = 0, c0 = 0, cA = 0, c3 = 0;
-  SKILL_TREE.forEach(p => p.s.forEach((s, i) => {
+  getSkillTree().forEach(p => p.s.forEach((s, i) => {
     const v = skillStat(p.n, i); sum += v; cnt++;
     if (v === 0) c0++; else if (v === 3) c3++; else cA++;
   }));
@@ -176,12 +193,18 @@ function renderSkills(s) {
   head.appendChild(progressRing(t.pct, 'var(--gold)', 66, 7, '<div style="font-size:15px;font-weight:800;color:#fff;">' + t.pct + '<span style="font-size:9px;">%</span></div>'));
   head.insertAdjacentHTML('beforeend',
     '<div style="flex:1;min-width:0;">' +
-    '<div style="font-size:13px;color:var(--t-1);font-weight:600;margin-bottom:4px;">' + t.cnt + ' Skills · 9 Phasen</div>' +
+    '<div style="font-size:13px;color:var(--t-1);font-weight:600;margin-bottom:4px;">' + t.cnt + ' Skills · ' + getSkillTree().length + ' Phasen</div>' +
     '<div style="font-size:12px;color:var(--t-3);line-height:1.6;">' +
     '<span style="color:var(--blue);">●</span> ' + t.cA + ' aktiv · ' +
     '<span style="color:var(--gold);">●</span> ' + t.c3 + ' beherrscht · ' +
     '<span style="color:var(--t-4);">●</span> ' + t.c0 + ' offen</div></div>');
   s.appendChild(head);
+
+  // Add your own skill
+  const addSkillBtn = h('button', { textContent: '＋ Skill hinzufügen' });
+  addSkillBtn.className = 'btn btn-glass tap'; addSkillBtn.style.cssText = 'width:100%;font-size:13px;margin-top:10px;';
+  addSkillBtn.onclick = () => addUserSkill();
+  s.appendChild(addSkillBtn);
 
   // Search
   const search = h('input', { type: 'search', placeholder: '🔍 Skill suchen…' }, '');
@@ -206,7 +229,7 @@ function renderSkills(s) {
     const q = search.value.trim().toLowerCase();
     let anyShown = false;
 
-    SKILL_TREE.forEach(p => {
+    getSkillTree().forEach(p => {
       const isPar = SKILL_PAR.has(p.mode);
       // which skills of this phase pass filter + search
       const visible = p.s.map((sk, i) => ({ sk, i, v: skillStat(p.n, i) }))
@@ -255,28 +278,31 @@ function renderSkills(s) {
 
     if (open) {
       const d = div(''); d.style.cssText = 'padding:0 12px 12px;border-top:1px solid var(--edge);';
-      // Kernbausteine
-      d.insertAdjacentHTML('beforeend', '<div class="label" style="font-size:10px;margin:10px 0 6px;">KERNBAUSTEINE</div>' +
-        '<div style="display:flex;flex-wrap:wrap;gap:6px;">' + (sk.core || []).map(c => '<span style="font-size:11.5px;color:var(--t-1);background:var(--glass-2);border:1px solid var(--edge);border-radius:8px;padding:4px 9px;">' + esc(c) + '</span>').join('') + '</div>');
-      // Stufenleiter with per-level "Kurs bauen"
-      d.insertAdjacentHTML('beforeend', '<div class="label" style="font-size:10px;margin:12px 0 6px;">STUFENLEITER</div>');
-      (sk.lvl || []).forEach((lt, li) => {
-        const lr = div(''); lr.style.cssText = 'display:flex;align-items:flex-start;gap:8px;padding:5px 0;';
-        lr.innerHTML = '<span style="flex:none;font-size:10px;font-weight:700;color:#241a09;background:' + SKILL_STATUS_C[li + 1] + ';border-radius:6px;padding:2px 6px;margin-top:1px;">L' + (li + 1) + '</span>' +
-          '<span style="flex:1;font-size:12.5px;color:var(--t-2);line-height:1.4;">' + esc(lt) + '</span>';
-        const kb = h('button', { textContent: '✦ Kurs' });
-        kb.className = 'tap'; kb.style.cssText = 'flex:none;font-size:11px;color:var(--gold);background:none;padding:2px 4px;';
-        kb.onclick = () => skillBuildCourse(sk, li);
-        lr.appendChild(kb); d.appendChild(lr);
-      });
-      // Erster Schritt
-      d.insertAdjacentHTML('beforeend', '<div class="label" style="font-size:10px;margin:12px 0 6px;">ERSTER SCHRITT</div>' +
-        '<div style="font-size:12.5px;color:var(--t-2);line-height:1.5;">' + esc(sk.step || '') + '</div>');
+      if (!p.user) {
+        // Kernbausteine
+        d.insertAdjacentHTML('beforeend', '<div class="label" style="font-size:10px;margin:10px 0 6px;">KERNBAUSTEINE</div>' +
+          '<div style="display:flex;flex-wrap:wrap;gap:6px;">' + (sk.core || []).map(c => '<span style="font-size:11.5px;color:var(--t-1);background:var(--glass-2);border:1px solid var(--edge);border-radius:8px;padding:4px 9px;">' + esc(c) + '</span>').join('') + '</div>');
+        // Stufenleiter with per-level "Kurs bauen"
+        d.insertAdjacentHTML('beforeend', '<div class="label" style="font-size:10px;margin:12px 0 6px;">STUFENLEITER</div>');
+        (sk.lvl || []).forEach((lt, li) => {
+          const lr = div(''); lr.style.cssText = 'display:flex;align-items:flex-start;gap:8px;padding:5px 0;';
+          lr.innerHTML = '<span style="flex:none;font-size:10px;font-weight:700;color:#241a09;background:' + SKILL_STATUS_C[li + 1] + ';border-radius:6px;padding:2px 6px;margin-top:1px;">L' + (li + 1) + '</span>' +
+            '<span style="flex:1;font-size:12.5px;color:var(--t-2);line-height:1.4;">' + esc(lt) + '</span>';
+          const kb = h('button', { textContent: '✦ Kurs' });
+          kb.className = 'tap'; kb.style.cssText = 'flex:none;font-size:11px;color:var(--gold);background:none;padding:2px 4px;';
+          kb.onclick = () => skillBuildCourse(sk, li);
+          lr.appendChild(kb); d.appendChild(lr);
+        });
+        // Erster Schritt
+        d.insertAdjacentHTML('beforeend', '<div class="label" style="font-size:10px;margin:12px 0 6px;">ERSTER SCHRITT</div>' +
+          '<div style="font-size:12.5px;color:var(--t-2);line-height:1.5;">' + esc(sk.step || '') + '</div>');
+      }
       // Actions
       const acts = div(''); acts.style.cssText = 'display:flex;gap:6px;margin-top:12px;flex-wrap:wrap;';
       const mk = (label, fn) => { const b = h('button', { textContent: label }); b.className = 'itab tap'; b.style.cssText = 'flex:1;min-width:120px;font-size:11.5px;text-transform:none;letter-spacing:0;padding:9px 6px;'; b.onclick = fn; return b; };
       acts.appendChild(mk('🌱 Schritt → Heute', () => skillToToday(sk.name, sk.step)));
       acts.appendChild(mk('◇ Als Ziel', () => { skillToGoal(sk); }));
+      if (p.user) acts.appendChild(mk('🗑 Löschen', () => { const a = userSkills(); a.splice(i, 1); saveUserSkills(a); renderScreen('skills'); }));
       d.appendChild(acts);
       card.appendChild(d);
     }

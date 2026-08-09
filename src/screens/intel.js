@@ -26,16 +26,20 @@ function renderIntel(s) {
   });
   s.appendChild(tabRow);
 
-  // WISSEN grid
+  // WISSEN grid — curated sections (owner build) + your own topics, all addable
   const grd = div('stagger');
   grd.style.cssText = 'display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px;';
-  INTEL_SECTIONS.forEach(sec => {
-    const c = div('glass tap', '<div style="font-size:22px;margin-bottom:8px;">' + sec.ic + '</div>' +
-      '<div class="serif" style="font-size:13px;color:var(--t-1);">' + sec.label + '</div>' +
-      '<div style="height:1px;background:linear-gradient(90deg,' + sec.color + '55,transparent);margin-top:8px;border-radius:99px;"></div>');
+  getKnowledge().forEach(sec => {
+    const c = div('glass tap', '<div style="font-size:22px;margin-bottom:8px;">' + (sec.ic || '📌') + '</div>' +
+      '<div class="serif" style="font-size:13px;color:var(--t-1);">' + esc(sec.label) + '</div>' +
+      '<div style="height:1px;background:linear-gradient(90deg,' + (sec.color || '#0A84FF') + '55,transparent);margin-top:8px;border-radius:99px;"></div>');
     c.onclick = () => openIntelDetail(sec);
     grd.appendChild(c);
   });
+  const addC = div('glass tap', '<div style="font-size:22px;margin-bottom:8px;color:var(--blue);">＋</div>' +
+    '<div class="serif" style="font-size:13px;color:var(--blue);">Thema hinzufügen</div>');
+  addC.onclick = () => openAddTopic();
+  grd.appendChild(addC);
   panels['WISSEN'].appendChild(grd);
 
   renderBodyFix(panels['BODY FIX']);
@@ -44,13 +48,59 @@ function renderIntel(s) {
   Object.values(panels).forEach(p => s.appendChild(p));
 }
 
+// Knowledge store: owner's curated INTEL_SECTIONS (hidden in the public build)
+// plus the user's own topics — everyone can add their own.
+function userKnowledge() { return ls('los_knowledge') || []; }
+function saveUserKnowledge(a) { ls('los_knowledge', a); }
+function getKnowledge() {
+  const base = (typeof HUSTLEX_PUBLIC !== 'undefined' && HUSTLEX_PUBLIC) ? [] : INTEL_SECTIONS;
+  return base.concat(userKnowledge());
+}
+function openAddTopic() {
+  const label = prompt(LANG === 'en' ? 'Topic name:' : 'Thema-Name:'); if (!label || !label.trim()) return;
+  const ic = (prompt(LANG === 'en' ? 'Emoji icon:' : 'Emoji-Icon:', '📌') || '📌').trim().slice(0, 2) || '📌';
+  const a = userKnowledge(); a.push({ id: Date.now(), ic, label: label.trim(), color: '#0A84FF', user: true, notes: [] });
+  saveUserKnowledge(a); renderScreen('intel');
+}
+
 function openIntelDetail(sec) {
   const inner = el('overlay_inner');
   inner.innerHTML = '';
   inner.appendChild(overlayBackBtn());
   inner.insertAdjacentHTML('beforeend',
-    '<div class="label" style="color:' + sec.color + ';margin-bottom:6px;">' + sec.ic + ' ' + sec.label.toUpperCase() + '</div>' +
-    '<div class="h1" style="margin-bottom:18px;">' + sec.label + '</div>');
+    '<div class="label" style="color:' + (sec.color || '#0A84FF') + ';margin-bottom:6px;">' + (sec.ic || '📌') + ' ' + esc(sec.label.toUpperCase()) + '</div>' +
+    '<div class="h1" style="margin-bottom:18px;">' + esc(sec.label) + '</div>');
+
+  // User topic → editable notes list + add + delete.
+  if (sec.user) {
+    const store = () => userKnowledge().find(x => x.id === sec.id) || sec;
+    const cur = store();
+    const notesCard = div('glass', '');
+    notesCard.style.marginBottom = '10px';
+    (cur.notes || []).forEach((note, i) => {
+      const r = div('', '<span class="dot dot-sm" style="margin-top:6px;background:var(--blue);"></span>' +
+        '<div style="flex:1;font-size:13px;color:var(--t-2);line-height:1.65;">' + esc(note) + '</div>');
+      r.style.cssText = 'display:flex;gap:8px;align-items:flex-start;padding:5px 0;' + (i > 0 ? 'border-top:1px solid var(--edge)' : '');
+      const del = h('button', { textContent: '×' }); del.className = 'tap'; del.style.cssText = 'background:none;color:var(--t-3);font-size:14px;';
+      del.onclick = () => { const a = userKnowledge(); const t = a.find(x => x.id === sec.id); if (t) { t.notes.splice(i, 1); saveUserKnowledge(a); openIntelDetail(sec); } };
+      r.appendChild(del); notesCard.appendChild(r);
+    });
+    if (!(cur.notes || []).length) notesCard.appendChild(div('', '<div style="font-size:12px;color:var(--t-3);">' + (LANG === 'en' ? 'No notes yet. Add your first below.' : 'Noch keine Notizen. Füge unten deine erste hinzu.') + '</div>'));
+    inner.appendChild(notesCard);
+    const row = div(''); row.style.cssText = 'display:flex;gap:8px;margin-bottom:14px;';
+    const inp = h('input', { type: 'text', placeholder: LANG === 'en' ? 'New note…' : 'Neue Notiz…' }); inp.className = 'inp';
+    const addB = h('button', { textContent: '＋' }); addB.className = 'tap'; addB.style.cssText = 'width:48px;flex:none;background:rgba(10,132,255,.14);border:1px solid rgba(10,132,255,.4);border-radius:var(--r-md);color:var(--blue);font-size:16px;';
+    addB.onclick = () => { const v = inp.value.trim(); if (!v) return; const a = userKnowledge(); const t = a.find(x => x.id === sec.id); if (t) { t.notes = t.notes || []; t.notes.push(v); saveUserKnowledge(a); openIntelDetail(sec); } };
+    inp.onkeydown = e => { if (e.key === 'Enter') addB.onclick(); };
+    row.appendChild(inp); row.appendChild(addB); inner.appendChild(row);
+    const delT = h('button', { textContent: (LANG === 'en' ? '🗑  Delete topic' : '🗑  Thema löschen') });
+    delT.className = 'btn tap'; delT.style.cssText = 'width:100%;background:rgba(255,69,58,.12);border:1px solid rgba(255,69,58,.3);color:#FF453A;font-weight:600;padding:12px;border-radius:var(--r-md);';
+    delT.onclick = () => { saveUserKnowledge(userKnowledge().filter(x => x.id !== sec.id)); closeOverlay(); renderScreen('intel'); };
+    inner.appendChild(delT);
+    openOverlay();
+    return;
+  }
+
   sec.items.forEach(item => {
     const c = div('glass', '<div class="label" style="font-size:10px;color:' + item.c + ';margin-bottom:10px;">' + item.h.toUpperCase() + '</div>');
     c.style.marginBottom = '10px';
