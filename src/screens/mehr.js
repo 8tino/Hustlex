@@ -112,13 +112,22 @@ const TUTORIAL_SLIDES = [
   { ic: '🎛', t: 'Mach sie zu deiner App', b: 'Unter <b>Mehr → 🎛 App anpassen</b> blendest du Sektionen aus, die du nicht brauchst, und legst <b>eigene Task-Ordner</b> an.<br><br>Unter <b>🔗 Verbindungen</b> koppelst du die KI (dein Claude-Konto).' },
   { ic: '🚀', t: 'Leg los!', b: 'Trag heute in <b>Körper</b> dein Essen & Wasser ein, plane in <b>Aufgaben</b> deinen Tag mit einem Tap, und setz dir in <b>Wachstum</b> ein Ziel. Du schaffst das. 💪' },
 ];
+const TUTORIAL_SLIDES_EN = [
+  { ic: '👋', t: 'Welcome to HustleX', b: 'Your personal operating system for life — body, tasks, goals, knowledge in one place. At the very bottom you switch between <b>5 areas</b>.' },
+  { ic: '🧭', t: 'The 5 areas at the bottom', b: '<b>◈ Today</b> — your overview for the day.<br><b>♡ Body</b> — food, water, sleep, habits.<br><b>◎ Tasks</b> — day plan, tasks, log, discipline.<br><b>✦ Growth</b> — goals, courses, skills, finances.<br><b>⋯ More</b> — tools & settings.' },
+  { ic: '👉', t: 'Navigate & gestures', b: '<b>Swipe from the left edge to the right</b> = go back one level (like on iPhone).<br><br>Headings with an <b>arrow</b> can be tapped to <b>expand and collapse</b> — keeping everything short and tidy.' },
+  { ic: '🔗', t: 'Everything connects', b: 'Log your <b>water</b> in Body and the „Drink" task checks itself off — no double entry. On a task, tap <b>⛓</b> to link it to a body metric.' },
+  { ic: '🎛', t: 'Make it your app', b: 'Under <b>More → 🎛 Customize app</b> you hide sections you don\'t need and create <b>your own task folders</b>.<br><br>Under <b>🔗 Connections</b> you link the AI (your Claude account).' },
+  { ic: '🚀', t: 'Get started!', b: 'Today, log your food & water in <b>Body</b>, plan your day with one tap in <b>Tasks</b>, and set a goal in <b>Growth</b>. You\'ve got this. 💪' },
+];
 function openTutorial(firstRun) {
   let idx = 0;
   const inner = el('overlay_inner');
+  const slides = (typeof LANG !== 'undefined' && LANG === 'en') ? TUTORIAL_SLIDES_EN : TUTORIAL_SLIDES;
   const render = () => {
     inner.innerHTML = '';
     if (!firstRun) inner.appendChild(overlayBackBtn());
-    const sl = TUTORIAL_SLIDES[idx];
+    const sl = slides[idx];
     const card = div('glass-accent', '');
     card.style.cssText = 'padding:26px 20px;text-align:center;';
     card.innerHTML = '<div style="font-size:52px;line-height:1;margin-bottom:14px;">' + sl.ic + '</div>' +
@@ -127,20 +136,21 @@ function openTutorial(firstRun) {
     inner.appendChild(card);
     // dots
     const dots = div(''); dots.style.cssText = 'display:flex;justify-content:center;gap:7px;margin:16px 0;';
-    TUTORIAL_SLIDES.forEach((_, i) => { const d = div(''); d.style.cssText = 'width:8px;height:8px;border-radius:50%;background:' + (i === idx ? 'var(--gold)' : 'var(--edge)') + ';'; dots.appendChild(d); });
+    slides.forEach((_, i) => { const d = div(''); d.style.cssText = 'width:8px;height:8px;border-radius:50%;background:' + (i === idx ? 'var(--gold)' : 'var(--edge)') + ';'; dots.appendChild(d); });
     inner.appendChild(dots);
+    const EN = (typeof LANG !== 'undefined' && LANG === 'en');
     // nav buttons
     const row = div(''); row.style.cssText = 'display:flex;gap:8px;';
-    if (idx > 0) { const back = h('button', { textContent: '‹ Zurück' }); back.className = 'btn btn-glass tap'; back.onclick = () => { idx--; render(); }; row.appendChild(back); }
-    const next = h('button', { textContent: idx < TUTORIAL_SLIDES.length - 1 ? 'Weiter ›' : '✓ Los geht’s' });
+    if (idx > 0) { const back = h('button', { textContent: EN ? '‹ Back' : '‹ Zurück' }); back.className = 'btn btn-glass tap'; back.onclick = () => { idx--; render(); }; row.appendChild(back); }
+    const next = h('button', { textContent: idx < slides.length - 1 ? (EN ? 'Next ›' : 'Weiter ›') : (EN ? '✓ Let’s go' : '✓ Los geht’s') });
     next.className = 'btn btn-gold tap';
     next.onclick = () => {
-      if (idx < TUTORIAL_SLIDES.length - 1) { idx++; render(); }
+      if (idx < slides.length - 1) { idx++; render(); }
       else { closeOverlay(); if (firstRun) setTimeout(() => { try { openCustomize(true); } catch (e) {} }, 250); }
     };
     row.appendChild(next); inner.appendChild(row);
     if (firstRun) {
-      const skip = h('button', { textContent: 'Überspringen' }); skip.className = 'btn btn-ghost tap'; skip.style.cssText = 'margin-top:8px;font-size:12px;';
+      const skip = h('button', { textContent: (typeof LANG !== 'undefined' && LANG === 'en') ? 'Skip' : 'Überspringen' }); skip.className = 'btn btn-ghost tap'; skip.style.cssText = 'margin-top:8px;font-size:12px;';
       skip.onclick = () => { closeOverlay(); setTimeout(() => { try { openCustomize(true); } catch (e) {} }, 250); };
       inner.appendChild(skip);
     }

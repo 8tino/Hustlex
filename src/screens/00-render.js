@@ -14,6 +14,7 @@ function renderScreen(v) {
     case 'quests':      renderQuests(s); break;
     case 'habits':      renderHabits(s); break;
     case 'trainingsplan': renderTrainingsplan(s); break;
+    case 'workout':     renderWorkout(s); break;
     case 'countdown':   renderCountdown(s); break;
     case 'vitals':      renderVitals(s); break;
     case 'intel':       renderIntel(s); break;

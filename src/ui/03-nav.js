@@ -12,6 +12,7 @@ const HUBS = {
     { v: 'habits', l: 'Gewohnheiten' },
     { v: 'quests', l: 'Quests' },
     { v: 'trainingsplan', l: 'Training' },
+    { v: 'workout', l: 'Workout' },
   ] },
   aufgaben: { kind: 'tabs', def: 'fokus', tabs: [
     { v: 'fokus', l: 'Tagesplan', ft: 'plan' },
@@ -24,7 +25,7 @@ const HUBS = {
 
 // child view → its hub
 const CHILD_HUB = {
-  vitals: 'koerper', quests: 'koerper', habits: 'koerper', trainingsplan: 'koerper',
+  vitals: 'koerper', quests: 'koerper', habits: 'koerper', trainingsplan: 'koerper', workout: 'koerper',
   fokus: 'aufgaben', tasks: 'aufgaben', log: 'aufgaben',
   ich: 'wachstumhub', kurse: 'wachstumhub', skills: 'wachstumhub', manifest: 'wachstumhub', wachstum: 'wachstumhub', intel: 'wachstumhub', finanzen: 'wachstumhub', markt: 'wachstumhub', countdown: 'wachstumhub',
 };

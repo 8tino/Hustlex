@@ -20,6 +20,12 @@ const I18N_WORDS = {
     // skill-tree phase-header fragments (composed with a % number)
     'nach Körper-Basis': 'after body base', 'vor Kampf & Tricks': 'before fighting & tricks',
     'zuerst': 'first', 'parallel': 'parallel', 'Reihenfolge': 'order',
+    // workout composed fragments
+    'Übungen': 'exercises', 'Übung': 'exercise', 'Sätze': 'sets', 'Satz': 'set', 'SATZ': 'SET', 'WDH': 'REPS',
+    'Volumen': 'volume', 'LÄUFT': 'ACTIVE', 'Rekord': 'Record', 'als eigene Übung anlegen': 'create as custom exercise',
+    // home / deadline composed fragments
+    'noch': 'still', 'Tage': 'days', 'Tag': 'day', 'überfällig': 'overdue', 'alles schaffen': 'complete all',
+    'Journal-Einträge': 'journal entries', 'Einträge': 'entries',
     // supplement auto-time hint (composed with a HH:MM time)
     'Landet automatisch ab': 'Auto-placed from', 'Antippen zum Ändern': 'Tap to change',
     // months
@@ -48,6 +54,8 @@ const I18N_PHRASES = {
     'Guten Abend,': 'Good evening,', 'Guten Tag,': 'Good day,', 'Guten Morgen,': 'Good morning,',
     'HEUTE · DEINE 3 BEREICHE': 'TODAY · YOUR 3 AREAS', 'NOCH OFFEN HEUTE': 'STILL OPEN TODAY',
     'Wohin du': 'Where you', 'wächst': 'grow', 'Werde, wer du': 'Become who you', 'sein willst': 'want to be',
+    'DEIN ZIEL IM FOKUS': 'YOUR GOAL IN FOCUS', '▶ Heute daran arbeiten': '▶ Work on it today',
+    'heute fällig': 'due today', 'morgen fällig': 'due tomorrow',
     'Vervollständige deinen': 'Complete your', 'Wer du': 'Who you', 'bist': 'are',
     'Was hast du': 'What did you', 'Deine': 'Your', 'Meine': 'My', 'Dein': 'Your', 'Das': 'The', 'Die': 'The',
     'täglichen': 'daily', 'heute': 'today', 'gemacht': 'done', 'einsortieren': 'sort', 'optimieren': 'optimize',
@@ -118,6 +126,8 @@ const I18N_PHRASES = {
     'Noch keine Wünsche. Tipp oben, um einen hinzuzufügen.': 'No wishes yet. Tap above to add one.',
     'KURZFRISTIG': 'SHORT-TERM', 'MITTELFRISTIG': 'MID-TERM', 'LANGFRISTIG': 'LONG-TERM',
     'DEINE IDENTITÄT': 'YOUR IDENTITY', '＋ Identität festlegen': '＋ Set identity',
+    'Dinge, die du willst — kaufen, machen oder erleben. Mit Grund und optional einer Bedingung (z.B. „wenn 5.000€ gespart"). Kein Ziel, ein Wunsch.': 'Things you want — to buy, do or experience. With a reason and optionally a condition (e.g. „when €5,000 saved"). Not a goal, a wish.',
+    'Trag dein Geburtsdatum ein — dann siehst du schwarz auf weiß, wie viel Zeit dir noch bleibt. Das ist keine Drohung, sondern dein stärkster Anschub.': 'Enter your date of birth — then you see in black and white how much time you have left. Not a threat, but your strongest push.',
     'Deine Werte sind der Kompass deines Lebens. Sie definieren wer du bist.': 'Your values are the compass of your life. They define who you are.',
     'Eigener Wert…': 'Own value…', 'ACHIEVEMENTS · 0/17 FREIGESCHALTET': 'ACHIEVEMENTS · 0/17 UNLOCKED',
     'KATEGORIE-LEVEL': 'CATEGORY LEVEL', 'PERSONAL BEST': 'PERSONAL BEST', 'BEST': 'BEST',
@@ -168,6 +178,42 @@ const I18N_PHRASES = {
     'Fragen stellen & Dinge eintragen': 'Ask questions & log things', 'Sektionen ein-/ausblenden · Task-Ordner verwalten': 'Show/hide sections · manage task folders',
     'Navigation, Gesten & alle Bereiche erklärt': 'Navigation, gestures & all areas explained', 'Antworten & Kontakt, falls du nicht weiterkommst': 'Answers & contact if you get stuck',
     'Bug gefunden? Sag Bescheid': 'Found a bug? Let us know', 'Feature-Wunsch oder was dir fehlt (z. B. Social verknüpfen)': 'Feature request or what you\'re missing (e.g. link social)',
+    // ── customize (App anpassen) ──
+    'anpassen': 'customize', 'nicht': 'not', 'Maßeinheit für Lebensmittel': 'Unit for food',
+    'sehen willst. Standard: alles an.': 'want to see. Default: all on.',
+    'Blende Sektionen aus, die du': 'Hide sections you', 'Schalte Sektionen aus, die du': 'Turn off sections you',
+    'Block-Bausteine (Tagesplan)': 'Block presets (day plan)', 'Iron Vows (Disziplin)': 'Iron Vows (discipline)',
+    'Deine Ordner im Tasks-Bereich. Umbenennen ✎, löschen ×, sortieren ▲▼. Neue unten hinzufügen.': 'Your folders in the Tasks area. Rename ✎, delete ×, reorder ▲▼. Add new ones below.',
+    'PERSONALISIEREN': 'PERSONALIZE', 'App': 'App', 'TASK-ORDNER': 'TASK FOLDERS', 'SEKTIONEN': 'SECTIONS', 'EINHEITEN': 'UNITS',
+    // ── help / FAQ ──
+    'HÄUFIGE FRAGEN': 'FREQUENT QUESTIONS', 'Wie gehe ich zurück?': 'How do I go back?',
+    'Wisch von der linken Kante nach rechts (wie am iPhone) oder nutze die Zurück-Taste.': 'Swipe from the left edge to the right (like on iPhone) or use the back button.',
+    'Wie blende ich Sektionen aus?': 'How do I hide sections?',
+    'Mehr → 🎛 App anpassen. Dort schaltest du einzelne Sektionen an/aus und legst Task-Ordner an.': 'More → 🎛 Customize app. There you toggle individual sections on/off and create task folders.',
+    'Wie hängt die App zusammen?': 'How does the app connect?',
+    'Trägst du z. B. dein Wasser in Körper ein, hakt sich der „Trinken"-Task von selbst ab. Beim Task per ⛓ mit einem Körper-Wert verknüpfen.': 'Log your water in Body, for example, and the „Drink" task checks itself off. Link a task to a body metric via ⛓.',
+    'Funktioniert die KI?': 'Does the AI work?', 'Sind meine Daten sicher?': 'Is my data safe?', 'Passwort vergessen?': 'Forgot password?',
+    'Die ✦-KI-Knöpfe brauchen eine Anbindung: entweder dein eigener Key (Mehr → 🔗 Verbindungen) oder der keyless-Weg „💬 Mit Claude besprechen".': 'The ✦ AI buttons need a connection: either your own key (More → 🔗 Connections) or the keyless way „💬 Discuss with Claude".',
+    'Ja — alles ist Ende-zu-Ende-verschlüsselt und liegt zuerst auf deinem Gerät. Ohne dein Passwort kommt niemand ran (auch wir nicht).': 'Yes — everything is end-to-end encrypted and lives on your device first. Without your password no one can access it (not even us).',
+    'Aus Sicherheitsgründen (echtes E2EE) gibt es keinen Reset — ohne Passwort sind die Cloud-Daten nicht entschlüsselbar. Lokale Daten auf dem Gerät bleiben, solange du angemeldet bist.': 'For security reasons (real E2EE) there is no reset — without your password the cloud data can\'t be decrypted. Local data on the device stays as long as you\'re logged in.',
+    '🐞 Kommst du nicht weiter? Melde es uns': '🐞 Stuck? Let us know',
+    // ── report (improvement) ──
+    'Sag uns, was dir fehlt oder besser sein könnte — z. B. „Instagram verknüpfen", ein neuer Bereich, ein Wert. Die besten Ideen bauen wir ein.': 'Tell us what you\'re missing or could be better — e.g. „link Instagram", a new area, a value. We build in the best ideas.',
+    'Kurz: deine Idee…': 'Short: your idea…', 'Beschreib deine Idee genauer…': 'Describe your idea in more detail…',
+    'Absenden': 'Send', 'Danke! Deine Idee ist notiert.': 'Thanks! Your idea is noted.',
+    // ── connections (BYOK / Obsidian) ──
+    ', über dein normales Claude-Abo: Tipp auf den Knopf, dann liegt dein aktueller HustleX-Stand in der Zwischenablage und Claude öffnet sich. Einfügen (⌘/Strg + V) — und Claude ist dein Coach. Antworten mit neuen Aufgaben/Zielen holst du über „Notizen einsortieren" zurück in die App.': ', via your normal Claude subscription: tap the button, then your current HustleX state is on the clipboard and Claude opens. Paste (⌘/Ctrl + V) — and Claude is your coach. Bring answers with new tasks/goals back into the app via „Sort notes".',
+    'Gesperrte Bereiche (weiter unten) bleiben auch hier ausgeblendet. Dein Gerät verlässt nur der Text, den du selbst in Claude einfügst — kein automatischer Upload.': 'Locked areas (further below) stay hidden here too. Only the text you paste into Claude yourself leaves your device — no automatic upload.',
+    'Verbinde dein eigenes Anthropic-Konto. Dann läuft die KI (KI-Kurse, Tipps, Assistent) über': 'Connect your own Anthropic account. Then the AI (AI courses, tips, assistant) runs on your',
+    'Key — mit freier Modellwahl (Opus 5) und ohne Server-Limit. Der Key bleibt nur auf deinem Gerät (E2EE-gesichert), nie im Code.': 'key — with free model choice (Opus 5) and no server limit. The key stays only on your device (E2EE-secured), never in the code.',
+    'KI über meinen Key nutzen': 'Use AI via my key', 'Standard: die KI darf auf': 'Default: the AI may access',
+    'zugreifen. Schalte Bereiche ab, die sie zu': 'Turn off areas it should', 'nicht sehen oder verändern darf (z. B. Finanzen).': 'not see or change (e.g. finances).',
+    'Vitals, Gewohnheiten, Ernährung': 'Vitals, habits, nutrition', 'Tasks, Log, Tagesplan': 'Tasks, log, day plan', 'Ziele, Wünsche, Skills, Manifest': 'Goals, wishes, skills, manifest',
+    'Exportiere deine Daten als eine Markdown-Datei — direkt in deinen Obsidian-Vault ziehbar. Gesperrte Bereiche (oben) werden': 'Export your data as a single Markdown file — draggable straight into your Obsidian vault. Locked areas (above) are',
+    'exportiert. Notizen aus Obsidian zurück holst du über „Notizen einsortieren".': 'exported. Bring notes back from Obsidian via „Sort notes".',
+    'Hinweis: Eine echte „live" MCP-Anbindung, bei der dein Claude von außen direkt in HustleX schreibt, braucht einen eigenen Server (später geplant). Schon jetzt möglich: KI-Kurse & Assistent laufen über dein Konto und respektieren die Berechtigungen oben.': 'Note: A real „live" MCP connection, where your Claude writes directly into HustleX from outside, needs its own server (planned later). Already possible now: AI courses & assistant run on your account and respect the permissions above.',
+    '🔗 Verbindungen': '🔗 Connections', 'BYOK · Eigener Key': 'BYOK · Own key', 'KI-BERECHTIGUNGEN': 'AI PERMISSIONS', 'OBSIDIAN / MARKDOWN': 'OBSIDIAN / MARKDOWN',
+    '💬 Mit Claude besprechen': '💬 Discuss with Claude', '📄 Als Markdown exportieren': '📄 Export as Markdown',
     'Eigenes Claude-Konto (KI) · Obsidian / Markdown-Export': 'Own Claude account (AI) · Obsidian / Markdown export',
     'Arbeit, Termine, .ics-Import (auch im Tagesplan)': 'Work, appointments, .ics import (also in the day plan)',
     // ── settings ──
@@ -312,6 +358,11 @@ const I18N_PHRASES = {
     '+ Gesundheit': '+ Health', '+ Mut': '+ Courage', '+ Selbstbeherrschung': '+ Self-control', '+ Wachstum': '+ Growth',
     // ── misc ──
     '◈ WAS TUE ICH JETZT?': '◈ WHAT DO I DO NOW?', '♨ Sauna/Kälte 30m': '♨ Sauna/cold 30m', '📁 Körper': '📁 Body', 'Geist': 'Mind',
+    // task/log folder labels (also as 📁 move-buttons)
+    'Ohne Ordner': 'No folder', '💼 Arbeit': '💼 Work',
+    '📁 🌅 Morgen': '📁 🌅 Morning', '📁 💼 Arbeit': '📁 💼 Work', '📁 🏋 Training': '📁 🏋 Training', '📁 🌙 Abend': '📁 🌙 Evening',
+    '📁 Ohne Ordner': '📁 No folder', '📁 Arbeit': '📁 Work', '📁 Freizeit': '📁 Leisure', '📁 Lernen': '📁 Learning',
+    'Neuer Ordner… (Emoji vorne = Icon)': 'New folder… (emoji up front = icon)',
     // ── quotes: motivation ──
     'Grit – Leidenschaft plus Ausdauer über Jahre – schlägt Talent.': 'Grit – passion plus perseverance over years – beats talent.',
     'Klarheit entsteht durch Handlung, nicht durch Nachdenken allein.': 'Clarity comes from action, not from thinking alone.',
@@ -392,5 +443,25 @@ const I18N_PHRASES = {
     'Frage mich warum dir etwas nicht gut tut, welche Supplements sich nicht vertragen oder was hinter deinen Symptomen steckt.': 'Ask me why something doesn\'t feel right, which supplements don\'t mix, or what\'s behind your symptoms.',
     'Vervollständige deinen Charakter, um deine volle Kraft zu entfalten.': 'Complete your character to unleash your full power.',
     'Reines Tracking · keine Finanz-/Anlageberatung': 'Pure tracking · no financial/investment advice',
+    // ── workout / gym log ──
+    'KÖRPER · GYM': 'BODY · GYM', '＋ Neues Workout starten': '＋ Start new workout', 'Routinen': 'Routines',
+    'Noch keine Routinen. Beende ein Workout und speichere es als Routine — dann startest du es mit einem Tap.': 'No routines yet. Finish a workout and save it as a routine — then start it with one tap.',
+    'Persönliche Rekorde': 'Personal records', 'Noch keine Rekorde erfasst.': 'No records logged yet.', 'Letzte Workouts': 'Recent workouts',
+    'Noch keine Workouts. Tippe oben auf „Neues Workout starten".': 'No workouts yet. Tap "Start new workout" above.',
+    '＋ Übung hinzufügen': '＋ Add exercise', '✓ Workout beenden': '✓ Finish workout', '📋 Als Routine speichern': '📋 Save as routine',
+    'Verwerfen': 'Discard', 'Erst Übungen hinzufügen': 'Add exercises first', 'Routine gespeichert': 'Routine saved',
+    'ÜBUNG WÄHLEN': 'CHOOSE EXERCISE', 'Bibliothek': 'Library', '🔍 Übung suchen…': '🔍 Search exercise…', '＋ Satz': '＋ Set',
+    'Workout gespeichert · +50 XP': 'Workout saved · +50 XP', 'Erst Übungen hinzufügen': 'Add exercises first',
+    // muscle groups
+    'Brust': 'Chest', 'Rücken': 'Back', 'Beine': 'Legs', 'Schultern': 'Shoulders', 'Arme': 'Arms',
+    // exercises
+    'Bankdrücken': 'Bench Press', 'Schrägbankdrücken': 'Incline Bench Press', 'Kurzhantel-Bankdrücken': 'Dumbbell Bench Press',
+    'Liegestütze': 'Push-ups', 'Dips': 'Dips', 'Kreuzheben': 'Deadlift', 'Klimmzüge': 'Pull-ups', 'Langhantelrudern': 'Barbell Row',
+    'Latzug': 'Lat Pulldown', 'Kabelrudern': 'Cable Row', 'Rumänisches Kreuzheben': 'Romanian Deadlift', 'Kniebeuge': 'Squat',
+    'Frontkniebeuge': 'Front Squat', 'Beinpresse': 'Leg Press', 'Ausfallschritte': 'Lunges', 'Beinbeuger': 'Leg Curl',
+    'Beinstrecker': 'Leg Extension', 'Wadenheben': 'Calf Raise', 'Hip Thrust': 'Hip Thrust', 'Schulterdrücken': 'Overhead Press',
+    'Seitheben': 'Lateral Raise', 'Face Pull': 'Face Pull', 'Frontheben': 'Front Raise', 'Langhantel-Curls': 'Barbell Curl',
+    'Kurzhantel-Curls': 'Dumbbell Curl', 'Hammer-Curls': 'Hammer Curl', 'Trizepsdrücken': 'Triceps Pushdown', 'Skull Crusher': 'Skull Crusher',
+    'Plank': 'Plank', 'Hängendes Beinheben': 'Hanging Leg Raise', 'Crunches': 'Crunches', 'Russian Twist': 'Russian Twist',
   },
 };
