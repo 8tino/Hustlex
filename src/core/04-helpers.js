@@ -22,6 +22,14 @@ function div(cls, inner) {
   return e;
 }
 
+// Uniform "done" checkbox used across the app (quests, supplements, tasks …).
+// Returns a circular button; pass done=true for the green filled state.
+function checkCircle(done) {
+  const b = h('button', { textContent: '✓' });
+  b.className = 'tap check-circle' + (done ? ' on' : '');
+  return b;
+}
+
 // Customization: is a page module/section switched on? Default = on. The user
 // toggles these under Mehr → 🎛 App anpassen (store los_modules).
 function moduleOn(key) { const m = ls('los_modules') || {}; return m[key] !== false; }

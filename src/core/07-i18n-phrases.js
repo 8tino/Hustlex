@@ -25,6 +25,7 @@ const I18N_WORDS = {
     'Volumen': 'volume', 'LÄUFT': 'ACTIVE', 'Rekord': 'Record', 'als eigene Übung anlegen': 'create as custom exercise',
     // home / deadline composed fragments
     'noch': 'still', 'Tage': 'days', 'Tag': 'day', 'überfällig': 'overdue', 'alles schaffen': 'complete all',
+    'Guten Morgen': 'Good morning', 'Guten Abend': 'Good evening', 'Schön, dass du da bist': 'Good to see you',
     'Journal-Einträge': 'journal entries', 'Einträge': 'entries',
     // supplement auto-time hint (composed with a HH:MM time)
     'Landet automatisch ab': 'Auto-placed from', 'Antippen zum Ändern': 'Tap to change',

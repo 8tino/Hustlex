@@ -140,11 +140,10 @@ function renderTasks(s) {
     const linked = t.link ? taskLinkInfo(t.link) : null;
     const isDone = taskDone(t);
     const streak = linked ? 0 : taskStreak(t.id);
-    const row = div('row tap' + (isDone ? ' done' : ''), '');
+    const row = div('row tap' + (isDone ? ' glass-success' : ''), '');
     row.dataset.sortid = t.id;
     const grip = dragHandle();
-    const cb = div('check' + (isDone ? ' on' : ''), '');
-    cb.style.cssText = 'width:28px;height:28px;';
+    const cb = checkCircle(isDone);                     // uniform check control
     const sub = linked
       ? '<div style="font-size:11px;color:' + (linked.done ? 'var(--green)' : 'var(--blue)') + ';margin-top:2px;">🔗 ' + linked.label + ' · ' + linked.cur + '/' + linked.goal + linked.u + ' → Körper</div>'
       : (streak > 1 ? '<div style="font-size:11px;color:var(--gold);margin-top:2px;">🔥 ' + streak + ' Tage in Folge</div>' : '');
@@ -154,7 +153,7 @@ function renderTasks(s) {
       if (linked) { navTo('vitals'); showToast('Trag es in Körper ein — der Task hakt sich dann selbst ab', '🔗'); return; }
       let d = getTasksDone();
       if (d.includes(t.id)) { d = d.filter(x => x !== t.id); removeTaskLog(t.id); }
-      else { d.push(t.id); haptic('success'); addXP(10, 'discipline'); addTaskLog(t); }
+      else { d.push(t.id); haptic('success'); addXP(10, 'discipline', true); addTaskLog(t); }
       saveTasksDone(d); renderScreen('tasks'); updateStatusBar();
     };
     // 🔗 = mit Körper-Wert verknüpfen (Wasser/Protein/kcal/Schlaf)

@@ -94,6 +94,25 @@
   background: linear-gradient(160deg, rgba(48, 209, 88, 0.20), rgba(255, 255, 255, 0.03) 60%);
 }
 
+/* Uniform check control — used app-wide (quests, supplements, tasks, recovery …).
+   Empty = neutral circle; .on = green filled with a checkmark. */
+.check-circle {
+  width: 34px; height: 34px; flex: none;
+  border-radius: 50%;
+  background: var(--glass-2);
+  border: 1px solid var(--edge);
+  color: var(--t-3);
+  font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  transition: all 0.18s var(--ease-out);
+}
+.check-circle.on {
+  background: rgba(48, 209, 88, 0.20);
+  border-color: rgba(48, 209, 88, 0.5);
+  color: var(--green, #30D158);
+}
+
 /* Interactive lift on tap (no hover on mobile) */
 .tap {
   cursor: pointer;

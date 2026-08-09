@@ -29,6 +29,22 @@ function addUserQuest(cat) {
   saveUserQuests(u); renderScreen('quests');
 }
 
+// Daily combo: a one-time bonus for finishing ALL of today's quests — awarded
+// whenever during the day the last one is checked, and removed if you un-check.
+const QUEST_COMBO_BONUS = 40;
+function questsAllDone() { const qs = getQuests(); return qs.length > 0 && qs.every(q => STATE.day.habits.includes(q.id)); }
+function syncQuestCombo() {
+  const all = questsAllDone();
+  if (all && !STATE.day.questCombo) {
+    STATE.day.questCombo = true; saveDay();
+    addXP(QUEST_COMBO_BONUS, 'discipline', true);
+    haptic('levelup'); showToast((typeof LANG !== 'undefined' && LANG === 'en') ? 'Combo! All quests done +' + QUEST_COMBO_BONUS + ' XP' : 'Kombo! Alle Quests erledigt +' + QUEST_COMBO_BONUS + ' XP', '🔥');
+  } else if (!all && STATE.day.questCombo) {
+    STATE.day.questCombo = false; saveDay();
+    if (typeof subXP === 'function') subXP(QUEST_COMBO_BONUS, 'discipline');
+  }
+}
+
 function renderQuests(s) {
   const pc = pColor();
   const cats = getCats();
@@ -43,7 +59,8 @@ function renderQuests(s) {
   const cr = div('');
   cr.style.cssText = 'display:flex;gap:6px;margin-top:10px;';
   CATS.forEach(c => {
-    const b = h('button', { textContent: c.l + (cats[c.k] ? ' ✓' : '') }, '');
+    const b = h('button', { textContent: c.l }, '');
+    if (cats[c.k]) b.insertAdjacentHTML('beforeend', ' <span style="color:var(--green);">✓</span>');
     b.className = 'itab tap' + (QUESTS_CAT === c.k ? ' on' : '');
     b.onclick = () => { QUESTS_CAT = c.k; renderScreen('quests'); };
     cr.appendChild(b);
@@ -59,24 +76,24 @@ function renderQuests(s) {
   }
   catQuests.forEach(hb => {
     const done = STATE.day.habits.includes(hb.id);
-    const row = div('row' + (done ? ' done' : ''), '');
-    if (done) row.style.borderColor = pc + '30';
-    const tapArea = div('tap', '<span style="font-size:20px;">' + hb.icon + '</span>' +
-      '<div style="flex:1;min-width:0;"><div style="font-size:14px;color:' + (done ? 'var(--t-3)' : 'var(--t-1)') + ';">' + esc(hb.label) + '</div>' +
-      (done ? '<div style="font-size:11px;color:var(--t-4);margin-top:1px;">' + (LANG === 'en' ? 'Tap to deselect' : 'Tippen zum Abwählen') + '</div>' : '') + '</div>' +
-      '<div style="font-size:12px;font-weight:600;color:' + (done ? pc : 'var(--gold-soft)') + ';">' + (done ? '✓' : '+' + hb.xp + ' XP') + '</div>');
-    tapArea.style.cssText = 'flex:1;display:flex;align-items:center;gap:12px;min-width:0;';
-    tapArea.onclick = () => {
+    const row = div('row' + (done ? ' glass-success' : ''), '');
+    const toggle = () => {
       if (STATE.day.habits.includes(hb.id)) {
         STATE.day.habits = STATE.day.habits.filter(x => x !== hb.id);
         STATE.day.xp = Math.max(0, STATE.day.xp - hb.xp);
         if (typeof subXP === 'function') subXP(hb.xp, hb.cat);
       } else {
-        STATE.day.habits.push(hb.id); STATE.day.xp += hb.xp; addXP(hb.xp, hb.cat);
+        STATE.day.habits.push(hb.id); STATE.day.xp += hb.xp; addXP(hb.xp, hb.cat, true); // flat, no click-combo
       }
-      saveDay(); renderScreen('quests'); updateStatusBar();
+      saveDay(); syncQuestCombo(); renderScreen('quests'); updateStatusBar();
     };
+    const tapArea = div('tap', '<span style="font-size:20px;">' + hb.icon + '</span>' +
+      '<div style="flex:1;min-width:0;"><div style="font-size:14px;color:' + (done ? 'var(--green)' : 'var(--t-1)') + ';">' + esc(hb.label) + '</div>' +
+      '<div style="font-size:11px;color:var(--t-4);margin-top:1px;">' + (done ? (LANG === 'en' ? 'Done' : 'Erledigt') : '+' + hb.xp + ' XP') + '</div></div>');
+    tapArea.style.cssText = 'flex:1;display:flex;align-items:center;gap:12px;min-width:0;';
+    tapArea.onclick = toggle;
     row.appendChild(tapArea);
+    const chk = checkCircle(done); chk.onclick = toggle; row.appendChild(chk);
     const del = h('button', { textContent: '×' });
     del.className = 'tap'; del.title = (LANG === 'en' ? 'Delete' : 'Löschen');
     del.style.cssText = 'background:none;color:var(--t-4);font-size:16px;padding:0 4px;flex:none;';
@@ -114,7 +131,7 @@ function renderQuests(s) {
     btn.onclick = () => {
       const v = inp.value.trim();
       if (!v || STATE.day.custom) return;
-      STATE.day.custom = v; STATE.day.habits.push('custom'); STATE.day.xp += 20; addXP(20); saveDay(); updateStatusBar();
+      STATE.day.custom = v; STATE.day.habits.push('custom'); STATE.day.xp += 20; addXP(20, null, true); saveDay(); updateStatusBar();
       renderScreen('quests');
     };
     row.appendChild(inp); row.appendChild(btn); ct.appendChild(row);

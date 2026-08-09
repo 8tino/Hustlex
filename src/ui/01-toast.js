@@ -44,13 +44,20 @@ function hideComboBar() {
   }
 }
 
-function addXP(n, cat) {
-  if (COMBO.timer) clearTimeout(COMBO.timer);
-  COMBO.count++;
-  COMBO.multi = COMBO.count >= 10 ? 3 :
-                COMBO.count >= 5  ? 2 :
-                COMBO.count >= 3  ? 1.5 : 1;
-  const earned = Math.round(n * COMBO.multi);
+// noCombo=true → flat award (no click-streak multiplier). Use it for anything
+// that can be toggled off again (quests, tasks) so on/off is exactly net-zero
+// and points can't be farmed by rapid re-selecting.
+function addXP(n, cat, noCombo) {
+  let multi = 1;
+  if (!noCombo) {
+    if (COMBO.timer) clearTimeout(COMBO.timer);
+    COMBO.count++;
+    COMBO.multi = COMBO.count >= 10 ? 3 :
+                  COMBO.count >= 5  ? 2 :
+                  COMBO.count >= 3  ? 1.5 : 1;
+    multi = COMBO.multi;
+  }
+  const earned = Math.round(n * multi);
   STATE.totalXP += earned;
   ls('los_xp', STATE.totalXP);
 
@@ -68,9 +75,9 @@ function addXP(n, cat) {
     ls('los_catxp', cx);
   }
 
-  showXPPopup(earned, COMBO.count >= 3 ? '×' + COMBO.multi : '');
-  if (COMBO.count >= 3) showComboBar();
-  COMBO.timer = setTimeout(() => { COMBO.count = 0; COMBO.multi = 1; hideComboBar(); }, 10000);
+  showXPPopup(earned, (!noCombo && COMBO.count >= 3) ? '×' + COMBO.multi : '');
+  if (!noCombo && COMBO.count >= 3) showComboBar();
+  if (!noCombo) COMBO.timer = setTimeout(() => { COMBO.count = 0; COMBO.multi = 1; hideComboBar(); }, 10000);
 
   const old = getLvl(STATE.totalXP - earned);
   const nw  = getLvl(STATE.totalXP);

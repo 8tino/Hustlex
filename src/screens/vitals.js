@@ -193,20 +193,10 @@ function renderVitals(s) {
     row.innerHTML = '<span style="font-size:18px;">' + (sup.ic || '💊') + '</span>' +
       '<div style="flex:1;min-width:0;"><div style="font-size:13px;color:' + (done ? 'var(--green)' : 'var(--t-1)') + ';">' + sup.n + ' <span style="font-size:11px;color:var(--t-3);">' + (sup.d || '') + '</span></div>' +
       '<div style="font-size:11px;color:var(--t-3);margin-top:1px;">' + (sup.t || '') + (isNow && !done ? '<span class="gold" style="font-weight:600;margin-left:6px;">← JETZT</span>' : '') + '</div></div>';
-    if (done) {
-      // tap the ✓ to un-take (deselect anytime)
-      const b = h('button', { textContent: '✓' }, '');
-      b.className = 'tap'; b.title = 'Abwählen';
-      b.style.cssText = 'width:34px;height:34px;flex:none;background:rgba(92,184,117,.15);border:1px solid rgba(92,184,117,.35);border-radius:50%;color:var(--green);font-size:14px;';
-      b.onclick = () => { delete STATE.day.supps[sup.id]; saveDay(); updateStatusBar(); renderVitals(s); };
-      row.appendChild(b);
-    } else {
-      const b = h('button', { textContent: '✓' }, '');
-      b.className = 'tap';
-      b.style.cssText = 'width:34px;height:34px;flex:none;background:var(--glass-2);border:1px solid var(--edge);border-radius:50%;color:var(--t-2);font-size:13px;';
-      b.onclick = () => { STATE.day.supps[sup.id] = true; saveDay(); updateStatusBar(); renderVitals(s); };
-      row.appendChild(b);
-    }
+    const b = checkCircle(done);                       // uniform check control
+    if (done) b.title = (LANG === 'en' ? 'Uncheck' : 'Abwählen');
+    b.onclick = () => { if (STATE.day.supps[sup.id]) delete STATE.day.supps[sup.id]; else STATE.day.supps[sup.id] = true; saveDay(); updateStatusBar(); renderVitals(s); };
+    row.appendChild(b);
     // Edit (time-of-day, intelligent, remove) — for EVERY supplement.
     const edit = h('button', { textContent: '✎' }, '');
     edit.className = 'tap'; edit.title = 'Bearbeiten';
@@ -239,11 +229,11 @@ function renderVitals(s) {
   const recSec = section('Recovery', 'v_recovery', false); const rcb = recSec._body;
   RECOVERY.slice().sort((a, b) => (STATE.day.recovery.includes(a.id) ? 1 : 0) - (STATE.day.recovery.includes(b.id) ? 1 : 0)).forEach(m => {
     const done = STATE.day.recovery.includes(m.id);
-    const row = div('row tap' + (done ? ' done' : ''), '');
-    if (done) row.style.borderColor = m.c + '40';
+    const row = div('row tap' + (done ? ' glass-success' : ''), '');
     row.innerHTML = '<span style="font-size:20px;">' + m.ic + '</span>' +
-      '<div style="flex:1;"><div style="font-size:13px;color:' + (done ? m.c : 'var(--t-1)') + ';">' + m.n + '</div>' +
-      '<div style="font-size:11px;color:var(--t-3);margin-top:1px;">' + m.t + '</div></div>' + (done ? '<span style="font-size:12px;color:' + m.c + ';">✓</span>' : '');
+      '<div style="flex:1;"><div style="font-size:13px;color:' + (done ? 'var(--green)' : 'var(--t-1)') + ';">' + m.n + '</div>' +
+      '<div style="font-size:11px;color:var(--t-3);margin-top:1px;">' + m.t + '</div></div>';
+    row.appendChild(checkCircle(done));                 // uniform check control
     row.onclick = () => {
       if (STATE.day.recovery.includes(m.id)) STATE.day.recovery = STATE.day.recovery.filter(x => x !== m.id);
       else STATE.day.recovery.push(m.id);
