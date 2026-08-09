@@ -29,19 +29,25 @@ function addUserQuest(cat) {
   saveUserQuests(u); renderScreen('quests');
 }
 
-// Daily combo: a one-time bonus for finishing ALL of today's quests — awarded
-// whenever during the day the last one is checked, and removed if you un-check.
-const QUEST_COMBO_BONUS = 40;
-function questsAllDone() { const qs = getQuests(); return qs.length > 0 && qs.every(q => STATE.day.habits.includes(q.id)); }
-function syncQuestCombo() {
-  const all = questsAllDone();
-  if (all && !STATE.day.questCombo) {
-    STATE.day.questCombo = true; saveDay();
-    addXP(QUEST_COMBO_BONUS, 'discipline', true);
-    haptic('levelup'); showToast((typeof LANG !== 'undefined' && LANG === 'en') ? 'Combo! All quests done +' + QUEST_COMBO_BONUS + ' XP' : 'Kombo! Alle Quests erledigt +' + QUEST_COMBO_BONUS + ' XP', '🔥');
-  } else if (!all && STATE.day.questCombo) {
-    STATE.day.questCombo = false; saveDay();
-    if (typeof subXP === 'function') subXP(QUEST_COMBO_BONUS, 'discipline');
+// Progressive daily multiplier: the more of today's quests are done, the bigger
+// the multiplier on their combined XP. 1 done = ×1, then +0.25 per further quest
+// (capped ×3). Fully reversible — the bonus is recomputed from scratch on every
+// toggle, so un-checking removes exactly the right amount (no point farming).
+function questMult(n) { return n <= 1 ? 1 : Math.min(3, 1 + (n - 1) * 0.25); }
+function questDoneCount() { return getQuests().filter(q => STATE.day.habits.includes(q.id)).length; }
+function recomputeQuestBonus() {
+  const doneQ = getQuests().filter(q => STATE.day.habits.includes(q.id));
+  const n = doneQ.length;
+  const baseSum = doneQ.reduce((a, q) => a + (q.xp || 0), 0);
+  const target = Math.round(baseSum * (questMult(n) - 1));   // extra XP beyond the flat base
+  const prev = STATE.day.questBonus || 0;
+  const delta = target - prev;
+  if (delta !== 0) {
+    STATE.totalXP = Math.max(0, STATE.totalXP + delta);
+    ls('los_xp', STATE.totalXP);
+    STATE.day.questBonus = target; saveDay();
+    if (delta > 0 && n >= 2) { haptic('achievement'); showToast((typeof LANG !== 'undefined' && LANG === 'en' ? 'Combo ×' : 'Kombo ×') + questMult(n) + '!', '🔥'); }
+    if (typeof updateStatusBar === 'function') updateStatusBar();
   }
 }
 
@@ -67,6 +73,20 @@ function renderQuests(s) {
   });
   s.appendChild(cr);
 
+  // Progressive combo indicator (across all categories)
+  const nDone = questDoneCount();
+  if (nDone >= 1) {
+    const m = questMult(nDone);
+    const cb = div('glass', '');
+    cb.style.cssText = 'display:flex;align-items:center;gap:10px;margin-top:8px;' + (m > 1 ? 'border-left:3px solid var(--gold);' : '');
+    cb.innerHTML = '<span style="font-size:18px;">' + (m > 1 ? '🔥' : '✅') + '</span>' +
+      '<div style="flex:1;min-width:0;"><div style="font-size:13px;font-weight:600;color:' + (m > 1 ? 'var(--gold)' : 'var(--t-1)') + ';">' +
+      (m > 1 ? ((LANG === 'en' ? 'Combo ×' : 'Kombo ×') + m) : (LANG === 'en' ? 'Keep going' : 'Weiter so')) + '</div>' +
+      '<div style="font-size:11px;color:var(--t-3);margin-top:1px;">' + nDone + ' ' + (LANG === 'en' ? 'done today' : 'heute erledigt') +
+      (m < 3 ? ' · ' + (LANG === 'en' ? 'more = higher multiplier' : 'mehr = höherer Multiplikator') : '') + '</div></div>';
+    s.appendChild(cb);
+  }
+
   // Habits of the selected category — erledigte rutschen ans Ende
   const catQuests = getQuests().filter(hh => hh.cat === QUESTS_CAT)
     .sort((a, b) => (STATE.day.habits.includes(a.id) ? 1 : 0) - (STATE.day.habits.includes(b.id) ? 1 : 0));
@@ -85,7 +105,7 @@ function renderQuests(s) {
       } else {
         STATE.day.habits.push(hb.id); STATE.day.xp += hb.xp; addXP(hb.xp, hb.cat, true); // flat, no click-combo
       }
-      saveDay(); syncQuestCombo(); renderScreen('quests'); updateStatusBar();
+      saveDay(); recomputeQuestBonus(); renderScreen('quests'); updateStatusBar();
     };
     const tapArea = div('tap', '<span style="font-size:20px;">' + hb.icon + '</span>' +
       '<div style="flex:1;min-width:0;"><div style="font-size:14px;color:' + (done ? 'var(--green)' : 'var(--t-1)') + ';">' + esc(hb.label) + '</div>' +
