@@ -8,8 +8,9 @@ import { createHash } from 'crypto';
 
 process.chdir(join(dirname(fileURLToPath(import.meta.url)), '..'));
 
-const SITE_ID = '9eb1a157-4412-418a-88b8-4fc9a12ca0d6';
-const SITE_URL = 'https://wonderful-meerkat-10ca3d.netlify.app/';
+// Default = Tinos bestehende Site. Override per NETLIFY_SITE_ID (z.B. Tester-Site).
+const SITE_ID = process.env.NETLIFY_SITE_ID || '9eb1a157-4412-418a-88b8-4fc9a12ca0d6';
+const SITE_URL = process.env.NETLIFY_SITE_URL || 'https://wonderful-meerkat-10ca3d.netlify.app/';
 const API = 'https://api.netlify.com/api/v1';
 const DIST = 'dist';
 
