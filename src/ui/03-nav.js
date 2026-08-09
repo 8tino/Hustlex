@@ -11,6 +11,7 @@ const HUBS = {
     { v: 'vitals', l: 'Vitals' },
     { v: 'habits', l: 'Gewohnheiten' },
     { v: 'quests', l: 'Quests' },
+    { v: 'trainingsplan', l: 'Training' },
   ] },
   aufgaben: { kind: 'tabs', def: 'fokus', tabs: [
     { v: 'fokus', l: 'Tagesplan', ft: 'plan' },
@@ -23,9 +24,9 @@ const HUBS = {
 
 // child view → its hub
 const CHILD_HUB = {
-  vitals: 'koerper', quests: 'koerper', habits: 'koerper',
+  vitals: 'koerper', quests: 'koerper', habits: 'koerper', trainingsplan: 'koerper',
   fokus: 'aufgaben', tasks: 'aufgaben', log: 'aufgaben',
-  ich: 'wachstumhub', kurse: 'wachstumhub', skills: 'wachstumhub', manifest: 'wachstumhub', wachstum: 'wachstumhub', intel: 'wachstumhub', finanzen: 'wachstumhub', markt: 'wachstumhub',
+  ich: 'wachstumhub', kurse: 'wachstumhub', skills: 'wachstumhub', manifest: 'wachstumhub', wachstum: 'wachstumhub', intel: 'wachstumhub', finanzen: 'wachstumhub', markt: 'wachstumhub', countdown: 'wachstumhub',
 };
 
 // Which bottom-nav button should light up for a given view.
@@ -137,6 +138,7 @@ function initNav() {
   $$('.nav-btn').forEach(btn => {
     btn.addEventListener('click', () => navTo(btn.dataset.view));
   });
+  if (typeof applyNavLabels === 'function') applyNavLabels();
   initSwipeBack();
   initBackButton();
 }

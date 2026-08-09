@@ -11,6 +11,11 @@ const OUT = resolve('./dist');
 // "## <nr>. …" heading. Emitted as `const KURSE_DATA = {…}` so the app has the
 // whole curriculum offline with no runtime fetch.
 function buildKurseData() {
+  // Public/tester build: ship the Kurse SECTION but WITHOUT the personal
+  // curriculum + guides (they stay in the private build). Set HUSTLEX_PUBLIC=1.
+  if (process.env.HUSTLEX_PUBLIC === '1') {
+    return 'const KURSE_DATA = ' + JSON.stringify({ manifest: { kurse: [], reihenfolge: { pfad: [] }, lernpfad: {} }, volltext: {}, leitfaeden: [] }) + ';\n';
+  }
   const dir = join(ROOT, 'kurse');
   const jsonPath = join(dir, 'lifeos-kurse.json');
   if (!existsSync(jsonPath)) return '';

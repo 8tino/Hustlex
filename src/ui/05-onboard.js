@@ -10,95 +10,99 @@ let OB = {
 
 // Inject the onboarding markup into #onboard (filled by JS in the modular build).
 function renderOnboard() {
+  const step = (n) => t('ob.step', 'SCHRITT') + ' ' + n + ' ' + t('ob.of', 'VON') + ' 3';
+  const back = '← <span class="label">' + t('ob.back', 'Zurück') + '</span>';
   el('onboard').innerHTML = `
   <div class="ob-page on" id="ob0">
     <div class="ob-inner" style="justify-content:center;text-align:center;">
       <div style="display:flex;align-items:center;gap:10px;justify-content:center;margin-bottom:52px;">
         <div style="flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--gold-deep))"></div>
-        <div class="label" style="letter-spacing:7px;">LIFE OS</div>
+        <div class="label" style="letter-spacing:7px;">HUSTLEX</div>
         <div style="flex:1;height:1px;background:linear-gradient(90deg,var(--gold-deep),transparent)"></div>
       </div>
-      <div class="label" style="letter-spacing:4px;margin-bottom:20px;">WILLKOMMEN</div>
+      <div id="ob_lang" style="margin-bottom:26px;"></div>
+      <div class="label" style="letter-spacing:4px;margin-bottom:20px;">${t('ob.welcome', 'WILLKOMMEN')}</div>
       <div class="serif anim-fade-in" style="font-size:42px;font-weight:300;color:var(--t-1);line-height:1.1;margin-bottom:16px;">
-        Das Leben als<br/><span class="shimmer" style="font-size:48px;">Meisterwerk</span>
+        ${t('ob.title', 'Das Leben als')}<br/><span class="shimmer" style="font-size:48px;">${t('ob.titleAccent', 'Meisterwerk')}</span>
       </div>
       <div class="serif italic" style="font-size:13px;color:var(--t-2);line-height:1.9;margin-bottom:10px;">
-        Optimiere jeden Aspekt deiner Existenz.<br/>Werde wer du sein willst.
+        ${t('ob.subtitle', 'Optimiere jeden Aspekt deiner Existenz.<br/>Werde wer du sein willst.')}
       </div>
-      <div class="label" style="margin-bottom:56px;">Körper · Geist · Disziplin · Langlebigkeit</div>
-      <button class="btn btn-gold tap" onclick="obGo(1)">JETZT STARTEN →</button>
-      <div class="label" style="margin-top:12px;font-size:10px;">FÜR MENSCHEN DIE SICH ETWAS WERT SIND</div>
+      <div class="label" style="margin-bottom:56px;">${t('ob.domains', 'Körper · Geist · Disziplin · Langlebigkeit')}</div>
+      <button class="btn btn-gold tap" onclick="obGo(1)">${t('ob.start', 'JETZT STARTEN →')}</button>
+      <div class="label" style="margin-top:12px;font-size:10px;">${t('ob.forPeople', 'FÜR MENSCHEN DIE SICH ETWAS WERT SIND')}</div>
     </div>
   </div>
 
   <div class="ob-page" id="ob1">
     <div class="ob-inner">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;">
-        <button class="tap" onclick="obGo(0)" style="background:none;color:var(--t-2);font-size:13px;display:flex;align-items:center;gap:6px;">← <span class="label">Zurück</span></button>
+        <button class="tap" onclick="obGo(0)" style="background:none;color:var(--t-2);font-size:13px;display:flex;align-items:center;gap:6px;">${back}</button>
         <div class="ob-dots" id="dots1"></div>
       </div>
-      <div class="label" style="margin-bottom:6px;">SCHRITT 1 VON 3</div>
-      <div class="h1" style="margin-bottom:4px;">Dein Charakter</div>
-      <div style="font-size:12px;color:var(--t-2);margin-bottom:28px;">Wie willst du dich nennen?</div>
+      <div class="label" style="margin-bottom:6px;">${step(1)}</div>
+      <div class="h1" style="margin-bottom:4px;">${t('ob.character', 'Dein Charakter')}</div>
+      <div style="font-size:12px;color:var(--t-2);margin-bottom:28px;">${t('ob.characterSub', 'Wie willst du dich nennen?')}</div>
       <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:28px;">
         <div>
-          <div class="label" style="margin-bottom:6px;">DEIN NAME *</div>
-          <input id="ob_name" class="inp inp-serif" type="text" placeholder="Name eingeben…" style="font-size:16px;"/>
+          <div class="label" style="margin-bottom:6px;">${t('ob.name', 'DEIN NAME *')}</div>
+          <input id="ob_name" class="inp inp-serif" type="text" placeholder="${t('ob.namePh', 'Name eingeben…')}" style="font-size:16px;"/>
         </div>
         <div>
-          <div class="label" style="margin-bottom:6px;">DEIN TITEL (OPTIONAL)</div>
-          <input id="ob_title" class="inp" type="text" placeholder="z.B. Entrepreneur · Athlet · Optimierer"/>
+          <div class="label" style="margin-bottom:6px;">${t('ob.titleField', 'DEIN TITEL (OPTIONAL)')}</div>
+          <input id="ob_title" class="inp" type="text" placeholder="${t('ob.titlePh', 'z.B. Entrepreneur · Athlet · Optimierer')}"/>
         </div>
         <div>
-          <div class="label" style="margin-bottom:6px;">PERSÖNLICHES MOTTO (OPTIONAL)</div>
-          <input id="ob_quote" class="inp inp-serif" type="text" placeholder="Ein Satz der dich antreibt…" style="font-style:italic;"/>
+          <div class="label" style="margin-bottom:6px;">${t('ob.motto', 'PERSÖNLICHES MOTTO (OPTIONAL)')}</div>
+          <input id="ob_quote" class="inp inp-serif" type="text" placeholder="${t('ob.mottoPh', 'Ein Satz der dich antreibt…')}" style="font-style:italic;"/>
         </div>
       </div>
-      <button class="btn btn-gold tap" onclick="obStep1()">WEITER →</button>
+      <button class="btn btn-gold tap" onclick="obStep1()">${t('ob.next', 'WEITER →')}</button>
     </div>
   </div>
 
   <div class="ob-page" id="ob2">
     <div class="ob-inner">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;">
-        <button class="tap" onclick="obGo(1)" style="background:none;color:var(--t-2);font-size:13px;display:flex;align-items:center;gap:6px;">← <span class="label">Zurück</span></button>
+        <button class="tap" onclick="obGo(1)" style="background:none;color:var(--t-2);font-size:13px;display:flex;align-items:center;gap:6px;">${back}</button>
         <div class="ob-dots" id="dots2"></div>
       </div>
-      <div class="label" style="margin-bottom:6px;">SCHRITT 2 VON 3</div>
-      <div class="h1" style="margin-bottom:4px;">Deine Ziele</div>
-      <div style="font-size:12px;color:var(--t-2);margin-bottom:6px;">Was willst du erreichen?</div>
-      <div class="italic" style="font-size:11px;color:var(--gold-soft);margin-bottom:18px;">Mehrere Ziele gleichzeitig möglich – wähle alles was passt.</div>
+      <div class="label" style="margin-bottom:6px;">${step(2)}</div>
+      <div class="h1" style="margin-bottom:4px;">${t('ob.goals', 'Deine Ziele')}</div>
+      <div style="font-size:12px;color:var(--t-2);margin-bottom:6px;">${t('ob.goalsSub', 'Was willst du erreichen?')}</div>
+      <div class="italic" style="font-size:11px;color:var(--gold-soft);margin-bottom:18px;">${t('ob.goalsMulti', 'Mehrere Ziele gleichzeitig möglich – wähle alles was passt.')}</div>
       <div class="stagger" style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px;" id="goal_cards"></div>
       <div id="custom_goal_wrap" style="display:none;margin-bottom:16px;">
-        <textarea id="ob_customgoal" class="inp inp-serif" rows="3" placeholder="Beschreibe dein Ziel so genau wie möglich…"></textarea>
+        <textarea id="ob_customgoal" class="inp inp-serif" rows="3" placeholder="${t('ob.goalsPh', 'Beschreibe dein Ziel so genau wie möglich…')}"></textarea>
       </div>
-      <button class="btn btn-gold tap" onclick="obStep2()">WEITER →</button>
+      <button class="btn btn-gold tap" onclick="obStep2()">${t('ob.next', 'WEITER →')}</button>
     </div>
   </div>
 
   <div class="ob-page" id="ob3">
     <div class="ob-inner">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;">
-        <button class="tap" onclick="obGo(2)" style="background:none;color:var(--t-2);font-size:13px;display:flex;align-items:center;gap:6px;">← <span class="label">Zurück</span></button>
+        <button class="tap" onclick="obGo(2)" style="background:none;color:var(--t-2);font-size:13px;display:flex;align-items:center;gap:6px;">${back}</button>
         <div class="ob-dots" id="dots3"></div>
       </div>
-      <div class="label" style="margin-bottom:6px;">SCHRITT 3 VON 3</div>
-      <div class="h1" style="margin-bottom:4px;">Dein Status</div>
-      <div style="font-size:12px;color:var(--t-2);margin-bottom:20px;">Damit der Plan zu dir passt</div>
+      <div class="label" style="margin-bottom:6px;">${step(3)}</div>
+      <div class="h1" style="margin-bottom:4px;">${t('ob.status', 'Dein Status')}</div>
+      <div style="font-size:12px;color:var(--t-2);margin-bottom:20px;">${t('ob.statusSub', 'Damit der Plan zu dir passt')}</div>
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px;">
-        <div><div class="label" style="margin-bottom:6px;font-size:10px;">ALTER</div><input id="ob_age" class="inp serif" type="number" placeholder="–" style="text-align:center;font-size:15px;padding:11px 6px;"/></div>
-        <div><div class="label" style="margin-bottom:6px;font-size:10px;">GEWICHT KG</div><input id="ob_weight" class="inp serif" type="number" placeholder="–" style="text-align:center;font-size:15px;padding:11px 6px;"/></div>
-        <div><div class="label" style="margin-bottom:6px;font-size:10px;">GRÖSSE CM</div><input id="ob_height" class="inp serif" type="number" placeholder="–" style="text-align:center;font-size:15px;padding:11px 6px;"/></div>
+        <div><div class="label" style="margin-bottom:6px;font-size:10px;">${t('ob.age', 'ALTER')}</div><input id="ob_age" class="inp serif" type="number" placeholder="–" style="text-align:center;font-size:15px;padding:11px 6px;"/></div>
+        <div><div class="label" style="margin-bottom:6px;font-size:10px;">${t('ob.weight', 'GEWICHT KG')}</div><input id="ob_weight" class="inp serif" type="number" placeholder="–" style="text-align:center;font-size:15px;padding:11px 6px;"/></div>
+        <div><div class="label" style="margin-bottom:6px;font-size:10px;">${t('ob.height', 'GRÖSSE CM')}</div><input id="ob_height" class="inp serif" type="number" placeholder="–" style="text-align:center;font-size:15px;padding:11px 6px;"/></div>
       </div>
       <div id="q_selectors"></div>
       <div style="margin-bottom:20px;">
-        <div class="label" style="margin-bottom:4px;">EXTRA-FOKUS</div>
-        <div style="font-size:11px;color:var(--t-3);margin-bottom:10px;">Was ist dir besonders wichtig?</div>
+        <div class="label" style="margin-bottom:4px;">${t('ob.extraFocus', 'EXTRA-FOKUS')}</div>
+        <div style="font-size:11px;color:var(--t-3);margin-bottom:10px;">${t('ob.extraFocusSub', 'Was ist dir besonders wichtig?')}</div>
         <div style="display:flex;flex-wrap:wrap;gap:6px;" id="focus_pills"></div>
       </div>
-      <button class="btn btn-gold tap" onclick="obFinish()">MEINEN PLAN ERSTELLEN →</button>
+      <button class="btn btn-gold tap" onclick="obFinish()">${t('ob.createPlan', 'MEINEN PLAN ERSTELLEN →')}</button>
     </div>
   </div>`;
+  if (typeof langPicker === 'function') { const lp = el('ob_lang'); if (lp) lp.appendChild(langPicker(false)); }
 }
 
 function obGo(page) {
@@ -146,7 +150,7 @@ function buildGoalCards() {
     };
     cont.appendChild(c);
   });
-  const counter = div('', OB.goalIds.length ? OB.goalIds.length + ' ausgewählt' : '');
+  const counter = div('', OB.goalIds.length ? OB.goalIds.length + ' ' + t('ob.selected', 'ausgewählt') : '');
   counter.id = 'goal_count';
   counter.style.cssText = 'font-size:11px;color:var(--gold-soft);text-align:center;letter-spacing:1px;height:16px;';
   cont.appendChild(counter);
@@ -162,10 +166,10 @@ function buildQSelectors() {
   const cont = el('q_selectors');
   cont.innerHTML = '';
   const SELS = [
-    { k: 'trainLvl', l: 'TRAININGSERFAHRUNG', opts: [{ v: 'beginner', l: 'Anfänger' }, { v: 'intermediate', l: 'Fortgeschritten' }, { v: 'advanced', l: 'Experte' }] },
-    { k: 'sleep', l: 'DURCHSCHNITTLICHER SCHLAF', opts: [{ v: '5', l: '<6h' }, { v: '6', l: '6–7h' }, { v: '7', l: '7–8h' }, { v: '9', l: '8+h' }] },
-    { k: 'stress', l: 'STRESSLEVEL', opts: [{ v: 'low', l: 'Niedrig' }, { v: 'medium', l: 'Mittel' }, { v: 'high', l: 'Hoch' }, { v: 'extreme', l: 'Extrem' }] },
-    { k: 'time', l: 'VERFÜGBARE ZEIT/TAG', opts: [{ v: '30', l: '30 Min' }, { v: '60', l: '1 Std' }, { v: '90', l: '1,5 Std' }, { v: '120', l: '2+ Std' }] },
+    { k: 'trainLvl', l: t('ob.trainExp', 'TRAININGSERFAHRUNG'), opts: [{ v: 'beginner', l: t('ob.lvlBeginner', 'Anfänger') }, { v: 'intermediate', l: t('ob.lvlInter', 'Fortgeschritten') }, { v: 'advanced', l: t('ob.lvlAdv', 'Experte') }] },
+    { k: 'sleep', l: t('ob.avgSleep', 'DURCHSCHNITTLICHER SCHLAF'), opts: [{ v: '5', l: '<6h' }, { v: '6', l: '6–7h' }, { v: '7', l: '7–8h' }, { v: '9', l: '8+h' }] },
+    { k: 'stress', l: t('ob.stress', 'STRESSLEVEL'), opts: [{ v: 'low', l: t('ob.stressLow', 'Niedrig') }, { v: 'medium', l: t('ob.stressMed', 'Mittel') }, { v: 'high', l: t('ob.stressHigh', 'Hoch') }, { v: 'extreme', l: t('ob.stressExtreme', 'Extrem') }] },
+    { k: 'time', l: t('ob.timePerDay', 'VERFÜGBARE ZEIT/TAG'), opts: [{ v: '30', l: '30 Min' }, { v: '60', l: '1 Std' }, { v: '90', l: '1,5 Std' }, { v: '120', l: '2+ Std' }] },
   ];
   SELS.forEach(sel => {
     const wrap = div('', '<div class="label" style="font-size:10px;margin-bottom:7px;">' + sel.l + '</div>');
@@ -214,7 +218,7 @@ async function obFinish() {
   const avatarIcons = selectedGoals.slice(0, 2).map(g => g.icon).join('');
 
   const finBtn = el('ob3').querySelector('button.btn');
-  finBtn.textContent = 'PLAN WIRD ERSTELLT…';
+  finBtn.textContent = t('ob.creatingPlan', 'PLAN WIRD ERSTELLT…');
   finBtn.style.opacity = '.6';
 
   const goalStr = OB.goalIds.includes('custom') && OB.customGoal

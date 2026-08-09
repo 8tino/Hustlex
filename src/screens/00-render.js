@@ -13,6 +13,8 @@ function renderScreen(v) {
     case 'fokus':       renderFokus(s); break;
     case 'quests':      renderQuests(s); break;
     case 'habits':      renderHabits(s); break;
+    case 'trainingsplan': renderTrainingsplan(s); break;
+    case 'countdown':   renderCountdown(s); break;
     case 'vitals':      renderVitals(s); break;
     case 'intel':       renderIntel(s); break;
     case 'ich':         renderIch(s); break;

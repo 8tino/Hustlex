@@ -16,6 +16,7 @@ function renderWachstumHub(s) {
     { view: 'wachstum', ic: '✒', name: 'Journal & Lernen',  sub: 'Journal, Lernliste, Vorbilder, Inspiration', c: '#BF5AF2' },
     { view: 'intel',    ic: '◉', name: 'Wissen',            sub: 'Wissens-Sektionen, Body Fix, KI-Doc', c: '#64D2FF' },
     { view: 'finanzen', ic: '€', name: 'Finanzen',          sub: 'Einnahmen, Ausgaben, Sparziele, Markt', c: '#30D158' },
+    { view: 'countdown', ic: '⏳', name: 'Memento Mori',     sub: 'Deine Zeit: Deadlines & Lebens-Countdown', c: '#FF453A' },
   ];
   areas.forEach(x => {
     const row = div('row tap', '');

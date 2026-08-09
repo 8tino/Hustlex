@@ -5,9 +5,11 @@
   "type": "module",
   "scripts": {
     "build": "node build.mjs",
+    "build:public": "HUSTLEX_PUBLIC=1 node build.mjs",
     "dev": "node dev.mjs",
     "icons": "node tools/gen-icons.mjs",
-    "deploy": "node build.mjs && node tools/deploy.mjs"
+    "deploy": "node build.mjs && node tools/deploy.mjs",
+    "deploy:public": "HUSTLEX_PUBLIC=1 node build.mjs && node tools/deploy.mjs"
   },
   "devDependencies": {
     "chokidar": "^3.6.0"

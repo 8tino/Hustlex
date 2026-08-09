@@ -13,40 +13,47 @@ function showLock() {
   lock.innerHTML =
     '<div class="lock-inner anim-fade-up">' +
       '<div style="text-align:center;margin-bottom:28px;">' +
-        '<div class="label" style="letter-spacing:7px;margin-bottom:18px;">LIFE OS</div>' +
-        '<div class="h1">' + (returning ? 'Willkommen <span class="gold italic">zurück</span>' : 'Dein <span class="gold italic">privater</span> Tresor') + '</div>' +
+        '<div class="label" style="letter-spacing:7px;margin-bottom:18px;">HUSTLEX</div>' +
+        '<div class="h1">' + (returning ? t('lock.welcomeBack', 'Willkommen <span class="gold italic">zurück</span>') : t('lock.vault', 'Dein <span class="gold italic">privater</span> Tresor')) + '</div>' +
         '<div style="font-size:12px;color:var(--t-2);line-height:1.6;margin-top:8px;">' +
-          (returning
-            ? 'Entsperre deine Daten mit deinem Passwort.'
-            : 'Erstelle ein Konto. Alles wird Ende-zu-Ende verschlüsselt – nur du kannst es lesen.') +
+          (returning ? t('lock.subReturning', 'Entsperre deine Daten mit deinem Passwort.')
+                     : t('lock.subNew', 'Erstelle ein Konto. Alles wird Ende-zu-Ende verschlüsselt – nur du kannst es lesen.')) +
         '</div>' +
       '</div>' +
 
+      '<div id="lk_lang" style="margin-bottom:16px;"></div>' +
+
       '<div class="glass" style="display:flex;flex-direction:column;gap:12px;">' +
         '<div>' +
-          '<div class="label" style="font-size:10px;margin-bottom:6px;">E-MAIL</div>' +
+          '<div class="label" style="font-size:10px;margin-bottom:6px;">' + t('lock.email', 'E-MAIL') + '</div>' +
           '<input id="lk_email" class="inp" type="email" autocomplete="username" inputmode="email" placeholder="du@beispiel.de" value="' + (email || '') + '"' + (returning ? ' readonly' : '') + '/>' +
         '</div>' +
         '<div>' +
-          '<div class="label" style="font-size:10px;margin-bottom:6px;">PASSWORT</div>' +
+          '<div class="label" style="font-size:10px;margin-bottom:6px;">' + t('lock.password', 'PASSWORT') + '</div>' +
           '<input id="lk_pw" class="inp" type="password" autocomplete="' + (returning ? 'current-password' : 'new-password') + '" placeholder="••••••••"/>' +
         '</div>' +
         (returning ? '' :
           '<div>' +
-            '<div class="label" style="font-size:10px;margin-bottom:6px;">PASSWORT WIEDERHOLEN</div>' +
+            '<div class="label" style="font-size:10px;margin-bottom:6px;">' + t('lock.repeat', 'PASSWORT WIEDERHOLEN') + '</div>' +
             '<input id="lk_pw2" class="inp" type="password" autocomplete="new-password" placeholder="••••••••"/>' +
           '</div>') +
         '<div id="lk_err" style="display:none;font-size:12px;color:var(--red);line-height:1.5;"></div>' +
-        '<button id="lk_go" class="btn btn-gold tap" style="margin-top:4px;">' + (returning ? 'ENTSPERREN' : 'KONTO ERSTELLEN & STARTEN') + '</button>' +
+        '<button id="lk_go" class="btn btn-gold tap" style="margin-top:4px;">' + (returning ? t('lock.unlock', 'ENTSPERREN') : t('lock.create', 'KONTO ERSTELLEN & STARTEN')) + '</button>' +
       '</div>' +
 
       '<div style="font-size:11px;color:var(--t-3);line-height:1.6;text-align:center;margin-top:16px;">' +
         (returning
-          ? '<span class="tap" id="lk_other" style="color:var(--gold-soft);cursor:pointer;">Anderes Konto / neues Gerät</span>'
-          : '⚠ Ende-zu-Ende verschlüsselt: Ohne dein Passwort sind die Daten <b>nicht</b> wiederherstellbar. Notiere es sicher.') +
+          ? '<span class="tap" id="lk_other" style="color:var(--gold-soft);cursor:pointer;">' + t('lock.otherAccount', 'Anderes Konto / neues Gerät') + '</span>'
+          : t('lock.e2eeWarn', '⚠ Ende-zu-Ende verschlüsselt: Ohne dein Passwort sind die Daten <b>nicht</b> wiederherstellbar. Notiere es sicher.')) +
       '</div>' +
+
+      (returning ? '' :
+        '<div style="font-size:11px;color:var(--gold-soft);line-height:1.5;text-align:center;margin-top:12px;padding:10px;background:rgba(10,132,255,.08);border:1px solid rgba(10,132,255,.2);border-radius:var(--r-sm);">' +
+          t('lock.testHint', '🧪 Testversion — noch ist nicht alles final. Bitte keine sensiblen Daten eingeben.') +
+        '</div>') +
     '</div>';
 
+  if (typeof langPicker === 'function') { const lp = el('lk_lang'); if (lp) lp.appendChild(langPicker(false)); }
   const go = el('lk_go');
   const pw = el('lk_pw');
   go.onclick = lockSubmit;
@@ -72,14 +79,14 @@ async function lockSubmit() {
   const pw2El = el('lk_pw2');
   el('lk_err').style.display = 'none';
 
-  if (!email || !/.+@.+\..+/.test(email)) return lockErr('Bitte eine gültige E-Mail eingeben.');
-  if (pw.length < 8) return lockErr('Passwort muss mindestens 8 Zeichen haben.');
-  if (pw2El && pw !== pw2El.value) return lockErr('Die Passwörter stimmen nicht überein.');
+  if (!email || !/.+@.+\..+/.test(email)) return lockErr(t('lock.errEmail', 'Bitte eine gültige E-Mail eingeben.'));
+  if (pw.length < 8) return lockErr(t('lock.errPw', 'Passwort muss mindestens 8 Zeichen haben.'));
+  if (pw2El && pw !== pw2El.value) return lockErr(t('lock.errPw2', 'Die Passwörter stimmen nicht überein.'));
 
   const go = el('lk_go');
   const original = go.textContent;
   go.disabled = true; go.style.opacity = '.6';
-  go.innerHTML = '<span class="anim-spin">⚙</span>  ' + (returning ? 'ENTSPERRE…' : 'ERSTELLE…');
+  go.innerHTML = '<span class="anim-spin">⚙</span>  ' + (returning ? t('lock.unlocking', 'ENTSPERRE…') : t('lock.creating', 'ERSTELLE…'));
 
   try {
     await e2eeLogin(email, pw);            // online: sign-in or create + pull/push

@@ -35,8 +35,16 @@ function showSettings() {
   inner.appendChild(overlayBackBtn());
 
   inner.insertAdjacentHTML('beforeend',
-    '<div class="label" style="margin-bottom:6px;">EINSTELLUNGEN</div>' +
-    '<div class="h2" style="margin-bottom:20px;">Profil & Plan</div>');
+    '<div class="label" style="margin-bottom:6px;">' + t('set.settings', 'EINSTELLUNGEN') + '</div>' +
+    '<div class="h2" style="margin-bottom:20px;">' + t('set.profilePlan', 'Profil & Plan') + '</div>');
+
+  if (typeof langPicker === 'function') {
+    const langCard = div('glass', '<div class="label" style="margin-bottom:10px;">' + t('set.language', 'SPRACHE') + '</div>');
+    langCard.style.marginBottom = '12px';
+    const lp = langPicker(false); lp.style.justifyContent = 'flex-start';
+    langCard.appendChild(lp);
+    inner.appendChild(langCard);
+  }
 
   if (STATE.profile) {
     const pc = div('glass-accent anim-fade-up', '');

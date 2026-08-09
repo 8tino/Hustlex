@@ -207,7 +207,7 @@ function initAssistant() {
     '<div class="assist-backdrop"></div>' +
     '<div class="assist-sheet">' +
       '<div class="assist-head">' +
-        '<div class="label gold">✦ LIFEOS ASSISTENT</div>' +
+        '<div class="label gold">✦ ' + t('assist.title', 'HUSTLEX ASSISTENT') + '</div>' +
         '<button id="assist_close" class="tap" style="background:none;color:var(--t-3);font-size:18px;">×</button>' +
       '</div>' +
       '<div id="assist_msgs" class="assist-msgs"></div>' +
