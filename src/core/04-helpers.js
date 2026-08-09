@@ -102,10 +102,11 @@ function getTotals() {
 }
 
 function getCats() {
+  const qs = (typeof getQuests === 'function') ? getQuests() : HABITS;
   return {
-    body:       HABITS.some(h => h.cat === 'body'       && STATE.day.habits.includes(h.id)),
-    mind:       HABITS.some(h => h.cat === 'mind'       && STATE.day.habits.includes(h.id)),
-    discipline: HABITS.some(h => h.cat === 'discipline' && STATE.day.habits.includes(h.id)),
+    body:       qs.some(h => h.cat === 'body'       && STATE.day.habits.includes(h.id)),
+    mind:       qs.some(h => h.cat === 'mind'       && STATE.day.habits.includes(h.id)),
+    discipline: qs.some(h => h.cat === 'discipline' && STATE.day.habits.includes(h.id)),
   };
 }
 

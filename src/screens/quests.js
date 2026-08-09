@@ -4,6 +4,31 @@
 
 let QUESTS_CAT = 'body';
 
+// Quests = owner presets (HABITS, hidden in the public build) + the user's own,
+// minus hidden presets. Everyone can add their own and delete/hide any quest.
+function questHidden() { return ls('los_habits_hidden') || []; }
+function userQuests() { return ls('los_habits_user') || []; }
+function saveUserQuests(a) { ls('los_habits_user', a); }
+function getQuests() {
+  const base = (typeof HUSTLEX_PUBLIC !== 'undefined' && HUSTLEX_PUBLIC) ? [] : HABITS;
+  const hidden = questHidden();
+  return base.filter(x => !hidden.includes(x.id)).concat(userQuests());
+}
+function removeQuest(id) {
+  const u = userQuests();
+  if (u.some(x => x.id === id)) saveUserQuests(u.filter(x => x.id !== id));
+  else { const h = questHidden(); if (!h.includes(id)) { h.push(id); ls('los_habits_hidden', h); } }
+  if (STATE.day && STATE.day.habits) { STATE.day.habits = STATE.day.habits.filter(x => x !== id); saveDay(); }
+}
+function restoreHiddenQuests() { ls('los_habits_hidden', []); }
+function addUserQuest(cat) {
+  const EN = (typeof LANG !== 'undefined' && LANG === 'en');
+  const label = prompt(EN ? 'Quest name:' : 'Quest-Name:'); if (!label || !label.trim()) return;
+  const icon = (prompt(EN ? 'Emoji icon:' : 'Emoji-Icon:', '✅') || '✅').trim().slice(0, 2) || '✅';
+  const u = userQuests(); u.push({ id: 'uq' + Date.now(), label: label.trim(), icon, xp: 10, cat, user: true });
+  saveUserQuests(u); renderScreen('quests');
+}
+
 function renderQuests(s) {
   const pc = pColor();
   const cats = getCats();
@@ -26,19 +51,23 @@ function renderQuests(s) {
   s.appendChild(cr);
 
   // Habits of the selected category — erledigte rutschen ans Ende
-  HABITS.filter(hh => hh.cat === QUESTS_CAT)
-    .sort((a, b) => (STATE.day.habits.includes(a.id) ? 1 : 0) - (STATE.day.habits.includes(b.id) ? 1 : 0))
-    .forEach(hb => {
+  const catQuests = getQuests().filter(hh => hh.cat === QUESTS_CAT)
+    .sort((a, b) => (STATE.day.habits.includes(a.id) ? 1 : 0) - (STATE.day.habits.includes(b.id) ? 1 : 0));
+  if (!catQuests.length) {
+    s.appendChild(div('', '<div style="font-size:12px;color:var(--t-3);line-height:1.6;padding:10px 2px;">' +
+      (LANG === 'en' ? 'No quests here yet. Add your own below.' : 'Noch keine Quests hier. Füge unten deine eigenen hinzu.') + '</div>'));
+  }
+  catQuests.forEach(hb => {
     const done = STATE.day.habits.includes(hb.id);
-    const row = div('row tap' + (done ? ' done' : ''), '');
+    const row = div('row' + (done ? ' done' : ''), '');
     if (done) row.style.borderColor = pc + '30';
-    row.innerHTML = '<span style="font-size:20px;">' + hb.icon + '</span>' +
-      '<div style="flex:1;"><div style="font-size:14px;color:' + (done ? 'var(--t-3)' : 'var(--t-1)') + ';">' + hb.label + '</div>' +
-      (done ? '<div style="font-size:11px;color:var(--t-4);margin-top:1px;">Tippen zum Abwählen</div>' : '') + '</div>' +
-      '<div style="font-size:12px;font-weight:600;color:' + (done ? pc : 'var(--gold-soft)') + ';">' + (done ? '✓' : '+' + hb.xp + ' XP') + '</div>';
-    row.onclick = () => {
+    const tapArea = div('tap', '<span style="font-size:20px;">' + hb.icon + '</span>' +
+      '<div style="flex:1;min-width:0;"><div style="font-size:14px;color:' + (done ? 'var(--t-3)' : 'var(--t-1)') + ';">' + esc(hb.label) + '</div>' +
+      (done ? '<div style="font-size:11px;color:var(--t-4);margin-top:1px;">' + (LANG === 'en' ? 'Tap to deselect' : 'Tippen zum Abwählen') + '</div>' : '') + '</div>' +
+      '<div style="font-size:12px;font-weight:600;color:' + (done ? pc : 'var(--gold-soft)') + ';">' + (done ? '✓' : '+' + hb.xp + ' XP') + '</div>');
+    tapArea.style.cssText = 'flex:1;display:flex;align-items:center;gap:12px;min-width:0;';
+    tapArea.onclick = () => {
       if (STATE.day.habits.includes(hb.id)) {
-        // de-select → give the XP back
         STATE.day.habits = STATE.day.habits.filter(x => x !== hb.id);
         STATE.day.xp = Math.max(0, STATE.day.xp - hb.xp);
         if (typeof subXP === 'function') subXP(hb.xp, hb.cat);
@@ -47,8 +76,26 @@ function renderQuests(s) {
       }
       saveDay(); renderScreen('quests'); updateStatusBar();
     };
+    row.appendChild(tapArea);
+    const del = h('button', { textContent: '×' });
+    del.className = 'tap'; del.title = (LANG === 'en' ? 'Delete' : 'Löschen');
+    del.style.cssText = 'background:none;color:var(--t-4);font-size:16px;padding:0 4px;flex:none;';
+    del.onclick = (e) => { e.stopPropagation(); removeQuest(hb.id); renderScreen('quests'); };
+    row.appendChild(del);
     s.appendChild(row);
   });
+
+  // Add your own quest (into the current category) + restore hidden presets
+  const addQ = h('button', { textContent: (LANG === 'en' ? '＋ Add quest' : '＋ Quest hinzufügen') });
+  addQ.className = 'btn btn-glass tap'; addQ.style.cssText = 'width:100%;font-size:13px;margin-top:6px;';
+  addQ.onclick = () => addUserQuest(QUESTS_CAT);
+  s.appendChild(addQ);
+  if (questHidden().length) {
+    const restore = h('button', { textContent: '↩ ' + questHidden().length + (LANG === 'en' ? ' hidden — restore' : ' ausgeblendete zurückholen') });
+    restore.className = 'tap'; restore.style.cssText = 'font-size:11px;color:var(--t-3);background:none;margin-top:6px;';
+    restore.onclick = () => { restoreHiddenQuests(); showToast(LANG === 'en' ? 'Restored' : 'Wieder eingeblendet', '↩'); renderScreen('quests'); };
+    s.appendChild(restore);
+  }
 
   // Custom task
   const ct = div('glass', '<div class="label" style="font-size:10px;margin-bottom:7px;">EIGENE AUFGABE +20 XP</div>');
