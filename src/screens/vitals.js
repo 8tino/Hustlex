@@ -200,12 +200,12 @@ function renderVitals(s) {
       b.onclick = () => { STATE.day.supps[sup.id] = true; saveDay(); updateStatusBar(); renderVitals(s); };
       row.appendChild(b);
     }
-    if (sup.custom) {
-      const del = h('button', { textContent: '×' }, '');
-      del.style.cssText = 'background:none;color:var(--t-4);font-size:14px;padding-left:6px;';
-      del.onclick = (e) => { e.stopPropagation(); delCustomSupp(sup.id); renderVitals(s); };
-      row.appendChild(del);
-    }
+    // Edit (time-of-day, intelligent, remove) — for EVERY supplement.
+    const edit = h('button', { textContent: '✎' }, '');
+    edit.className = 'tap'; edit.title = 'Bearbeiten';
+    edit.style.cssText = 'width:34px;height:34px;flex:none;background:none;color:var(--t-3);font-size:14px;';
+    edit.onclick = (e) => { e.stopPropagation(); openSuppEdit(sup, s); };
+    row.appendChild(edit);
     return row;
   };
   const supps = getSupps();
@@ -371,9 +371,52 @@ function openFoodEdit(f, s) {
   }
   openOverlay();
 }
-function getSupps() { return SUPPS.concat(ls('los_supps') || []); }
+// Supplements = built-in stack + own, minus hidden ones, with per-supp time
+// overrides applied (so built-ins can be re-timed AND removed too).
+function suppHidden() { return ls('los_supps_hidden') || []; }
+function suppTimes() { return ls('los_supp_time') || {}; }
+function getSupps() {
+  const hidden = suppHidden(), times = suppTimes();
+  return SUPPS.concat(ls('los_supps') || [])
+    .filter(x => !hidden.includes(x.id))
+    .map(x => times[x.id] ? Object.assign({}, x, { t: times[x.id] }) : x);
+}
 function addCustomSupp(s) { const a = ls('los_supps') || []; a.push(s); ls('los_supps', a); }
-function delCustomSupp(id) { ls('los_supps', (ls('los_supps') || []).filter(x => x.id !== id)); delete STATE.day.supps[id]; saveDay(); }
+// Remove: delete own supps outright; hide built-ins so they stay removable/restorable.
+function removeSupp(id) {
+  const own = ls('los_supps') || [];
+  if (own.some(x => x.id === id)) ls('los_supps', own.filter(x => x.id !== id));
+  else { const h = suppHidden(); if (!h.includes(id)) { h.push(id); ls('los_supps_hidden', h); } }
+  if (STATE.day && STATE.day.supps) { delete STATE.day.supps[id]; saveDay(); }
+}
+function delCustomSupp(id) { removeSupp(id); }         // kept for compatibility
+function restoreHiddenSupps() { ls('los_supps_hidden', []); }
+// Set a supplement's time-of-day (HH:MM). Built-ins get an override entry.
+function setSuppTime(id, t) { const m = suppTimes(); m[id] = t; ls('los_supp_time', m); }
+
+// Time-of-day buckets used across the supplement UI.
+const SUPP_TOD = [
+  { key: 'morgens', label: '🌅 Morgens', t: '08:00' },
+  { key: 'mittags', label: '☀️ Mittags', t: '13:00' },
+  { key: 'abends',  label: '🌙 Abends',  t: '21:00' },
+];
+function suppTodOf(t) { const hh = parseInt((t || '12:00').split(':')[0]) || 12; return hh < 11 ? 'morgens' : hh < 16 ? 'mittags' : 'abends'; }
+
+// Intelligent guess for WHEN to take a supplement, from its name. Returns HH:MM.
+function suggestSuppTime(name) {
+  const n = (name || '').toLowerCase();
+  const has = (...ks) => ks.some(k => n.includes(k));
+  if (has('magnesium', 'ashwagand', 'melatonin', 'zink', 'zma', 'glycin', 'baldrian', 'cbd', 'l-theanin', 'theanin', 'gaba', 'tryptophan', 'nacht')) return '21:00'; // beruhigend → abends
+  if (has('vitamin d', 'vit d', 'vitd', 'koffein', 'kaffee', 'pre-work', 'preworkout', 'pre workout', 'b12', 'b-komplex', 'b komplex', 'vitamin c', 'vit c', 'eisen', 'multivit', 'multi-vit', 'tyrosin', 'guarana', 'ginseng', 'rhodiola')) return '08:00'; // aktivierend → morgens
+  if (has('omega', 'fischöl', 'fischoel', 'fish oil', 'krill', 'protein', 'kreatin', 'creatin', 'kurkuma', 'curcumin', 'coq10', 'q10')) return '13:00'; // mit Mahlzeit → mittags
+  return '13:00';
+}
+// Assign intelligent times to every currently visible supplement.
+function autoAssignSuppTimes() {
+  const m = suppTimes();
+  getSupps().forEach(sup => { m[sup.id] = suggestSuppTime(sup.n); });
+  ls('los_supp_time', m);
+}
 
 // Macro progress bar (value / goal)
 function macroBar(label, val, goal, unit, color) {
@@ -594,25 +637,97 @@ function renderMealAdd(s) {
   return wrap;
 }
 
-// Collapsible "own supplement" form
+// Edit sheet for one supplement: time-of-day, intelligent assign, remove.
+function openSuppEdit(sup, s) {
+  const inner = el('overlay_inner');
+  inner.innerHTML = '';
+  inner.appendChild(overlayBackBtn());
+  inner.insertAdjacentHTML('beforeend',
+    '<div class="label" style="margin-bottom:4px;">SUPPLEMENT</div>' +
+    '<div class="h2" style="margin-bottom:4px;">' + (sup.ic || '💊') + ' ' + esc(sup.n) + '</div>' +
+    (sup.d ? '<div style="font-size:12px;color:var(--t-3);margin-bottom:18px;">' + esc(sup.d) + '</div>' : '<div style="margin-bottom:18px;"></div>'));
+
+  const card = div('glass', '<div class="label" style="font-size:10px;margin-bottom:10px;">WANN NEHMEN?</div>');
+  card.style.marginBottom = '12px';
+  const chips = div(''); chips.style.cssText = 'display:flex;gap:8px;flex-wrap:wrap;';
+  const curTod = suppTodOf(sup.t);
+  SUPP_TOD.forEach(tod => {
+    const b = h('button', { textContent: tod.label });
+    b.className = 'tap tp-chip' + (tod.key === curTod ? ' on' : '');
+    b.onclick = () => { setSuppTime(sup.id, tod.t); haptic('light'); renderVitals(s); openSuppEdit(Object.assign({}, sup, { t: tod.t }), s); };
+    chips.appendChild(b);
+  });
+  card.appendChild(chips);
+
+  const ai = h('button', { textContent: '✦ Intelligent zuweisen' });
+  ai.className = 'btn btn-glass tap'; ai.style.cssText = 'width:100%;margin-top:12px;font-size:13px;';
+  ai.onclick = () => {
+    const t = suggestSuppTime(sup.n); setSuppTime(sup.id, t);
+    const todLabel = (SUPP_TOD.find(x => x.key === suppTodOf(t)) || {}).label || t;
+    showToast(sup.n + ' → ' + todLabel, '✦'); haptic('success');
+    renderVitals(s); openSuppEdit(Object.assign({}, sup, { t }), s);
+  };
+  card.appendChild(ai);
+  inner.appendChild(card);
+
+  const rm = h('button', { textContent: '🗑  Entfernen' });
+  rm.className = 'btn tap'; rm.style.cssText = 'width:100%;background:rgba(255,69,58,.12);border:1px solid rgba(255,69,58,.3);color:#FF453A;font-weight:600;padding:12px;border-radius:var(--r-md);';
+  rm.onclick = () => { removeSupp(sup.id); haptic('warn'); closeOverlay(); renderVitals(s); };
+  inner.appendChild(rm);
+
+  openOverlay();
+}
+
+// Collapsible "own supplement" form + intelligent tools.
 function renderSuppAdd(s) {
   const wrap = div('');
+
+  // Top row: add own + auto-assign-all.
+  const tools = div(''); tools.style.cssText = 'display:flex;gap:8px;margin-bottom:6px;flex-wrap:wrap;';
   const btn = h('button', { textContent: '+ Eigenes Supplement' }, '');
-  btn.className = 'btn btn-glass tap'; btn.style.cssText = 'font-size:13px;margin-bottom:6px;';
+  btn.className = 'btn btn-glass tap'; btn.style.cssText = 'font-size:13px;flex:1;';
+  const autoAll = h('button', { textContent: '✦ Zeiten automatisch' }, '');
+  autoAll.className = 'btn btn-glass tap'; autoAll.style.cssText = 'font-size:13px;flex:1;';
+  autoAll.onclick = () => { autoAssignSuppTimes(); showToast('Tageszeiten intelligent zugewiesen', '✦'); haptic('success'); renderVitals(s); };
+  tools.appendChild(btn); tools.appendChild(autoAll);
+  wrap.appendChild(tools);
+
   const form = div('glass-hi', ''); form.style.cssText = 'display:none;margin-bottom:6px;';
   const nI = h('input', { type: 'text', placeholder: 'Name (z. B. Magnesium)' }, ''); nI.className = 'inp'; nI.style.marginBottom = '8px';
-  const dI = h('input', { type: 'text', placeholder: 'Dosis (z. B. 400mg)' }, ''); dI.className = 'inp'; dI.style.flex = '1';
-  const tI = h('input', { type: 'time', value: '08:00' }, ''); tI.className = 'inp'; tI.style.flex = '1';
-  const r = div(''); r.style.cssText = 'display:flex;gap:8px;margin-bottom:8px;'; r.appendChild(dI); r.appendChild(tI);
-  const save = h('button', { textContent: 'Hinzufügen' }, ''); save.className = 'btn btn-gold tap';
+  const dI = h('input', { type: 'text', placeholder: 'Dosis (z. B. 400mg)' }, ''); dI.className = 'inp'; dI.style.marginBottom = '8px';
+
+  // Time-of-day chips (default: intelligent by name); an ✦ auto chip re-detects.
+  let chosenT = '';                       // '' = auto/intelligent
+  const todLbl = div('label', 'WANN? (leer = automatisch)'); todLbl.style.cssText = 'font-size:10px;margin-bottom:6px;';
+  const todRow = div(''); todRow.style.cssText = 'display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;';
+  const paint = () => todRow.querySelectorAll('.tp-chip').forEach(c => c.classList.toggle('on', c.dataset.t === chosenT));
+  const autoChip = h('button', { textContent: '✦ Auto' }); autoChip.className = 'tap tp-chip on'; autoChip.dataset.t = '';
+  autoChip.onclick = () => { chosenT = ''; paint(); };
+  todRow.appendChild(autoChip);
+  SUPP_TOD.forEach(tod => {
+    const b = h('button', { textContent: tod.label }); b.className = 'tap tp-chip'; b.dataset.t = tod.t;
+    b.onclick = () => { chosenT = tod.t; paint(); };
+    todRow.appendChild(b);
+  });
+
+  const save = h('button', { textContent: 'Hinzufügen' }, ''); save.className = 'btn btn-gold tap'; save.style.width = '100%';
   save.onclick = () => {
     const n = nI.value.trim();
     if (!n) { nI.classList.add('anim-shake'); setTimeout(() => nI.classList.remove('anim-shake'), 450); return; }
-    addCustomSupp({ id: 'cs' + Date.now(), n, d: dI.value.trim(), ic: '💊', t: tI.value || '08:00', custom: true });
+    const t = chosenT || suggestSuppTime(n);        // empty → intelligent guess
+    addCustomSupp({ id: 'cs' + Date.now(), n, d: dI.value.trim(), ic: '💊', t, custom: true });
     haptic('success'); renderVitals(s);
   };
-  form.appendChild(nI); form.appendChild(r); form.appendChild(save);
+  form.appendChild(nI); form.appendChild(dI); form.appendChild(todLbl); form.appendChild(todRow); form.appendChild(save);
   btn.onclick = () => { form.style.display = form.style.display === 'none' ? 'block' : 'none'; };
-  wrap.appendChild(btn); wrap.appendChild(form);
+  wrap.appendChild(form);
+
+  // Restore hidden built-ins, if any were removed.
+  if (suppHidden().length) {
+    const restore = h('button', { textContent: '↩ ' + suppHidden().length + ' ausgeblendete zurückholen' }, '');
+    restore.className = 'tap'; restore.style.cssText = 'font-size:11px;color:var(--t-3);background:none;margin-bottom:6px;';
+    restore.onclick = () => { restoreHiddenSupps(); showToast('Wieder eingeblendet', '↩'); renderVitals(s); };
+    wrap.appendChild(restore);
+  }
   return wrap;
 }
