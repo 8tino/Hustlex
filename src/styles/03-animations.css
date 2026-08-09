@@ -1,0 +1,234 @@
+/* ═══════════════════════════════════════════════════════
+   ANIMATIONS · MICRO-INTERACTIONS & MOTION
+   ═══════════════════════════════════════════════════════ */
+
+/* ─── KEYFRAMES ──────────────────────────────────────── */
+@keyframes shimmer {
+  0%   { background-position: 200% center; }
+  100% { background-position: -200% center; }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Screen revealed by the edge-swipe / back button — slides in from the left. */
+@keyframes screen-back {
+  from { opacity: 0; transform: translateX(-26px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+.screen.on.nav-back {
+  animation: screen-back 0.34s var(--ease-out) both;
+}
+
+@keyframes fade-down {
+  from { opacity: 0; transform: translateY(-12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.92); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.55; }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow:
+      var(--shadow-md),
+      inset 0 1px 0 rgba(224, 190, 126, 0.18),
+      0 0 20px rgba(224, 190, 126, 0.08);
+  }
+  50% {
+    box-shadow:
+      var(--shadow-md),
+      inset 0 1px 0 rgba(224, 190, 126, 0.28),
+      0 0 40px rgba(224, 190, 126, 0.18);
+  }
+}
+
+@keyframes pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 rgba(224, 190, 126, 0.40);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(224, 190, 126, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(224, 190, 126, 0);
+  }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25%      { transform: translateX(-5px); }
+  75%      { transform: translateX(5px); }
+}
+
+@keyframes bounce-in {
+  0%   { opacity: 0; transform: scale(0.3); }
+  60%  { opacity: 1; transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+
+@keyframes slide-up-spring {
+  0%   { opacity: 0; transform: translateY(40px); }
+  60%  { opacity: 1; transform: translateY(-6px); }
+  100% { transform: translateY(0); }
+}
+
+@keyframes shine-sweep {
+  0%   { transform: translateX(-100%) skewX(-20deg); }
+  100% { transform: translateX(200%) skewX(-20deg); }
+}
+
+@keyframes float-y {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-3px); }
+}
+
+/* ─── UTILITY CLASSES ────────────────────────────────── */
+.anim-fade-in   { animation: fade-in 0.32s var(--ease-out) both; }
+.anim-fade-up   { animation: fade-up 0.42s var(--ease-out) both; }
+.anim-fade-down { animation: fade-down 0.42s var(--ease-out) both; }
+.anim-scale-in  { animation: scale-in 0.32s var(--ease-spring) both; }
+.anim-bounce    { animation: bounce-in 0.5s var(--ease-spring) both; }
+.anim-spring    { animation: slide-up-spring 0.55s var(--ease-spring) both; }
+
+.anim-pulse      { animation: pulse-soft 2.2s ease-in-out infinite; }
+.anim-pulse-glow { animation: pulse-glow 2.8s ease-in-out infinite; }
+.anim-pulse-ring { animation: pulse-ring 2.5s ease-out infinite; }
+.anim-float      { animation: float-y 3.5s ease-in-out infinite; }
+.anim-spin       { animation: spin 1.4s linear infinite; display: inline-block; }
+.anim-shake      { animation: shake 0.45s var(--ease-out); }
+
+/* Staggered animations for children */
+.stagger > * {
+  animation: fade-up 0.5s var(--ease-out) both;
+}
+.stagger > *:nth-child(1) { animation-delay: 0.04s; }
+.stagger > *:nth-child(2) { animation-delay: 0.08s; }
+.stagger > *:nth-child(3) { animation-delay: 0.12s; }
+.stagger > *:nth-child(4) { animation-delay: 0.16s; }
+.stagger > *:nth-child(5) { animation-delay: 0.20s; }
+.stagger > *:nth-child(6) { animation-delay: 0.24s; }
+.stagger > *:nth-child(7) { animation-delay: 0.28s; }
+.stagger > *:nth-child(8) { animation-delay: 0.32s; }
+.stagger > *:nth-child(n+9) { animation-delay: 0.36s; }
+
+/* Shine sweep — for celebratory states */
+.shine-wrap {
+  position: relative;
+  overflow: hidden;
+}
+.shine-wrap::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.10),
+    transparent
+  );
+  animation: shine-sweep 3s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* XP popup */
+.xp-pop {
+  position: fixed;
+  top: 80px;
+  right: 18px;
+  z-index: 999;
+  padding: 10px 16px;
+  background: linear-gradient(135deg, var(--gold-deep), var(--gold), var(--gold-soft));
+  color: #1A1308;
+  border-radius: var(--r-md);
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  pointer-events: none;
+  box-shadow: 0 8px 24px rgba(224, 190, 126, 0.35);
+  animation: xp-pop 1s var(--ease-spring) forwards;
+}
+@keyframes xp-pop {
+  0%   { opacity: 0; transform: translateY(0) scale(0.5); }
+  20%  { opacity: 1; transform: translateY(-8px) scale(1.1); }
+  60%  { opacity: 1; transform: translateY(-22px) scale(1); }
+  100% { opacity: 0; transform: translateY(-44px) scale(0.9); }
+}
+
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: calc(96px + env(safe-area-inset-bottom));
+  left: 50%;
+  z-index: 999;
+  padding: 12px 20px;
+  background: var(--glass-3);
+  backdrop-filter: var(--blur-lg);
+  -webkit-backdrop-filter: var(--blur-lg);
+  border: 1px solid var(--edge-hi);
+  border-radius: var(--r-md);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--t-1);
+  box-shadow: var(--shadow-lg);
+  white-space: nowrap;
+  max-width: 88vw;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  animation: toast-cycle 2.8s ease forwards;
+}
+@keyframes toast-cycle {
+  0%   { opacity: 0; transform: translate(-50%, 12px); }
+  12%  { opacity: 1; transform: translate(-50%, 0); }
+  88%  { opacity: 1; transform: translate(-50%, 0); }
+  100% { opacity: 0; transform: translate(-50%, -6px); }
+}
+
+/* Combo bar */
+.combo-bar {
+  position: fixed;
+  top: 80px;
+  left: 18px;
+  z-index: 998;
+  padding: 8px 14px;
+  background: var(--glass-3);
+  backdrop-filter: var(--blur-md);
+  -webkit-backdrop-filter: var(--blur-md);
+  border: 1px solid rgba(224, 190, 126, 0.35);
+  border-radius: var(--r-md);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--gold);
+  box-shadow: var(--shadow-md), 0 0 20px var(--gold-glow);
+  animation: bounce-in 0.4s var(--ease-spring);
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

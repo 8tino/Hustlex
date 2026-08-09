@@ -1,0 +1,12 @@
+# Netlify config — used when the repo is connected to Netlify (Git deploy).
+# For manual deploys use `npm run deploy` (needs NETLIFY_AUTH_TOKEN) or drag
+# the dist/ folder onto https://app.netlify.com/drop
+[build]
+  command = "node build.mjs"
+  publish = "dist"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "no-referrer"

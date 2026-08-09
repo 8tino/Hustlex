@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="LifeOS"/>
+<meta name="theme-color" content="#000000"/>
+<link rel="manifest" href="manifest.webmanifest"/>
+<link rel="apple-touch-icon" href="apple-touch-icon.png"/>
+<link rel="icon" type="image/png" href="icon-192.png"/>
+<title>LifeOS</title>
+<style>
+/*<!--INJECT_CSS-->*/
+</style>
+</head>
+<body>
+
+<!-- Ambient background layer (glassmorphism depth) -->
+<div class="ambient">
+  <div class="ambient-glow ambient-glow-1"></div>
+  <div class="ambient-glow ambient-glow-2"></div>
+</div>
+
+<!-- Password lock / E2EE gate (filled by JS, shown before everything) -->
+<div id="lock"></div>
+
+<!-- Onboarding (filled by JS) -->
+<div id="onboard"></div>
+
+<!-- Status bar (filled by JS) -->
+<div id="statusbar"></div>
+
+<!-- Content area with all screens -->
+<div id="content">
+  <div class="screen on" id="s_home"></div>
+  <div class="screen" id="s_tasks"></div>
+  <div class="screen" id="s_log"></div>
+  <div class="screen" id="s_fokus"></div>
+  <div class="screen" id="s_quests"></div>
+  <div class="screen" id="s_vitals"></div>
+  <div class="screen" id="s_habits"></div>
+  <div class="screen" id="s_intel"></div>
+  <div class="screen" id="s_ich"></div>
+  <div class="screen" id="s_wachstum"></div>
+  <div class="screen" id="s_finanzen"></div>
+  <div class="screen" id="s_kurse"></div>
+  <div class="screen" id="s_skills"></div>
+  <div class="screen" id="s_manifest"></div>
+  <div class="screen" id="s_wachstumhub"></div>
+  <div class="screen" id="s_mehr"></div>
+</div>
+
+<!-- Bottom navigation · 5 sections -->
+<nav id="nav">
+  <button class="nav-btn on" data-view="home"><span class="nav-ic">◈</span><span class="nav-lbl">HEUTE</span></button>
+  <button class="nav-btn" data-view="koerper"><span class="nav-ic">♡</span><span class="nav-lbl">KÖRPER</span></button>
+  <button class="nav-btn" data-view="aufgaben"><span class="nav-ic">◎</span><span class="nav-lbl">AUFGABEN</span></button>
+  <button class="nav-btn" data-view="wachstumhub"><span class="nav-ic">✦</span><span class="nav-lbl">WACHSTUM</span></button>
+  <button class="nav-btn" data-view="mehr"><span class="nav-ic">⋯</span><span class="nav-lbl">MEHR</span></button>
+</nav>
+
+<!-- Overlay for modals -->
+<div id="overlay">
+  <div class="overlay-backdrop"></div>
+  <div class="overlay-inner" id="overlay_inner"></div>
+</div>
+
+<script>
+//<!--INJECT_JS-->
+</script>
+</body>
+</html>

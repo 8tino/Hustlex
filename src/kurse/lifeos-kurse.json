@@ -1,0 +1,2454 @@
+{
+  "meta": {
+    "version": "2.0",
+    "stand": "2026-07-24",
+    "sprache": "de",
+    "beschreibung": "Kurriculum-Datenstruktur fuer LifeOS. Struktur, Kapitel und Kontrollfragen liegen hier; die ausformulierten Inhalte liegen in den zugehoerigen Markdown-Dateien (Feld 'datei').",
+    "hinweis": "Status 'fertig' = Markdown existiert. Status 'offen' = Kapitelstruktur geplant, Text folgt.",
+    "statusWerte": [
+      "fertig",
+      "offen"
+    ],
+    "phasen": {
+      "0": "Phasenunabhaengig - gilt immer",
+      "1": "Verdienen (0-100k) - Einkommen ist alles",
+      "2": "Vermehren (100k-1M) - Systeme bauen",
+      "3": "Schuetzen (1-10M) - Struktur und Erhalt",
+      "4": "Bewahren (10M+) - Nachfolge"
+    }
+  },
+  "faeden": [
+    {
+      "id": "f1",
+      "titel": "Multiplikation braucht einen Faktor",
+      "kern": "0 x alles = 0. Optimierung ist immer der letzte Schritt, nie der erste.",
+      "vorkommen": [
+        "m1.k20",
+        "m5.k10",
+        "m5.k6",
+        "m3",
+        "m6"
+      ]
+    },
+    {
+      "id": "f2",
+      "titel": "Zeit ist der einzige Rohstoff, den man nicht nachkaufen kann",
+      "kern": "Alles, was Zeit braucht, faengt jetzt an - auch wenn der Betrag winzig ist.",
+      "vorkommen": [
+        "m1.k3",
+        "m5.k1",
+        "m5.k17",
+        "m2.t4",
+        "m8.t1"
+      ]
+    },
+    {
+      "id": "f3",
+      "titel": "Beduerftigkeit ist der Killer - und sie ist eine Bilanzfrage",
+      "kern": "Liquiditaet ist Freiheit ist Verhandlungsmacht. Die Ruecklage ist ein Verkaufsinstrument.",
+      "vorkommen": [
+        "m1.k16",
+        "m2.t6",
+        "m5.k14",
+        "m5.k11"
+      ]
+    },
+    {
+      "id": "f4",
+      "titel": "Diagnose schlaegt Ueberredung",
+      "kern": "Die meisten Fehler sind richtige Antworten auf die falsche Frage.",
+      "vorkommen": [
+        "m2.t3",
+        "m2.t5",
+        "m4",
+        "m5.k11",
+        "m1.k9"
+      ]
+    },
+    {
+      "id": "f5",
+      "titel": "Zuverlaessigkeit ist der unterschaetzteste Wettbewerbsvorteil",
+      "kern": "Keine Talentfrage, eine Entscheidung. Der langweiligste Vorteil und der zuverlaessigste.",
+      "vorkommen": [
+        "m2.t6",
+        "m5.k17",
+        "m5.k18",
+        "m1.k13",
+        "m7.t3"
+      ]
+    },
+    {
+      "id": "f6",
+      "titel": "Systeme schlagen Vorsaetze",
+      "kern": "Motivation ist Wetter, System ist Klima. Wer auf Motivation baut, baut auf Sand.",
+      "vorkommen": [
+        "m7.t3",
+        "m8.t4",
+        "m6",
+        "m1.k16"
+      ]
+    },
+    {
+      "id": "f7",
+      "titel": "Optimieren ist immer der letzte Schritt",
+      "kern": "Weglassen vor vereinfachen vor automatisieren vor optimieren - in jedem Bereich.",
+      "vorkommen": [
+        "m6.k10",
+        "m8.k17",
+        "m9.k14",
+        "m5.k10",
+        "m3.k1"
+      ]
+    },
+    {
+      "id": "f8",
+      "titel": "Der Ruf ist der eigentliche Vermoegenswert",
+      "kern": "Nicht aufdringlich wirken geht nur, indem man es nicht ist. Der gute Ruf entsteht dort, wo du nichts verkaufst.",
+      "vorkommen": [
+        "m2b.k17",
+        "m2b.k20",
+        "m2.t7",
+        "m5.k17",
+        "m4.k21"
+      ]
+    }
+  ],
+  "kurse": [
+    {
+      "id": "m1",
+      "nummer": 1,
+      "titel": "Geld, Steuern, Banken, Systeme",
+      "kurztitel": "Geld & Steuern",
+      "status": "fertig",
+      "datei": "Kurs-Modul-1-Geld-Steuern-Banken-Systeme.md",
+      "funktion": "Behalten, was reinkommt",
+      "leitfrage": "Wie behalte ich, was ich verdiene - und sterbe nicht an Buerokratie?",
+      "phase": [
+        1,
+        2
+      ],
+      "prioritaet": "hoch",
+      "voraussetzungen": [],
+      "geschaetzteZeit": "6-8 h Lesen, dann Nachschlagewerk",
+      "warnung": "Alle Zahlen Stand 2026. Steuerrecht aendert sich jaehrlich - vor dem Handeln pruefen.",
+      "kernaussagen": [
+        "Das 4-Konten-System ist das Wichtigste im ganzen Modul",
+        "Grenzsteuersatz ist die Zahl, mit der man entscheidet - nicht der Durchschnittssteuersatz",
+        "Umsatzsteuer ist nicht dein Geld, du bist Kassierer",
+        "Paragraf 35 EStG: Gewerbesteuer ist fuer Einzelunternehmer meist effektiv null",
+        "Der Vorauszahlungsschock in Jahr 2 killt mehr Selbststaendige als schlechte Produkte"
+      ],
+      "kapitel": [
+        {
+          "nr": 1,
+          "titel": "Die vier Ebenen: Umsatz, Gewinn, Einkommen, Vermoegen",
+          "kern": "Umsatz ist Eitelkeit, Gewinn ist Vernunft, Cash ist Koenig.",
+          "checks": [
+            "Du machst 60.000 Umsatz, 22.000 Ausgaben. Wie viel Steuern? Was fehlt dir?",
+            "Warum kann ein profitables Unternehmen pleitegehen?",
+            "In welcher Einkommensart bist du zu 95 Prozent?"
+          ]
+        },
+        {
+          "nr": 2,
+          "titel": "Was Geld ueberhaupt ist",
+          "kern": "Geld ist kein Wert, sondern ein Anspruch auf Wert. Der groesste Teil entsteht durch Kreditvergabe.",
+          "checks": [
+            "Woher kommt der groesste Teil des Geldes in der Wirtschaft?",
+            "Was passiert mit Aktienkursen, wenn die EZB den Leitzins anhebt - und warum?"
+          ]
+        },
+        {
+          "nr": 3,
+          "titel": "Inflation, Zins und warum Sparen dich aermer macht",
+          "kern": "Nominale Zahlen sind Luegen. Denk real. Die 72er-Regel im Kopf.",
+          "checks": [
+            "Sparkonto 2 Prozent, Inflation 3,5 Prozent - gewinnst oder verlierst du?",
+            "Bei 9 Prozent Rendite: wie lange bis zur Verdopplung?"
+          ]
+        },
+        {
+          "nr": 4,
+          "titel": "Rechtsformen und das Wort Haftung",
+          "kern": "Haftung heisst: Wer bezahlt, wenn es schiefgeht? Die GbR entsteht automatisch.",
+          "checks": [
+            "Was ist der gefaehrlichste Satz an der GbR?",
+            "Warum schuetzt eine GmbH bei einem Bankkredit oft nicht?"
+          ]
+        },
+        {
+          "nr": 5,
+          "titel": "Die Anmeldung: was du wirklich tun musst",
+          "kern": "Gewerbeanmeldung, ELSTER-Fragebogen, HWK, BG, Geschaeftskonto. Die Taetigkeitsbeschreibung entscheidet spaeter alles.",
+          "checks": [
+            "Welche zwei Fragen im Fragebogen begleiten dich jahrelang?"
+          ]
+        },
+        {
+          "nr": 6,
+          "titel": "Der Sonderfall Handwerk: Handwerksordnung",
+          "kern": "Anlage A ist zulassungspflichtig. Fertigen und verkaufen ist etwas anderes als einbauen.",
+          "checks": [
+            "Unterschied zwischen Teil fertigen und Teil einbauen - rechtlich?",
+            "Welche Wege gibt es in die Handwerksrolle ohne Meister?"
+          ]
+        },
+        {
+          "nr": 7,
+          "titel": "Landkarte: welche Steuer dich wann trifft",
+          "kern": "Umsatzsteuer ist nicht dein Geld. Einkommensteuer ist dein Geld, das der Staat nimmt.",
+          "checks": [
+            "Welche Steuer trifft dich immer, egal welche Rechtsform?"
+          ]
+        },
+        {
+          "nr": 8,
+          "titel": "Umsatzsteuer - das durchlaufende Missverstaendnis",
+          "kern": "Vorsteuerabzug macht USt zum Nullsummenspiel. Aber: sofort auf ein separates Konto.",
+          "checks": [
+            "Warum ist die kassierte USt auf deinem Konto gefaehrlich?",
+            "Welche Pflichtangaben braucht eine Rechnung?"
+          ]
+        },
+        {
+          "nr": 9,
+          "titel": "Kleinunternehmerregelung Paragraf 19 UStG",
+          "kern": "25.000 Vorjahr / 100.000 laufend. Haengt an der Person, nicht am Betrieb. 5 Jahre Bindung bei Verzicht.",
+          "checks": [
+            "Warum bringt die Regelung bei B2B-Kunden fast nichts?",
+            "Du schreibst als Kleinunternehmer versehentlich 19 Prozent USt - was passiert?",
+            "Kannst du ein Gewerbe als Kleinunternehmer und eins regelbesteuert fuehren?"
+          ]
+        },
+        {
+          "nr": 10,
+          "titel": "Einkommensteuer - Progression verstehen",
+          "kern": "Grundfreibetrag 12.348. Spitzensteuersatz ab 69.879. Grenzsteuersatz ist die Entscheidungszahl.",
+          "checks": [
+            "zvE 60.000, Werkzeug fuer 2.000 - wie viel Steuer sparst du wirklich?",
+            "Warum ist 'lieber weniger verdienen wegen der Steuerklasse' Quatsch?"
+          ]
+        },
+        {
+          "nr": 11,
+          "titel": "Gewerbesteuer - und warum sie dich fast nichts kostet",
+          "kern": "Freibetrag 24.500 plus Anrechnung nach Paragraf 35 EStG = effektiv oft null.",
+          "checks": [
+            "Warum zahlt eine GmbH bei 20.000 Gewinn GewSt, du aber nicht?",
+            "Was ist die Voraussetzung dafuer, dass Paragraf 35 dir hilft?"
+          ]
+        },
+        {
+          "nr": 12,
+          "titel": "Gewinnermittlung: EUER, Betriebsausgaben, AfA",
+          "kern": "Zufluss-/Abflussprinzip erlaubt legale Zeitsteuerung. IAB nach Paragraf 7g ist der unterschaetzte Hebel.",
+          "checks": [
+            "Kauf am 30.12., Zahlung am 5.1. - welches Jahr?",
+            "Warum ist AfA bei einer teuren Maschine ein Liquiditaetsproblem?",
+            "Ist der Anzug fuer den Kundentermin absetzbar?"
+          ]
+        },
+        {
+          "nr": 13,
+          "titel": "Das Steuerjahr im Ablauf",
+          "kern": "Der Vorauszahlungsschock in Jahr 2. 30-40 Prozent ab dem ersten Euro Gewinn zuruecklegen.",
+          "checks": [
+            "Was passiert typischerweise im Fruehjahr des zweiten Jahres?"
+          ]
+        },
+        {
+          "nr": 14,
+          "titel": "Nebengewerbe als Azubi",
+          "kern": "Erlaubt, aber: kein Wettbewerb zum Ausbildungsbetrieb. Der ungenutzte Grundfreibetrag faengt die ersten Gewinne ab.",
+          "checks": [
+            "Was ist das groesste rechtliche Risiko beim Nebengewerbe als Azubi?"
+          ]
+        },
+        {
+          "nr": 15,
+          "titel": "Sozialversicherung - das teuerste Thema, das niemand erklaert",
+          "kern": "Die Hauptberuflichkeitsfalle bei der Krankenkasse. Rueckwirkend, vierstellig.",
+          "checks": [
+            "Ab wann kann die Kasse dich als hauptberuflich einstufen - und was kostet das?",
+            "Warum ist ein einziger grosser Kunde rechtlich gefaehrlich?"
+          ]
+        },
+        {
+          "nr": 16,
+          "titel": "Konten, Trennung, das 4-Konten-System",
+          "kern": "Einnahmen / Steuer / USt / Puffer. Automatisch, nicht per Disziplin. Das eine System, das Existenzen rettet.",
+          "checks": [
+            "Warum sind Konto 2 und 3 heilig?",
+            "Warum lohnt eine Hausbankbeziehung, bevor man sie braucht?"
+          ]
+        },
+        {
+          "nr": 17,
+          "titel": "Zahlungsverkehr: Stripe, PayPal, SEPA, Gebuehren",
+          "kern": "Merchant of Record nimmt dir die internationale USt ab. Anzahlung bei Materialeinsatz ist nicht verhandelbar.",
+          "checks": [
+            "Was loest ein Merchant of Record fuer dich?",
+            "Warum ist 2 Prozent Skonto teuer?"
+          ]
+        },
+        {
+          "nr": 18,
+          "titel": "Kredit, Bonitaet, SCHUFA",
+          "kern": "Bonitaet ist ein Vermoegenswert und baut sich Jahre vorher auf. Konditionenanfrage statt Kreditanfrage.",
+          "checks": [
+            "Was ist der Unterschied zwischen guter und schlechter Verschuldung?",
+            "Warum senkt eine Kreditanfrage den Score, eine Konditionenanfrage nicht?"
+          ]
+        },
+        {
+          "nr": 19,
+          "titel": "Kapitalertraege besteuern: Abgeltungsteuer & Co.",
+          "kern": "26,375 Prozent pauschal. Teilfreistellung 30 Prozent bei Aktienfonds. Verlustverrechnungstoepfe sind getrennt.",
+          "checks": [
+            "Warum kannst du Aktienverluste nicht mit ETF-Gewinnen verrechnen?",
+            "Was ist die Vorabpauschale und warum ist sie meist irrelevant?"
+          ]
+        },
+        {
+          "nr": 20,
+          "titel": "Die Hebel, die legal wirklich was bringen",
+          "kern": "Eine Ausgabe, die du nur taetigst um Steuern zu sparen, ist immer ein Verlustgeschaeft.",
+          "checks": [
+            "Warum ist Steuersparen nie ein Selbstzweck?"
+          ]
+        },
+        {
+          "nr": 21,
+          "titel": "Andere Laender: was geht, was Maerchen ist",
+          "kern": "Deutschland besteuert nach Wohnsitz, nicht nach Firmensitz. Damit ist der meiste Offshore-Content erledigt.",
+          "checks": [
+            "Warum funktioniert 'Firma in Dubai, wohnen in Bayern' nicht?",
+            "Was ist eine Betriebsstaette nach Paragraf 12 AO?"
+          ]
+        },
+        {
+          "nr": 22,
+          "titel": "Die Fallen",
+          "kern": "14 Fallen, nach Haeufigkeit sortiert. USt ausgegeben ist Nummer 1.",
+          "checks": [
+            "Nenne drei Fallen, die dich aktuell betreffen koennten"
+          ]
+        },
+        {
+          "nr": 23,
+          "titel": "Werkzeuge",
+          "kern": "Buchhaltung, ELSTER, Zahlung, Vertraege, kostenlose Kammerberatung.",
+          "checks": []
+        },
+        {
+          "nr": 24,
+          "titel": "Dein 90-Tage-Fahrplan",
+          "kern": "Die Sofort-Liste dauert zwei Stunden und bringt sofort echtes Geld.",
+          "checks": [
+            "Freistellungsauftrag erledigt?",
+            "W-8BEN geprueft?",
+            "SCHUFA-Selbstauskunft angefordert?",
+            "Hebesatz der Gemeinde bekannt?",
+            "DPMA-Namensrecherche gemacht?"
+          ]
+        },
+        {
+          "nr": 25,
+          "titel": "Glossar",
+          "kern": "Nachschlagewerk.",
+          "checks": []
+        }
+      ]
+    },
+    {
+      "id": "m2",
+      "nummer": 2,
+      "titel": "Verkauf & Menschen",
+      "kurztitel": "Verkauf",
+      "status": "fertig",
+      "datei": "Verkaufs-und-Netzwerk-Playbook.md",
+      "funktion": "Aus Interesse wird Geld. 1:1.",
+      "leitfrage": "Wie spreche ich Menschen an, dass sie interessiert sind - und wie verkaufe ich ihnen dann etwas?",
+      "phase": [
+        0
+      ],
+      "prioritaet": "hoch",
+      "voraussetzungen": [],
+      "geschaetzteZeit": "3-4 h Lesen, dann Uebung",
+      "kernaussagen": [
+        "Sei Arzt, nicht Vertreter - diagnostizieren statt ueberreden",
+        "70/30: er redet, du hoerst zu",
+        "Die Auswirkungsfrage ist der Unterschied zwischen Durchschnitt und Spitze",
+        "Preis nennen, dann still sein",
+        "Beduerftigkeit ist der Verkaufskiller Nummer 1"
+      ],
+      "kapitel": [
+        {
+          "nr": 1,
+          "titel": "Das Fundament: Warum Menschen ueberhaupt reagieren",
+          "kern": "Drei Waehrungen: Aufmerksamkeit, Risiko, Energie. Beschreibe das Problem besser, als er es koennte.",
+          "checks": [
+            "Was kostet jede Interaktion den anderen?",
+            "Was ist das staerkste Autoritaetssignal?"
+          ]
+        },
+        {
+          "nr": 2,
+          "titel": "Aufmerksamkeit: Wie man angesprochen wird, ohne zu nerven",
+          "kern": "3-Sekunden-Regel. Die erste Zeile handelt von IHM, nie von dir.",
+          "checks": [
+            "Nenne die vier Oeffner-Typen",
+            "Warum ist ein Link in Nachricht 1 ein Fehler?"
+          ]
+        },
+        {
+          "nr": 3,
+          "titel": "Das Gespraech: Diagnose statt Ueberredung",
+          "kern": "SPIN: Situation, Problem, Implication, Need-Payoff. Echo, Labeling, Stille.",
+          "checks": [
+            "Welche der vier SPIN-Fragen ist die wichtigste und warum?",
+            "Was machst du drei Sekunden nach seiner Antwort?"
+          ]
+        },
+        {
+          "nr": 4,
+          "titel": "Social Media & Kaltakquise per DM",
+          "kern": "Die DM ist der Abschluss, nicht der Anfang. Aufwaerm-Sequenz ueber 3 Wochen.",
+          "checks": [
+            "Warum hat eine kalte DM 2-5 Prozent und eine warme 40 Prozent Antwortquote?",
+            "Wie sieht ein guter Kommentar aus?"
+          ]
+        },
+        {
+          "nr": 5,
+          "titel": "Einwaende",
+          "kern": "Ein Einwand ist eine Frage in Verkleidung. Zustimmen, nachfragen, antworten.",
+          "checks": [
+            "Was heisst 'zu teuer' fast immer wirklich?",
+            "Was ist der Fehler bei 'Ich muss noch ueberlegen'?"
+          ]
+        },
+        {
+          "nr": 6,
+          "titel": "Der Abschluss",
+          "kern": "Sag die Zahl. Dann sei still. Jedes Gespraech endet mit einem terminierten naechsten Schritt.",
+          "checks": [
+            "Wer zuerst redet, verliert - warum?",
+            "Was ist der Unterschied zwischen 'melden Sie sich' und einem Abschluss?"
+          ]
+        },
+        {
+          "nr": 7,
+          "titel": "Netzwerk aufbauen (das lange Spiel)",
+          "kern": "Schwache Verbindungen bringen mehr Chancen als enge. Gib, ohne zu rechnen.",
+          "checks": [
+            "Warum sind 30 lose Kontakte wertvoller als 5 enge?",
+            "Warum funktioniert der persoenliche Besuch besser als jede DM?"
+          ]
+        },
+        {
+          "nr": 8,
+          "titel": "Konkrete Skripte",
+          "kern": "Fertige Formulierungen fuer die eigenen Projekte.",
+          "checks": []
+        },
+        {
+          "nr": 9,
+          "titel": "Die 30-Tage-Umsetzung",
+          "kern": "Woche 1 zuhoeren, Woche 2 bauen, Woche 3 verkaufen, Woche 4 wiederholen.",
+          "checks": [
+            "Warum ist in Woche 1 Verkaufen verboten?"
+          ]
+        },
+        {
+          "nr": 10,
+          "titel": "Die Fehlerliste",
+          "kern": "Vor jedem Gespraech ueberfliegen.",
+          "checks": []
+        }
+      ]
+    },
+    {
+      "id": "m2b",
+      "nummer": 2.5,
+      "titel": "Verkauf fuer Fortgeschrittene",
+      "kurztitel": "Verkauf+",
+      "status": "fertig",
+      "datei": "Kurs-2b-Verkauf-Fortgeschritten.md",
+      "funktion": "Alles an jeden - und dich selbst",
+      "leitfrage": "Wie verkaufe ich produktunabhaengig, verhandle, verkaufe mich selbst - und wirke dabei nie aufdringlich?",
+      "phase": [
+        0
+      ],
+      "prioritaet": "hoch",
+      "voraussetzungen": [
+        "m2"
+      ],
+      "geschaetzteZeit": "4-5 h",
+      "kernaussagen": [
+        "'Alles' ja, 'jeden' nein - qualifizieren statt ueberreden",
+        "Du verkaufst nie ein Produkt, sondern einen Zustandswechsel",
+        "Zu teuer heisst: Wert zu niedrig. Erhoehe den Wert.",
+        "Risikoumkehr ist das staerkste Einzelwerkzeug",
+        "Bei dir selbst: Beweise statt Adjektive",
+        "Nicht aufdringlich wirken geht nur, indem man nicht aufdringlich ist"
+      ],
+      "kapitel": [
+        {
+          "nr": 1,
+          "titel": "Warum 'alles an jeden' ein Missverstaendnis ist",
+          "kern": "Wer auswaehlt, verkauft mit weniger Aufwand mehr.",
+          "checks": [
+            "Was ist universell, was ist marktspezifisch?"
+          ]
+        },
+        {
+          "nr": 2,
+          "titel": "Du verkaufst nie ein Produkt",
+          "kern": "Zustand vorher, Zustand nachher. Frag zweimal 'und?'.",
+          "checks": [
+            "Uebersetze dein Angebot in beide Zustaende"
+          ]
+        },
+        {
+          "nr": 3,
+          "titel": "Die fuenf Kaufmotive",
+          "kern": "Gewinn, Schmerz, Sicherheit, Status, Bequemlichkeit. Verkaufe in seinem, nicht deinem.",
+          "checks": [
+            "Welches Motiv dominiert bei deinem typischen Kunden?"
+          ]
+        },
+        {
+          "nr": 4,
+          "titel": "Qualifizieren",
+          "kern": "Problem, Geld, Macht, Zeit. Ein schnelles Nein ist ein Geschenk.",
+          "checks": [
+            "Bei welchem aktuellen Kontakt fehlt eine der vier?"
+          ]
+        },
+        {
+          "nr": 5,
+          "titel": "Die sechs unausgesprochenen Fragen",
+          "kern": "Bei einem stockenden Deal ist genau eine offen.",
+          "checks": [
+            "Welche Frage ist bei deinem haengenden Deal offen?"
+          ]
+        },
+        {
+          "nr": 6,
+          "titel": "Die Wertgleichung",
+          "kern": "Ergebnis mal Wahrscheinlichkeit, geteilt durch Zeit mal Aufwand.",
+          "checks": [
+            "Welchen der vier Faktoren kannst du sofort verbessern?"
+          ]
+        },
+        {
+          "nr": 7,
+          "titel": "Risikoumkehr",
+          "kern": "Fuenf Stufen. Das Musterteil ist Risikoumkehr in Reinform.",
+          "checks": [
+            "Welche Stufe bietest du aktuell an?"
+          ]
+        },
+        {
+          "nr": 8,
+          "titel": "Dringlichkeit, die nicht luegt",
+          "kern": "Kosten des Nichtstuns sichtbar machen statt Druck erfinden.",
+          "checks": [
+            "Welche echte Dringlichkeit hast du?"
+          ]
+        },
+        {
+          "nr": 9,
+          "titel": "Der Anker",
+          "kern": "Wer zuerst nennt, setzt den Rahmen - wenn er den Markt kennt.",
+          "checks": [
+            "Solltest du bei deinem naechsten Gespraech zuerst nennen?"
+          ]
+        },
+        {
+          "nr": 10,
+          "titel": "Zugestaendnisse und die Mitte-Falle",
+          "kern": "Nie ohne Gegenleistung nachgeben. Zugestaendnisse werden kleiner.",
+          "checks": [
+            "Was gibst du beim naechsten Rabatt als Gegenleistung zurueck?"
+          ]
+        },
+        {
+          "nr": 11,
+          "titel": "Deine Alternative ist deine Macht",
+          "kern": "BATNA. Die Verhandlungsposition entsteht vor der Verhandlung.",
+          "checks": [
+            "Wie viele gleichzeitige Anfragen hast du?",
+            "Wo ist deine Grenze - schriftlich?"
+          ]
+        },
+        {
+          "nr": 12,
+          "titel": "Der Unterschied: du bist das Produkt",
+          "kern": "Ablehnung fuehlt sich persoenlich an, Beweis ist schwerer, Bescheidenheitsnorm gilt.",
+          "checks": [
+            "Formuliere eine Eigenschaft als Zustandswechsel"
+          ]
+        },
+        {
+          "nr": 13,
+          "titel": "Der Beweis-Stapel",
+          "kern": "Situation, Handlung, Ergebnis. Zwei Minuten pro Woche.",
+          "checks": [
+            "Hast du einen Beweis-Stapel angelegt?"
+          ]
+        },
+        {
+          "nr": 14,
+          "titel": "Ueber dich reden ohne anzugeben",
+          "kern": "Zahlen statt Adjektive. Fremdurteile zitieren. Schwaeche selbst nennen.",
+          "checks": [
+            "Formuliere drei deiner Staerken als Situation-Handlung-Ergebnis"
+          ]
+        },
+        {
+          "nr": 15,
+          "titel": "Gehalt, Bewerbung, Chefgespraech",
+          "kern": "Zahl nennen, still sein. Bei Nein: in eine Frage ueberfuehren.",
+          "checks": [
+            "Was waere deine Zahl - und deine Begruendung?"
+          ]
+        },
+        {
+          "nr": 16,
+          "titel": "Praesenz",
+          "kern": "Langsamer sprechen, Pausen aushalten, Weichmacher streichen.",
+          "checks": [
+            "Welche Weichmacher benutzt du am haeufigsten?"
+          ]
+        },
+        {
+          "nr": 17,
+          "titel": "Die Grundwahrheit, die alle Technik traegt",
+          "kern": "Nicht aufdringlich wirken geht nur, indem man es nicht ist. Der Sensor laesst sich nicht austricksen.",
+          "checks": [
+            "Willst du gerade verkaufen oder herausfinden, ob es passt?"
+          ]
+        },
+        {
+          "nr": 18,
+          "titel": "Die Trennung, die dich schuetzt",
+          "kern": "Benenne den Wechsel in den Verkaufsmodus und lass ihn zustimmen. Kein heimliches Umschalten.",
+          "checks": [
+            "Wie kuendigst du ein geschaeftliches Thema an, ohne zu ueberfallen?"
+          ]
+        },
+        {
+          "nr": 19,
+          "titel": "Die Anti-Aufdringlich-Regeln",
+          "kern": "Einmal anbieten, dann loslassen. Das zweite Mal macht aufdringlich.",
+          "checks": [
+            "Welche der sieben Regeln faellt dir am schwersten?"
+          ]
+        },
+        {
+          "nr": 20,
+          "titel": "Wie du willst, dass Leute ueber dich reden",
+          "kern": "Der gute Ruf entsteht in den Gespraechen, in denen du NICHTS verkaufst.",
+          "checks": [
+            "Was sollen Leute ueber dich erzaehlen - woertlich?"
+          ]
+        },
+        {
+          "nr": 21,
+          "titel": "Der Umgang mit Freunden und Familie",
+          "kern": "Wuerde ich das auch empfehlen, wenn ich nichts daran verdiene? Wenn nein: Finger weg.",
+          "checks": [
+            "Wende die Ehrlichkeitsprobe auf einen konkreten Fall an"
+          ]
+        },
+        {
+          "nr": 22,
+          "titel": "Die Selbstpruefung",
+          "kern": "Die einzige Bilanz, die zaehlt: Reden die, denen du nichts verkauft hast, gut ueber dich?",
+          "checks": [
+            "Ist deine letzte Person mit gutem Gefuehl rausgegangen?"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "m3",
+      "nummer": 3,
+      "titel": "Marketing, Angebot, Positionierung, Preis",
+      "kurztitel": "Marketing",
+      "status": "fertig",
+      "datei": "Kurs-3-Marketing-Positionierung-Preis.md",
+      "funktion": "Dass die Richtigen dich finden. 1:viele.",
+      "leitfrage": "Wie finden mich die Richtigen, ohne dass ich jeden einzeln ansprechen muss?",
+      "phase": [
+        1,
+        2
+      ],
+      "prioritaet": "mittel",
+      "voraussetzungen": [
+        "m2"
+      ],
+      "geschaetzteZeit": "4-5 h",
+      "kernaussagen": [
+        "Angebot vor Botschaft vor Kanal - fast alle fangen falsch an",
+        "'Fuer alle' heisst 'fuer niemanden'",
+        "Zu billig erzeugt Misstrauen, nicht Freude",
+        "Wenn du nie einen Auftrag am Preis verlierst, bist du zu billig",
+        "Ein Kanal richtig schlaegt fuenf halbherzig"
+      ],
+      "kapitel": [
+        {
+          "nr": 1,
+          "titel": "Was Marketing wirklich ist",
+          "kern": "Marketing ist nicht Werbung, sondern die Entscheidung, fuer wen du was bist.",
+          "checks": [
+            "Was ist der Unterschied zwischen Marketing und Werbung?"
+          ]
+        },
+        {
+          "nr": 2,
+          "titel": "Das Angebot schlaegt das Marketing",
+          "kern": "Ein starkes Angebot verkauft mit schlechtem Marketing. Umgekehrt nicht.",
+          "checks": [
+            "Woran erkennst du, ob dein Problem das Angebot oder der Kanal ist?"
+          ]
+        },
+        {
+          "nr": 3,
+          "titel": "Positionierung: 'fuer alle' heisst 'fuer niemanden'",
+          "kern": "Verengen in einer von drei Dimensionen: wer, was, wie.",
+          "checks": [
+            "Formuliere deinen Positionierungssatz in einem Satz",
+            "In welcher Dimension verengst du?"
+          ]
+        },
+        {
+          "nr": 4,
+          "titel": "Der Zielkunde: eng schlaegt breit",
+          "kern": "Nicht Alter und Hobbys - der Schmerz und seine Worte.",
+          "checks": [
+            "Wie beschreibt dein Kunde sein Problem woertlich?"
+          ]
+        },
+        {
+          "nr": 5,
+          "titel": "Was du wirklich verkaufst",
+          "kern": "Nie ein Produkt, immer einen Zustandswechsel.",
+          "checks": [
+            "Uebersetze dein Angebot in Zustand vorher / Zustand nachher"
+          ]
+        },
+        {
+          "nr": 6,
+          "titel": "Die Botschaft in einem Satz",
+          "kern": "Zielgruppe + konkretes Ergebnis + Unterscheidung.",
+          "checks": [
+            "Kann jemand aus deiner Zielgruppe in einem Satz sagen, was du machst?"
+          ]
+        },
+        {
+          "nr": 7,
+          "titel": "Preis als Signal",
+          "kern": "Zu billig loest Misstrauen aus. Die anstrengendsten Kunden zahlen am wenigsten.",
+          "checks": [
+            "Wann hast du zuletzt einen Auftrag am Preis verloren?"
+          ]
+        },
+        {
+          "nr": 8,
+          "titel": "Preismodelle",
+          "kern": "Stundensatz bestraft dich fuers Besserwerden. Frueh auf Festpreis.",
+          "checks": [
+            "Welches Modell passt zu deiner Leistung?"
+          ]
+        },
+        {
+          "nr": 9,
+          "titel": "Kalkulieren, damit es sich traegt",
+          "kern": "Vollkosten inkl. unbezahlter Zeit. Von 40 Stunden sind 20 fakturierbar.",
+          "checks": [
+            "Sind alle Posten in deiner Kalkulation drin?"
+          ]
+        },
+        {
+          "nr": 10,
+          "titel": "Kanaele: welcher passt zu welchem Geschaeft",
+          "kern": "Ein Kanal richtig schlaegt fuenf halbherzig. Bei lokalem B2B: persoenlich hingehen.",
+          "checks": [
+            "Wo sind deine Leute schon?",
+            "Welches Format haeltst du dauerhaft durch?"
+          ]
+        },
+        {
+          "nr": 11,
+          "titel": "Content: Prozess schlaegt Ergebnis",
+          "kern": "Das fertige Teil ist langweilig. Fehler performen am besten.",
+          "checks": [
+            "Welche drei Inhalte koenntest du aus deinem Alltag machen?"
+          ]
+        },
+        {
+          "nr": 12,
+          "titel": "Beweis",
+          "kern": "Fallstudie schlaegt Zitat schlaegt Bild schlaegt Behauptung.",
+          "checks": [
+            "Wie viele Referenzen hast du aktiv erfragt?"
+          ]
+        },
+        {
+          "nr": 13,
+          "titel": "Der Trichter und das Wiederholungsgeschaeft",
+          "kern": "Verbessere nur die Stufe, an der es klemmt. Der billigste Kunde ist der, den du hast.",
+          "checks": [
+            "An welcher Trichterstufe klemmt es bei dir?"
+          ]
+        },
+        {
+          "nr": 14,
+          "titel": "Messen - und die Fallen",
+          "kern": "Follower sind Eitelkeit. Anfragen, Gespraeche, Abschluesse zaehlen.",
+          "checks": [
+            "Fragst du jeden Kunden, woher er kommt?"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "m4",
+      "nummer": 4,
+      "titel": "Psychologie: Entscheidung, Wahrnehmung, Einfluss",
+      "kurztitel": "Psychologie",
+      "status": "fertig",
+      "datei": "Kurs-4-Psychologie.md",
+      "funktion": "Das Fundament unter Verkauf und Marketing",
+      "leitfrage": "Wie entscheiden Menschen wirklich - und wie erkenne ich meine eigenen Denkfehler?",
+      "phase": [
+        0
+      ],
+      "prioritaet": "mittel",
+      "voraussetzungen": [],
+      "geschaetzteZeit": "5-6 h",
+      "kernaussagen": [
+        "System 1 entscheidet, System 2 begruendet hinterher",
+        "Verlust wiegt etwa doppelt so schwer wie gleich grosser Gewinn",
+        "Menschen glauben ihren eigenen Schluessen, nicht deinen",
+        "Online entscheidet System 1 praktisch allein",
+        "Die DM ist der Abschluss, nicht der Anfang"
+      ],
+      "kapitel": [
+        {
+          "nr": 1,
+          "titel": "System 1 und System 2",
+          "kern": "Schnelles automatisches vs. langsames willentliches Denken.",
+          "checks": [
+            "Welches System trifft die meisten Kaufentscheidungen?"
+          ]
+        },
+        {
+          "nr": 2,
+          "titel": "Warum Verzerrungen keine Fehler sind",
+          "kern": "Abkuerzungen, die meist funktionieren. Man schaltet sie nicht ab.",
+          "checks": [
+            "Warum hilft Wissen allein nicht gegen Verzerrungen?"
+          ]
+        },
+        {
+          "nr": 3,
+          "titel": "Verlustaversion",
+          "kern": "Verlust wiegt etwa doppelt. Deshalb wirkt Schmerz staerker als Gewinn.",
+          "checks": [
+            "Formuliere ein Angebot einmal als Gewinn und einmal als vermiedenen Verlust"
+          ]
+        },
+        {
+          "nr": 4,
+          "titel": "Der Anker",
+          "kern": "Die erste Zahl verzerrt alle weiteren - auch bei Leuten, die es wissen.",
+          "checks": [
+            "Schreib deinen Zielpreis auf, BEVOR du in eine Verhandlung gehst"
+          ]
+        },
+        {
+          "nr": 5,
+          "titel": "Verfuegbarkeit",
+          "kern": "Was leicht einfaellt, wirkt haeufig - unabhaengig davon, ob es das ist.",
+          "checks": [
+            "Wo schaetzt du ein Risiko falsch ein, weil ein Fall praesent ist?"
+          ]
+        },
+        {
+          "nr": 6,
+          "titel": "Bestaetigungsfehler",
+          "kern": "Du findest, was du suchst.",
+          "checks": [
+            "Was muesste wahr sein, damit du bei deiner aktuellen Annahme falsch liegst?"
+          ]
+        },
+        {
+          "nr": 7,
+          "titel": "Versunkene Kosten",
+          "kern": "Investiertes ist weg. Es gehoert nicht in die Entscheidung.",
+          "checks": [
+            "Wuerdest du heute nochmal anfangen, wenn nichts investiert waere?"
+          ]
+        },
+        {
+          "nr": 8,
+          "titel": "Framing",
+          "kern": "Der Vergleichsmassstab ist maechtiger als die Formulierung.",
+          "checks": [
+            "Wie kannst du dein Angebot anders rahmen, ohne zu luegen?"
+          ]
+        },
+        {
+          "nr": 9,
+          "titel": "Sozialer Beweis",
+          "kern": "Menschen tun, was AEHNLICHE Menschen tun - nicht was Prominente tun.",
+          "checks": [
+            "Wer ist fuer deine Zielgruppe 'aehnlich'?"
+          ]
+        },
+        {
+          "nr": 10,
+          "titel": "Reziprozitaet, Status, Zugehoerigkeit",
+          "kern": "Geben wirkt nur, wenn wirklich nichts erwartet wird.",
+          "checks": [
+            "Was koenntest du diese Woche verschenken, ohne etwas zu wollen?"
+          ]
+        },
+        {
+          "nr": 11,
+          "titel": "Warum Menschen ihren eigenen Schluessen glauben",
+          "kern": "Deshalb fragen statt behaupten.",
+          "checks": [
+            "Wie kannst du deinen naechsten Verkaufspunkt als Frage stellen?"
+          ]
+        },
+        {
+          "nr": 12,
+          "titel": "Selbstanwendung",
+          "kern": "Der eigentliche Zweck. Es gilt auch fuer dich - besonders wenn du glaubst, es gelte nicht.",
+          "checks": [
+            "Welche Verzerrung erkennst du gerade bei dir selbst?"
+          ]
+        },
+        {
+          "nr": 13,
+          "titel": "Die ethische Grenze",
+          "kern": "Wuerdest du wollen, dass er weiss, wie du es gemacht hast?",
+          "checks": [
+            "Wende die Frage auf deinen letzten Verkaufsversuch an"
+          ]
+        },
+        {
+          "nr": 14,
+          "titel": "Warum online alles verstaerkt ist",
+          "kern": "Kein Koerper, Sekundenentscheidung, unendliche Alternativen.",
+          "checks": [
+            "Warum gewinnt online nicht das beste Argument?"
+          ]
+        },
+        {
+          "nr": 15,
+          "titel": "Die richtigen Leute finden",
+          "kern": "Such Orte, nicht Menschen. Such den Schmerz in ihren Worten.",
+          "checks": [
+            "Nenne drei Orte, an denen deine Zielgruppe schon versammelt ist",
+            "Welche Suchbegriffe beschreiben den Schmerz statt deiner Leistung?"
+          ]
+        },
+        {
+          "nr": 16,
+          "titel": "Menschen online lesen",
+          "kern": "Die Beschwerde ist Gold. Drei Zustaende: unbewusst, problembewusst, loesungsbewusst.",
+          "checks": [
+            "In welchem Zustand ist dein typischer Kontakt?"
+          ]
+        },
+        {
+          "nr": 17,
+          "titel": "Die Psychologie der ersten Nachricht",
+          "kern": "DMs scheitern an der Kategorisierung Werbung/Mensch, nicht am Inhalt.",
+          "checks": [
+            "Wuerde ein Fremder ohne Verkaufsabsicht deine Nachricht so schreiben?"
+          ]
+        },
+        {
+          "nr": 18,
+          "titel": "Vom Kontakt zum Verkauf",
+          "kern": "Vier Phasen ueber drei Wochen. 'Wenn nicht, auch gut' entfernt Reaktanz.",
+          "checks": [
+            "Bei wie vielen Leuten bist du gerade in Phase 1?"
+          ]
+        },
+        {
+          "nr": 19,
+          "titel": "Der Beitrag, der Menschen zu dir bringt",
+          "kern": "Beschreib das Problem so genau, dass der Betroffene denkt: woher weiss der das?",
+          "checks": [
+            "Schreib einen Beitrag, der nur den Schmerz beschreibt - ohne Angebot"
+          ]
+        },
+        {
+          "nr": 20,
+          "titel": "Die Fallen online",
+          "kern": "Zu frueh verkaufen. Und: aufhoeren nach sechs Wochen.",
+          "checks": [
+            "Welche der sieben Fallen betrifft dich?"
+          ]
+        },
+        {
+          "nr": 21,
+          "titel": "Der ethische Punkt online",
+          "kern": "Der Ruf ist online fragiler, weil alles dokumentiert ist.",
+          "checks": [
+            "Wuerdest du wollen, dass er deine Sequenz kennt?"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "m5",
+      "nummer": 5,
+      "titel": "Vermoegen, Strukturen, Assets",
+      "kurztitel": "Vermoegen",
+      "status": "fertig",
+      "datei": "Kurs-Modul-5-Vermoegen-Strukturen-Assets.md",
+      "funktion": "Aus Einkommen wird Vermoegen",
+      "leitfrage": "Wie bauen Leute von wenig zu viel auf - Konten, Holdings, Stiftungen, Assets, Zugang?",
+      "phase": [
+        2,
+        3,
+        4
+      ],
+      "prioritaet": "niedrig",
+      "voraussetzungen": [
+        "m1"
+      ],
+      "geschaetzteZeit": "5-7 h",
+      "warnung": "Beratungsterritorium. Erklaert Mechanik, ersetzt keinen Steuerberater.",
+      "kernaussagen": [
+        "Der Multiplikator: +20k Gewinn x Multiple 6 = 120k Vermoegen",
+        "Die vier Phasen - jede hat genau eine Aufgabe",
+        "Paragraf 8b KStG: Holding zu 95 Prozent steuerfrei, effektiv 1,5 statt 26,375 Prozent",
+        "Die Stiftung spart keine Steuern - sie kauft Kontrolle",
+        "Zugang schlaegt Cleverness - gute Deals werden nie inseriert"
+      ],
+      "kapitel": [
+        {
+          "nr": 1,
+          "titel": "Wie Vermoegen tatsaechlich entsteht",
+          "kern": "Der Multiplikator-Effekt. Ein Betrieb, der ohne dich nicht laeuft, ist kein Vermoegen.",
+          "checks": [
+            "Warum steigert +20.000 Gewinn dein Vermoegen um mehr als 20.000?",
+            "Warum ist ein inhaberabhaengiger Betrieb kein Vermoegen?"
+          ]
+        },
+        {
+          "nr": 2,
+          "titel": "Die vier Phasen",
+          "kern": "Verdienen, Vermehren, Schuetzen, Bewahren. Wer die Aufgabe der falschen Phase loest, verliert Jahre.",
+          "checks": [
+            "Du hast 40.000 und fragst nach der besten Anlagestrategie. Richtige Antwort?"
+          ]
+        },
+        {
+          "nr": 3,
+          "titel": "Warum Vermoegende mehrere Banken haben",
+          "kern": "Einlagensicherung, Funktionstrennung, Ausfallsicherheit, Verhandlungsmacht. Konto = Glaeubiger, Depot = Sondervermoegen.",
+          "checks": [
+            "Warum muss man Cash streuen, Depots aber nicht?",
+            "Was ist der Unterschied zwischen einem ETF und einem Zertifikat im Insolvenzfall?"
+          ]
+        },
+        {
+          "nr": 4,
+          "titel": "Die Stufen: Retail, Private Banking, Family Office",
+          "kern": "Man zahlt fuer Zugang und Lombardkredit, nicht fuer Rendite.",
+          "checks": [
+            "Wie erkennst du, ob dein Berater Verkaeufer oder Berater ist?"
+          ]
+        },
+        {
+          "nr": 5,
+          "titel": "Die Struktur-Pyramide",
+          "kern": "Das Risiko unten, das Vermoegen oben, dazwischen eine Wand.",
+          "checks": [
+            "Was ist der eigentliche Zweck der Trennung - Steuern oder Haftung?"
+          ]
+        },
+        {
+          "nr": 6,
+          "titel": "Die Holding",
+          "kern": "Paragraf 8b KStG: 95 Prozent steuerfrei. Beim Exit entscheidet die Struktur ueber Hunderttausende.",
+          "checks": [
+            "Warum sind Streubesitz-Dividenden voll steuerpflichtig, Kursgewinne aber nicht?",
+            "Ab welchem Gewinn lohnt eine Holding?",
+            "Warum gruendet man sie von Anfang an?"
+          ]
+        },
+        {
+          "nr": 7,
+          "titel": "Die vermoegensverwaltende GmbH",
+          "kern": "Lohnt erst ab hohen Betraegen. Bei Immobilien: erweiterte Gewerbesteuerkuerzung.",
+          "checks": [
+            "Warum ist eine Spardosen-GmbH bei einem kleinen ETF-Sparplan schaedlich?"
+          ]
+        },
+        {
+          "nr": 8,
+          "titel": "Die Stiftung",
+          "kern": "Sie gehoert sich selbst. Kein Steuersparmodell, sondern ein Kontrollmodell. Erbersatzsteuer alle 30 Jahre.",
+          "checks": [
+            "Warum ist eine Stiftung nicht pfaendbar?",
+            "Was ist an ihr unumkehrbar?",
+            "Wann ist der Familienpool besser?"
+          ]
+        },
+        {
+          "nr": 9,
+          "titel": "Trusts und auslaendische Konstrukte",
+          "kern": "CRS und Paragraf 15 AStG erledigen das meiste. Wohnsitz entscheidet.",
+          "checks": [
+            "Warum funktionieren auslaendische Strukturen bei Wohnsitz in Deutschland fast nie?"
+          ]
+        },
+        {
+          "nr": 10,
+          "titel": "Was Struktur nicht kann",
+          "kern": "Struktur multipliziert. Sie erschafft nicht.",
+          "checks": [
+            "0 Euro Gewinn mal beste Holding der Welt ergibt was?"
+          ]
+        },
+        {
+          "nr": 11,
+          "titel": "Die einzige Frage, die zaehlt",
+          "kern": "Produziert es etwas - oder hoffe ich nur, dass jemand spaeter mehr zahlt?",
+          "checks": [
+            "Nenne drei produktive und drei nicht-produktive Assets"
+          ]
+        },
+        {
+          "nr": 12,
+          "titel": "Die Anlageklassen, ehrlich sortiert",
+          "kern": "Das eigene Unternehmen hat die hoechste Rendite. Immobilien sind in Deutschland strukturell beguenstigt.",
+          "checks": [
+            "Warum ist Inflation gut fuer den Immobilienkreditnehmer?",
+            "Warum ist Gold keine Strategie?"
+          ]
+        },
+        {
+          "nr": 13,
+          "titel": "Was Vermoegende wirklich kaufen - nach Phase",
+          "kern": "Diversifikation kommt mit steigendem Vermoegen, nicht davor.",
+          "checks": [
+            "Warum wird man nie reich, wenn man zu frueh diversifiziert?"
+          ]
+        },
+        {
+          "nr": 14,
+          "titel": "Buy, Borrow, Die",
+          "kern": "Ein Kredit ist kein Einkommen, also nicht steuerbar. Funktioniert erst bei grossem Vermoegen.",
+          "checks": [
+            "Was ist ein Margin Call und warum ist er gefaehrlich?"
+          ]
+        },
+        {
+          "nr": 15,
+          "titel": "Hebel",
+          "kern": "Hebel verstaerkt beides. Produkt und Menschen sind bessere Hebel als Kredit.",
+          "checks": [
+            "Wann ist ein Hebel gut, wann toedlich?"
+          ]
+        },
+        {
+          "nr": 16,
+          "titel": "Die Cashflow-Maschine",
+          "kern": "Alles entscheidet sich am Ueberschuss. Lifestyle-Inflation ist der wahre Killer.",
+          "checks": [
+            "Warum baut jemand mit 40k Einkommen manchmal schneller Vermoegen auf als jemand mit 200k?"
+          ]
+        },
+        {
+          "nr": 17,
+          "titel": "Warum Zugang das eigentliche Asset ist",
+          "kern": "Die guten Deals werden nie inseriert. Sie werden weitergereicht.",
+          "checks": [
+            "An wen werden Chancen weitergegeben - und welcher der drei Punkte wird unterschaetzt?"
+          ]
+        },
+        {
+          "nr": 18,
+          "titel": "Wie Verbindungen entstehen",
+          "kern": "Berater, Anwaelte und Banker sind Knotenpunkte. Der billigste Weg nach oben.",
+          "checks": [
+            "Warum ist ein guter Steuerberater mehr wert als 500 LinkedIn-Kontakte?"
+          ]
+        },
+        {
+          "nr": 19,
+          "titel": "Die Reihenfolge: von 0 auf viel",
+          "kern": "Acht Schritte. Der schwerste ist Nummer 3, nicht Nummer 7.",
+          "checks": [
+            "Welcher Schritt ist der schwerste und warum?"
+          ]
+        },
+        {
+          "nr": 20,
+          "titel": "Mythen",
+          "kern": "Zehn verbreitete Irrtuemer, sauber auseinandergenommen.",
+          "checks": [
+            "Warum ist 'Reiche zahlen keine Steuern' falsch?"
+          ]
+        },
+        {
+          "nr": 21,
+          "titel": "Was du davon JETZT brauchst",
+          "kern": "Fast nichts davon. Kontentrennung, Lifestyle-Falle, Zugang, Hausbank.",
+          "checks": []
+        },
+        {
+          "nr": 22,
+          "titel": "Glossar",
+          "kern": "Nachschlagewerk.",
+          "checks": []
+        }
+      ]
+    },
+    {
+      "id": "m6",
+      "nummer": 6,
+      "titel": "Systeme: Automatisierung, Prozesse, Skalierung",
+      "kurztitel": "Systeme",
+      "status": "fertig",
+      "datei": "Kurs-6-Systeme.md",
+      "funktion": "Dass es ohne dich laeuft - hier wird Einkommen zu Vermoegen",
+      "leitfrage": "Wie baue ich etwas, das ohne meine Stunden funktioniert?",
+      "phase": [
+        2,
+        3
+      ],
+      "prioritaet": "mittel",
+      "voraussetzungen": [
+        "m2",
+        "m3"
+      ],
+      "geschaetzteZeit": "4-5 h",
+      "kernaussagen": [
+        "Der Test: laeuft es sechs Wochen ohne dich?",
+        "Die Unternehmerrolle ist nie dringend und faellt deshalb immer aus",
+        "Es gibt genau einen Engpass - alles andere zu verbessern bringt nichts",
+        "Weglassen vor vereinfachen vor automatisieren vor delegieren vor optimieren",
+        "Preise erhoehen kommt vor Personal einstellen"
+      ],
+      "kapitel": [
+        {
+          "nr": 1,
+          "titel": "Job oder Unternehmen",
+          "kern": "Wenn du sechs Wochen ausfaellst - laeuft es weiter?",
+          "checks": [
+            "Beantworte den Test ehrlich",
+            "Auf welcher der fuenf Stufen stehst du?"
+          ]
+        },
+        {
+          "nr": 2,
+          "titel": "Die drei Rollen",
+          "kern": "Macher, Verwalter, Unternehmer. Die dritte faellt immer aus.",
+          "checks": [
+            "Wann ist dein woechentlicher Systemblock?"
+          ]
+        },
+        {
+          "nr": 3,
+          "titel": "Der Multiple-Hebel",
+          "kern": "Was den Verkaufswert verdoppelt, gibt dir auch Urlaub und ruhige Naechte.",
+          "checks": [
+            "Welche der sieben Faktoren erfuellst du schon?"
+          ]
+        },
+        {
+          "nr": 4,
+          "titel": "Was ein Prozess ist",
+          "kern": "Vorhersehbares Ergebnis, unabhaengig davon wer es ausfuehrt.",
+          "checks": [
+            "Was tust du oefter als einmal im Monat?"
+          ]
+        },
+        {
+          "nr": 5,
+          "titel": "Dokumentieren ohne Buerokratie",
+          "kern": "Beim Machen aufschreiben oder filmen - nicht an einem Dokumentationstag.",
+          "checks": [
+            "Welchen Prozess dokumentierst du beim naechsten Mal?"
+          ]
+        },
+        {
+          "nr": 6,
+          "titel": "Checklisten",
+          "kern": "Jeder Fehler, der zweimal passiert, gehoert auf eine Checkliste.",
+          "checks": [
+            "Welcher Fehler ist dir zweimal passiert?"
+          ]
+        },
+        {
+          "nr": 7,
+          "titel": "Standards und Qualitaet ohne dich",
+          "kern": "'Ordentlich' ist kein Standard. Grenzmuster statt Beschreibung.",
+          "checks": [
+            "Definiere einen ueberpruefbaren Standard fuer deine Hauptleistung"
+          ]
+        },
+        {
+          "nr": 8,
+          "titel": "Die Engpasstheorie",
+          "kern": "Vier Schritte. Schritt 2 - den Engpass nie warten lassen - ist der billigste.",
+          "checks": [
+            "Was ist dein Engpass?"
+          ]
+        },
+        {
+          "nr": 9,
+          "titel": "Den Engpass finden",
+          "kern": "Meist bist du es selbst - und zwar bei den Uebergaengen, nicht bei der Arbeit.",
+          "checks": [
+            "Was machst nur du? Was koennte eine Entscheidungsregel loesen?"
+          ]
+        },
+        {
+          "nr": 10,
+          "titel": "Die Leiter",
+          "kern": "Weglassen, vereinfachen, standardisieren, automatisieren, delegieren, optimieren.",
+          "checks": [
+            "Nenne fuenf Dinge, die du weglassen koenntest"
+          ]
+        },
+        {
+          "nr": 11,
+          "titel": "Automatisieren",
+          "kern": "Erst dreimal von Hand. Automatisieren ist attraktiver Planungs-Ersatz.",
+          "checks": [
+            "Was hast du schon dreimal von Hand gemacht?"
+          ]
+        },
+        {
+          "nr": 12,
+          "titel": "Delegieren",
+          "kern": "80 Prozent so gut wie du reicht. Der Entscheidungsrahmen wird immer vergessen.",
+          "checks": [
+            "Was gibst du zuerst ab - nach der Vier-Felder-Regel?"
+          ]
+        },
+        {
+          "nr": 13,
+          "titel": "Der erste Mitarbeiter",
+          "kern": "Nicht bei viel Arbeit, sondern bei dauerhaft vorhersehbarer Arbeit.",
+          "checks": [
+            "Erfuellst du alle vier Punkte der Pruefliste?"
+          ]
+        },
+        {
+          "nr": 14,
+          "titel": "Wann Skalieren toedlich ist",
+          "kern": "Wachstum verschlingt Liquiditaet. Sinkender Kontostand bei steigendem Umsatz ist das Warnsignal.",
+          "checks": [
+            "Welche der fuenf Warnsignale siehst du?"
+          ]
+        },
+        {
+          "nr": 15,
+          "titel": "Der 90-Tage-Systemaufbau",
+          "kern": "Drei Prozesse dokumentiert, Engpass bekannt, Systemblock im Kalender.",
+          "checks": [
+            "Monat 1 gestartet?"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "m7",
+      "nummer": 7,
+      "titel": "Anfangen und Durchziehen",
+      "kurztitel": "Durchziehen",
+      "status": "fertig",
+      "datei": "Kurs-7-Anfangen-und-Durchziehen.md",
+      "funktion": "Der Kurs, der alle anderen erst wirksam macht",
+      "leitfrage": "Wie fange ich an - und wie ziehe ich durch, wenn es unangenehm wird?",
+      "phase": [
+        0
+      ],
+      "prioritaet": "hoch",
+      "voraussetzungen": [],
+      "geschaetzteZeit": "3-4 h Lesen, dann taeglich",
+      "kernaussagen": [
+        "Aufschieben ist Emotionsregulation, kein Charakterfehler",
+        "Unklare Aufgaben werden nicht aufgeschoben - sie sind nicht anfangbar",
+        "Motivation ist Wetter, System ist Klima",
+        "Nie zweimal hintereinander aussetzen",
+        "WIP-Limit: maximal ein aktives Projekt"
+      ],
+      "kapitel": [
+        {
+          "nr": 1,
+          "titel": "Warum Anfangen schwer ist - die ehrliche Mechanik",
+          "kern": "Aufschieben regelt kurzfristig ein unangenehmes Gefuehl. Es ist nie Faulheit.",
+          "checks": [
+            "Welches Gefuehl vermeidest du gerade, wenn du etwas aufschiebst?"
+          ]
+        },
+        {
+          "nr": 2,
+          "titel": "Die Ambiguitaetsfalle",
+          "kern": "Was du nicht anfangen kannst, ist meist nicht zu schwer, sondern zu unklar.",
+          "checks": [
+            "Nimm deine aelteste offene Aufgabe: ist sie schwer oder unklar?"
+          ]
+        },
+        {
+          "nr": 3,
+          "titel": "Der Planungs-Ersatz",
+          "kern": "Planen fuehlt sich nach Fortschritt an und ist gefahrlos. Das ist die Falle.",
+          "checks": [
+            "Wie viel deiner Projektzeit war Planen, wie viel Machen?"
+          ]
+        },
+        {
+          "nr": 4,
+          "titel": "Die kleinste nicht-teilbare Handlung",
+          "kern": "Zerlege, bis der erste Schritt laecherlich klein ist. Dann ist Aufschieben teurer als Machen.",
+          "checks": [
+            "Was ist der kleinste erste Schritt deiner aktuellen Aufgabe?"
+          ]
+        },
+        {
+          "nr": 5,
+          "titel": "Aktivierungsenergie senken",
+          "kern": "Umgebung schlaegt Willenskraft. Reibung entfernen statt Disziplin erhoehen.",
+          "checks": [
+            "Welche drei Reibungen stehen zwischen dir und dem Anfangen?"
+          ]
+        },
+        {
+          "nr": 6,
+          "titel": "Wenn-Dann-Plaene",
+          "kern": "Vorsatz an Zeit und Ort binden. Der am besten belegte Trick der Umsetzungsforschung.",
+          "checks": [
+            "Formuliere deinen naechsten Vorsatz als Wenn-Dann-Satz"
+          ]
+        },
+        {
+          "nr": 7,
+          "titel": "Motivation ist der falsche Treibstoff",
+          "kern": "Motivation ist Wetter. System ist Klima. Bau fuer die schlechten Tage.",
+          "checks": [
+            "Wuerde dein System auch an einem schlechten Tag funktionieren?"
+          ]
+        },
+        {
+          "nr": 8,
+          "titel": "Nie zweimal aussetzen",
+          "kern": "Ein Ausfall ist Rauschen. Zwei sind ein neues Muster.",
+          "checks": [
+            "Was ist deine Minimalversion fuer schlechte Tage?"
+          ]
+        },
+        {
+          "nr": 9,
+          "titel": "Der Dip: die Muehsal-Phase",
+          "kern": "Jedes Projekt hat eine Phase nach dem Reiz und vor dem Ergebnis. Da wird abgebrochen.",
+          "checks": [
+            "Bist du bei einem Projekt gerade im Dip?"
+          ]
+        },
+        {
+          "nr": 10,
+          "titel": "Die Projekt-Falle und das WIP-Limit",
+          "kern": "Neue Projekte sind attraktiv, weil sie noch keinen Dip haben. Maximal eins aktiv.",
+          "checks": [
+            "Wie viele Projekte hast du gerade offen? Welches ist das eine?"
+          ]
+        },
+        {
+          "nr": 11,
+          "titel": "Die Ideen-Halde",
+          "kern": "Ideen aufschreiben und weglegen ist die eigentliche Uebung.",
+          "checks": [
+            "Hast du einen Ort fuer Ideen, die nicht dran sind?"
+          ]
+        },
+        {
+          "nr": 12,
+          "titel": "Fertig definieren",
+          "kern": "Ohne Abschlussdefinition ist nichts je fertig - und Fertigwerden ist die Faehigkeit.",
+          "checks": [
+            "Woran erkennst du, dass dein aktuelles Projekt fertig ist?"
+          ]
+        },
+        {
+          "nr": 13,
+          "titel": "Sichtbarkeit und Messung",
+          "kern": "Was du nicht siehst, verwaltest du nicht. Leading statt Lagging.",
+          "checks": [
+            "Welche Zahl misst dein Verhalten, nicht dein Ergebnis?"
+          ]
+        },
+        {
+          "nr": 14,
+          "titel": "Der Wochen-Review",
+          "kern": "20 Minuten pro Woche. Der einzige Termin, der nicht ausfallen darf.",
+          "checks": [
+            "Wann ist dein fester Review-Termin?"
+          ]
+        },
+        {
+          "nr": 15,
+          "titel": "Umgebung und soziale Verpflichtung",
+          "kern": "Ein Termin mit einem Menschen schlaegt jeden Vorsatz mit dir selbst.",
+          "checks": [
+            "Wer weiss von deinem aktuellen Ziel?"
+          ]
+        },
+        {
+          "nr": 16,
+          "titel": "Rueckfall einplanen",
+          "kern": "Der Rueckfall ist Teil des Systems, nicht sein Scheitern.",
+          "checks": [
+            "Was ist dein Plan fuer den Tag nach dem Abbruch?"
+          ]
+        },
+        {
+          "nr": 17,
+          "titel": "Der 30-Tage-Start",
+          "kern": "Ein Projekt, ein Schritt, taeglich sichtbar.",
+          "checks": []
+        }
+      ]
+    },
+    {
+      "id": "m8",
+      "nummer": 8,
+      "titel": "Timemaxxing: Zeit, Energie, Fokus",
+      "kurztitel": "Timemaxxing",
+      "status": "fertig",
+      "datei": "Kurs-8-Timemaxxing.md",
+      "funktion": "Mehr aus der Zeit holen, die tatsaechlich da ist",
+      "leitfrage": "Wie hole ich das Maximum aus Tagen, die schon voll sind?",
+      "phase": [
+        0
+      ],
+      "prioritaet": "hoch",
+      "voraussetzungen": [],
+      "geschaetzteZeit": "3-4 h Lesen, dann Umsetzung",
+      "kernaussagen": [
+        "'Keine Zeit' heisst fast immer 'keine Prioritaet'",
+        "Kontextwechsel ist der teuerste Posten - Aufmerksamkeitsrueckstand",
+        "Energie schlaegt Zeit: eine gute Stunde schlaegt drei muede",
+        "Timeboxing schlaegt To-Do-Listen",
+        "Sequenziell schlaegt parallel"
+      ],
+      "kapitel": [
+        {
+          "nr": 1,
+          "titel": "Die Grundrechnung: wo Zeit wirklich hingeht",
+          "kern": "Erst messen, dann optimieren. Die Schaetzung liegt immer daneben.",
+          "checks": [
+            "Hast du eine Woche lang wirklich mitgeschrieben?"
+          ]
+        },
+        {
+          "nr": 2,
+          "titel": "'Keine Zeit' ist fast immer 'keine Prioritaet'",
+          "kern": "Der Satz ist bequem, weil er die Entscheidung verdeckt.",
+          "checks": [
+            "Formuliere 'ich hatte keine Zeit' ehrlich um"
+          ]
+        },
+        {
+          "nr": 3,
+          "titel": "Die vier Zeitarten",
+          "kern": "Tief, flach, erholend, verschwendet. Nur die erste bewegt etwas.",
+          "checks": [
+            "Wie viele Stunden echte Tiefarbeit hattest du letzte Woche?"
+          ]
+        },
+        {
+          "nr": 4,
+          "titel": "Kontextwechsel: der teuerste Posten",
+          "kern": "Nach jedem Wechsel bleibt Aufmerksamkeit am alten Thema haengen.",
+          "checks": [
+            "Wie oft wechselst du pro Stunde die Aufgabe?"
+          ]
+        },
+        {
+          "nr": 5,
+          "titel": "Energie schlaegt Zeit",
+          "kern": "Eine gute Stunde schlaegt drei muede. Die beste Zeit gehoert der wichtigsten Sache.",
+          "checks": [
+            "Wann bist du taeglich am klarsten - und was machst du dann gerade?"
+          ]
+        },
+        {
+          "nr": 6,
+          "titel": "Schlaf als Leistungsvariable",
+          "kern": "Der billigste und meistignorierte Hebel. Schlafmangel kostet mehr Stunden, als er spart.",
+          "checks": [
+            "Wie viele Stunden schlaefst du an Werktagen wirklich?"
+          ]
+        },
+        {
+          "nr": 7,
+          "titel": "Timeboxing schlaegt To-Do-Listen",
+          "kern": "Eine Liste ist ein Wunsch. Ein Kalendereintrag ist eine Entscheidung.",
+          "checks": [
+            "Steht deine wichtigste Aufgabe der Woche im Kalender?"
+          ]
+        },
+        {
+          "nr": 8,
+          "titel": "Die 3-Prioritaeten-Regel",
+          "kern": "Drei Dinge pro Tag. Mehr ist eine Wunschliste, keine Planung.",
+          "checks": [
+            "Was sind deine drei fuer morgen?"
+          ]
+        },
+        {
+          "nr": 9,
+          "titel": "Batching: gleichartiges buendeln",
+          "kern": "Einmal ruesten, mehrfach nutzen - gilt fuer Buero wie fuer Werkstatt.",
+          "checks": [
+            "Welche Aufgaben liessen sich buendeln?"
+          ]
+        },
+        {
+          "nr": 10,
+          "titel": "Was Zeit frisst: Handy, Benachrichtigungen, Entscheidungsmuedigkeit",
+          "kern": "Nicht die Minuten sind das Problem, sondern der zerstueckelte Fokus.",
+          "checks": [
+            "Wie viele Benachrichtigungen duerfen dich aktuell unterbrechen?"
+          ]
+        },
+        {
+          "nr": 11,
+          "titel": "Nein sagen als Zeitwerkzeug",
+          "kern": "Jedes Ja ist ein Nein zu etwas anderem - nur unsichtbar.",
+          "checks": [
+            "Wozu haettest du letzte Woche nein sagen sollen?"
+          ]
+        },
+        {
+          "nr": 12,
+          "titel": "Wenn Zeit wirklich knapp ist",
+          "kern": "Ausbildung, Schule, Sport, Projekte: die ehrliche Rechnung, was uebrig bleibt.",
+          "checks": [
+            "Wie viele freie Stunden hast du realistisch pro Woche?"
+          ]
+        },
+        {
+          "nr": 13,
+          "titel": "Sequenziell schlaegt parallel",
+          "kern": "Drei Projekte zu 33 Prozent brauchen laenger als drei nacheinander zu 100 Prozent.",
+          "checks": [
+            "Welche zwei Projekte koenntest du pausieren?"
+          ]
+        },
+        {
+          "nr": 14,
+          "titel": "Saisonales Denken",
+          "kern": "Nicht jede Phase des Lebens hat Platz fuer alles. Das ist kein Scheitern.",
+          "checks": [
+            "Was hat in dieser Lebensphase bewusst keinen Platz?"
+          ]
+        },
+        {
+          "nr": 15,
+          "titel": "Tote Zeit nutzen - und wann man es lassen sollte",
+          "kern": "Wege und Wartezeit sind Lernzeit. Aber Erholung ist kein Leerlauf.",
+          "checks": []
+        },
+        {
+          "nr": 16,
+          "titel": "Der Wochenplan, der haelt",
+          "kern": "Feste Bloecke fuer feste Dinge. Der Rest fuellt die Luecken.",
+          "checks": [
+            "Steht dein Wochengeruest?"
+          ]
+        },
+        {
+          "nr": 17,
+          "titel": "Automatisieren und delegieren",
+          "kern": "Die Bruecke zu Modul 6. Was sich wiederholt, gehoert nicht in deinen Kopf.",
+          "checks": []
+        }
+      ]
+    },
+    {
+      "id": "m9",
+      "nummer": 9,
+      "titel": "KI professionell nutzen",
+      "kurztitel": "KI-Profi",
+      "status": "fertig",
+      "datei": "Kurs-9-KI-professionell.md",
+      "funktion": "KI als Werkzeug statt als Spielzeug",
+      "leitfrage": "Wie werde ich richtig gut darin, KI fuer Arbeit, Code und Geschaeft einzusetzen?",
+      "phase": [
+        0
+      ],
+      "prioritaet": "hoch",
+      "voraussetzungen": [],
+      "geschaetzteZeit": "4-5 h",
+      "kernaussagen": [
+        "Es optimiert auf 'klingt richtig', nicht auf 'ist richtig'",
+        "Kontext ist der einzige echte Hebel - nicht die Formulierung",
+        "Beispiele schlagen Erklaerungen, Gegenbeispiele am meisten",
+        "Gut bei Material, das du lieferst - unzuverlaessig bei Material, das es liefern soll",
+        "Bau nichts ein, was du nicht erklaeren kannst"
+      ],
+      "kapitel": [
+        {
+          "nr": 1,
+          "titel": "Was ein Sprachmodell tut",
+          "kern": "Es sagt den naechsten Textbaustein voraus. Daraus folgt alles andere.",
+          "checks": [
+            "Warum erfindet es plausible Details?"
+          ]
+        },
+        {
+          "nr": 2,
+          "titel": "Kontext ist alles",
+          "kern": "Koennte ein fremder kompetenter Mensch mit diesen Infos die Aufgabe loesen?",
+          "checks": [
+            "Was fehlt deinem letzten Prompt an Kontext?"
+          ]
+        },
+        {
+          "nr": 3,
+          "titel": "Warum dieselbe Frage verschiedene Antworten bekommt",
+          "kern": "Zufall, Kontext, Formulierung. Bei Festgefahrenem: neu starten.",
+          "checks": [
+            "Wann solltest du einen neuen Chat anfangen?"
+          ]
+        },
+        {
+          "nr": 4,
+          "titel": "Frage vs. Auftrag",
+          "kern": "Wenn du es haettest googeln koennen, war es eine Frage.",
+          "checks": [
+            "Formuliere deine letzte Frage als Auftrag um"
+          ]
+        },
+        {
+          "nr": 5,
+          "titel": "Die fuenf Bausteine",
+          "kern": "Rolle, Aufgabe, Kontext, Format, Einschraenkungen. Der Negativ-Trick.",
+          "checks": [
+            "Welcher Baustein fehlt dir meistens?"
+          ]
+        },
+        {
+          "nr": 6,
+          "titel": "Beispiele schlagen Erklaerungen",
+          "kern": "Ein Gegenbeispiel-Paar ist der staerkste Hebel.",
+          "checks": [
+            "Hast du einen Ordner mit eigenen Vorlagen?"
+          ]
+        },
+        {
+          "nr": 7,
+          "titel": "Iteration",
+          "kern": "Plan mit drei Runden. Lass es sich selbst kritisieren.",
+          "checks": [
+            "Nutze den Kritik-Trick an deinem letzten Ergebnis"
+          ]
+        },
+        {
+          "nr": 8,
+          "titel": "Struktur erzwingen",
+          "kern": "Format vorgeben, Vorlage vorgeben, schrittweise denken lassen.",
+          "checks": [
+            "Wie erzwingst du maschinenlesbare Ausgabe?"
+          ]
+        },
+        {
+          "nr": 9,
+          "titel": "Halluzination",
+          "kern": "Es kennt den Unterschied zwischen plausibel und wahr nicht.",
+          "checks": [
+            "Erlaubst du ihm explizit, etwas nicht zu wissen?"
+          ]
+        },
+        {
+          "nr": 10,
+          "titel": "Wo KI verlaesslich ist",
+          "kern": "Gut bei deinem Material, unzuverlaessig bei seinem.",
+          "checks": [
+            "Ordne deine drei haeufigsten Nutzungen in die Landkarte ein"
+          ]
+        },
+        {
+          "nr": 11,
+          "titel": "Pruefstrategien",
+          "kern": "Pruefpflicht steigt mit dem Einsatz. Groessenordnung immer ueberschlagen.",
+          "checks": [
+            "Was pruefst du aktuell gar nicht, obwohl du solltest?"
+          ]
+        },
+        {
+          "nr": 12,
+          "titel": "KI beim Programmieren",
+          "kern": "Bau nichts ein, was du nicht erklaeren kannst. Als Pruefer oft staerker denn als Autor.",
+          "checks": [
+            "Verstehst du jede Zeile in deinem aktuellen Projekt?"
+          ]
+        },
+        {
+          "nr": 13,
+          "titel": "KI im Geschaeft",
+          "kern": "Der wertvollste Einsatz ist Sparringspartner, nicht Textproduktion.",
+          "checks": [
+            "Welche Entscheidung koenntest du diese Woche durchspielen lassen?"
+          ]
+        },
+        {
+          "nr": 14,
+          "titel": "Vom Chat zum Workflow",
+          "kern": "Vier Stufen. Der Sprung auf Stufe 2 - Vorlagen - bringt am meisten.",
+          "checks": [
+            "Wie viele wiederverwendbare Vorlagen hast du?"
+          ]
+        },
+        {
+          "nr": 15,
+          "titel": "Recht, Vertraulichkeit, Verantwortung",
+          "kern": "Anonymisieren vor dem Eingeben. Die Haftung bleibt bei dir.",
+          "checks": [
+            "Was hast du zuletzt eingegeben, das du haettest anonymisieren sollen?"
+          ]
+        },
+        {
+          "nr": 16,
+          "titel": "Die Kompetenzfalle",
+          "kern": "Du musst gut genug sein, um schlechte Ergebnisse zu erkennen.",
+          "checks": [
+            "Wo nutzt du KI, um etwas zu vermeiden statt es zu lernen?"
+          ]
+        }
+      ],
+      "warnung": "Prinzipien halten, Produkte nicht. Konkrete Werkzeuge selbst gegenpruefen."
+    },
+    {
+      "id": "m10",
+      "nummer": 10,
+      "titel": "Content Creation",
+      "kurztitel": "Content",
+      "status": "fertig",
+      "datei": "Kurs-10-Content-Creation.md",
+      "funktion": "Reichweite als Hebel: 1:viele statt 1:1",
+      "leitfrage": "Wie baue ich mit Content Reichweite, Vertrauen und Einkommen auf?",
+      "phase": [
+        1,
+        2
+      ],
+      "prioritaet": "mittel",
+      "voraussetzungen": [],
+      "geschaetzteZeit": "3-4 h Lesen, dann taeglich anwenden",
+      "kernaussagen": [
+        "Content entkoppelt deinen Wert von deiner Zeit. Einmal erstellt, arbeitet er weiter — während du schläfst, isst, an anderem arbeitest.",
+        "Fünfzig mittelmäßige Videos schlagen ein perfektes. Nicht wegen der Zahl — wegen der 50 Wiederholungen, in denen du besser wirst.",
+        "Ein Kanal, gemeistert, schlägt fünf Kanäle, halb bespielt. Verteile dich erst, wenn einer läuft.",
+        "„Für alle\" heißt für niemanden. Je klarer, für wen du sprichst, desto stärker fühlt sich diese Person gemeint."
+      ],
+      "kapitel": [
+        {
+          "nr": 1,
+          "titel": "Warum Content der größte Hebel ist",
+          "kern": "Content entkoppelt deinen Wert von deiner Zeit. Einmal erstellt, arbeitet er weiter — während du schläfst, isst, an anderem arbeitest.",
+          "checks": [
+            "Welche der vier Hebelformen nutzt du gerade — und welche davon skaliert ohne mehr Zeit von dir?"
+          ]
+        },
+        {
+          "nr": 2,
+          "titel": "Konsistenz schlägt Perfektion",
+          "kern": "Fünfzig mittelmäßige Videos schlagen ein perfektes. Nicht wegen der Zahl — wegen der 50 Wiederholungen, in denen du besser wirst.",
+          "checks": [
+            "Welche Post-Frequenz schaffst du an einem miesen, vollen Tag garantiert noch? Diese Zahl ist deine Kadenz."
+          ]
+        },
+        {
+          "nr": 3,
+          "titel": "Eine Plattform zuerst",
+          "kern": "Ein Kanal, gemeistert, schlägt fünf Kanäle, halb bespielt. Verteile dich erst, wenn einer läuft.",
+          "checks": [
+            "Nenne die EINE Plattform, auf die du dich 90 Tage konzentrierst — und den einen Grund dafür."
+          ]
+        },
+        {
+          "nr": 4,
+          "titel": "Nische & Versprechen",
+          "kern": "„Für alle\" heißt für niemanden. Je klarer, für wen du sprichst, desto stärker fühlt sich diese Person gemeint.",
+          "checks": [
+            "Fülle die Positionierungs-Formel für dich aus — in einem Satz."
+          ]
+        },
+        {
+          "nr": 5,
+          "titel": "Der Hook",
+          "kern": "Die ersten 1–3 Sekunden entscheiden über 90 % des Erfolgs. Kein Hook, keine Reichweite — egal wie gut der Rest ist.",
+          "checks": [
+            "Nimm deine nächste Idee und schreibe drei verschiedene Hooks dafür. Welcher macht am meisten neugierig?"
+          ]
+        },
+        {
+          "nr": 6,
+          "titel": "Storytelling-Struktur",
+          "kern": "Hook → Spannung halten → Auszahlung. Menschen bleiben für eine offene Schleife, nicht für Informationen.",
+          "checks": [
+            "Zerlege ein Video, das dich kürzlich bis zum Ende gehalten hat: Wo war der Hook, wo die offene Schleife, wo die Auszahlung?"
+          ]
+        },
+        {
+          "nr": 7,
+          "titel": "Das Ideen-System",
+          "kern": "Ideenmangel ist ein System-Problem, kein Kreativitäts-Problem. Wer sammelt, hat nie leere Hände.",
+          "checks": [
+            "Schreib jetzt fünf Content-Ideen aus „Fragen, die man dir stellt\" auf."
+          ]
+        },
+        {
+          "nr": 8,
+          "titel": "Batching: Produktion als System",
+          "kern": "Trenne die Modi. Ideen sammeln, skripten, drehen, schneiden, posten sind fünf verschiedene Köpfe. Zusammen ergeben sie Reibung.",
+          "checks": [
+            "Welche zwei festen Zeitblöcke pro Woche reservierst du — einen fürs Skripten, einen fürs Drehen?"
+          ]
+        },
+        {
+          "nr": 9,
+          "titel": "Skript & Format",
+          "kern": "Ein 30-Sekunden-Video ist zu 80 % geschrieben, bevor die Kamera läuft. Improvisation sieht nur bei den Geübtesten gut aus.",
+          "checks": [
+            "Schreib ein Mini-Skript (Hook, 2 Punkte, Payoff, CTA) für deine beste aktuelle Idee."
+          ]
+        },
+        {
+          "nr": 10,
+          "titel": "Distribution & die Algorithmus-Realität",
+          "kern": "Der Algorithmus ist kein Gegner und kein Freund. Er ist ein Spiegel: Er zeigt mehr von dem, was Menschen bis zum Ende schauen und teilen.",
+          "checks": [
+            "Bei deinem letzten Beitrag: Was war schwächer — dass Leute nicht dranblieben (Retention) oder dass niemand teilte (Share)? Das ist dein nächster Fokus."
+          ]
+        },
+        {
+          "nr": 11,
+          "titel": "Die Metriken, die zählen",
+          "kern": "Follower sind Eitelkeit. Retention, Shares und (später) Umsatz sind Wahrheit.",
+          "checks": [
+            "Welche EINE Metrik verfolgst du ab jetzt statt Followerzahl — und warum?"
+          ]
+        },
+        {
+          "nr": 12,
+          "titel": "Monetarisierung",
+          "kern": "Content baut Vertrauen. Vertrauen ist die Währung, die du in Angebote tauschst. Erst Publikum + Vertrauen, dann verkaufen.",
+          "checks": [
+            "Welches EINE Angebot könntest du deinem künftigen Publikum machen — und welches konkrete Problem löst es?"
+          ]
+        },
+        {
+          "nr": 13,
+          "titel": "Der Content-Dip",
+          "kern": "Zwischen „neu und motiviert\" und „läuft\" liegt ein Tal, in dem fast alle aufhören. Wer es durchsteht, hat kaum noch Konkurrenz.",
+          "checks": [
+            "Woran genau (welche feste Zeit, welcher Vorrat) erkennst du im Dip, dass dein System dich trägt — auch ohne Motivation?"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "m11",
+      "nummer": 11,
+      "titel": "Der Gedankenpalast",
+      "kurztitel": "Gedaechtnis",
+      "status": "fertig",
+      "datei": "Kurs-11-Gedankenpalast.md",
+      "funktion": "Ein trainiertes Gedaechtnis, das fast nichts vergisst",
+      "leitfrage": "Wie merke ich mir Namen, Zahlen, Reden und Stoff dauerhaft?",
+      "phase": [
+        0
+      ],
+      "prioritaet": "mittel",
+      "voraussetzungen": [],
+      "geschaetzteZeit": "2-3 h Lesen, dann taeglich ueben",
+      "kernaussagen": [
+        "Dein Gehirn vergisst Abstraktes (Zahlen, Namen, Fakten) und behält Konkretes (Orte, Bilder, Bewegung, Emotion). Gute Gedächtnistechnik übersetzt das eine ins andere.",
+        "Nimm einen Ort, den du auswendig kennst. Geh ihn in fester Reihenfolge ab. An jede Station legst du ein Bild dessen, was du dir merken willst. Zum Abrufen gehst du den Ort erneut ab.",
+        "Der beste erste Palast ist ein Ort, den du blind abgehen kannst — deine Wohnung. Kein Erfinden nötig, das Fundament steht schon.",
+        "Ein vergessliches Bild ist normal, groß, still und farblos. Ein klebendes Bild ist bizarr, riesig oder winzig, in Bewegung, laut, und du bist beteiligt."
+      ],
+      "kapitel": [
+        {
+          "nr": 1,
+          "titel": "Warum dein Gedächtnis trainierbar ist",
+          "kern": "Dein Gehirn vergisst Abstraktes (Zahlen, Namen, Fakten) und behält Konkretes (Orte, Bilder, Bewegung, Emotion). Gute Gedächtnistechnik übersetzt das eine ins andere.",
+          "checks": [
+            "Nenne drei Dinge, die du mühelos erinnerst (Orte/Gesichter/Wege) — und eine Sache, die dir nie im Kopf bleibt. Erkennst du das Muster (konkret vs. abstrakt)?"
+          ]
+        },
+        {
+          "nr": 2,
+          "titel": "Das Grundprinzip: die Loci-Methode",
+          "kern": "Nimm einen Ort, den du auswendig kennst. Geh ihn in fester Reihenfolge ab. An jede Station legst du ein Bild dessen, was du dir merken willst. Zum Abrufen gehst du den Ort erneut ab.",
+          "checks": [
+            "Präge dir die fünf Bilder oben ein, schließ die Augen, geh den Weg ab. Wie viele der fünf Dinge hast du?"
+          ]
+        },
+        {
+          "nr": 3,
+          "titel": "Deinen ersten Palast bauen",
+          "kern": "Der beste erste Palast ist ein Ort, den du blind abgehen kannst — deine Wohnung. Kein Erfinden nötig, das Fundament steht schon.",
+          "checks": [
+            "Schreib die 10 Stationen deiner Wohnung in fester Reihenfolge auf. Geh sie einmal blind im Kopf ab."
+          ]
+        },
+        {
+          "nr": 4,
+          "titel": "Bilder, die kleben",
+          "kern": "Ein vergessliches Bild ist normal, groß, still und farblos. Ein klebendes Bild ist bizarr, riesig oder winzig, in Bewegung, laut, und du bist beteiligt.",
+          "checks": [
+            "Verwandle das Wort „Geduld\" in ein bizarres, bewegtes Bild mit dir mittendrin. Beschreib es in einem Satz."
+          ]
+        },
+        {
+          "nr": 5,
+          "titel": "Routen & Stationen",
+          "kern": "Ein Palast ist begrenzt, deine Vorräte an Palästen nicht. Baue mehrere Routen, damit sich Inhalte nie überlagern.",
+          "checks": [
+            "Nenne drei reale Orte, aus denen du Paläste bauen könntest — und ordne jedem ein Thema zu."
+          ]
+        },
+        {
+          "nr": 6,
+          "titel": "Zahlen merken: das Major-System",
+          "kern": "Zahlen sind abstrakt und deshalb schwer. Das Major-System übersetzt jede Ziffer in einen Konsonantenlaut — daraus baust du Wörter und Bilder.",
+          "checks": [
+            "Übersetze deine Handy-Vorwahl oder eine 4-stellige Zahl mit dem Major-System in zwei Bilder."
+          ]
+        },
+        {
+          "nr": 7,
+          "titel": "Namen & Gesichter",
+          "kern": "Namen vergisst man, weil sie nichts bedeuten. Mach den Namen zu einem Bild und heft es an ein auffälliges Merkmal des Gesichts.",
+          "checks": [
+            "Denk an eine Person, deren Namen du dir zuletzt nicht merken konntest. Bau jetzt ein Bild aus dem Namen und häfte es an ein Gesichtsmerkmal."
+          ]
+        },
+        {
+          "nr": 8,
+          "titel": "Vokabeln & Fakten",
+          "kern": "Eine Vokabel ist eine Brücke zwischen Klang und Bedeutung. Bau ein Bild, das beide Ufer verbindet — die Schlüsselwort-Methode.",
+          "checks": [
+            "Nimm eine Vokabel oder einen Fachbegriff, den du lernen willst, und bau ein Schlüsselwort-Bild dafür."
+          ]
+        },
+        {
+          "nr": 9,
+          "titel": "Karten & Sequenzen: PAO",
+          "kern": "PAO = Person–Aktion–Objekt. Jede Zahl (oder Karte) bekommt eine Person, eine Aktion und ein Objekt — so komprimierst du drei Einheiten in ein Bild.",
+          "checks": [
+            "Lege für dich PAO für die Zahl 07 fest (eine bekannte Person, ihre typische Aktion, ihr Objekt)."
+          ]
+        },
+        {
+          "nr": 10,
+          "titel": "Reden & Listen frei halten",
+          "kern": "Eine Rede ist eine geordnete Liste von Punkten. Leg jeden Kernpunkt an eine Palast-Station — dann redest du frei, indem du den Palast abgehst.",
+          "checks": [
+            "Nimm eine kurze Sache, die du „vortragen\" musst (Vorstellung, 3 Argumente), und lege die Punkte auf 3 Stationen. Trag sie einmal frei vor."
+          ]
+        },
+        {
+          "nr": 11,
+          "titel": "Pflege: Wiederholung & Palast-Recycling",
+          "kern": "Bilder verblassen ohne Abruf. Aber Wiederholung im Palast ist um ein Vielfaches schneller als stures Nachlernen — und mit Abständen hält es dauerhaft.",
+          "checks": [
+            "Lege für eine Route, die du behalten willst, die nächsten drei Wiederhol-Termine fest (z. B. morgen, in 3 Tagen, in 1 Woche) — als Tasks in LifeOS."
+          ]
+        },
+        {
+          "nr": 12,
+          "titel": "Im Alltag anwenden",
+          "kern": "Eine Technik, die du nicht benutzt, verkümmert. Bau sie in echte, tägliche Situationen ein — dann wird sie automatisch.",
+          "checks": [
+            "Welche EINE Alltagssituation nutzt du ab morgen, um den Palast zu üben — und wie erinnerst du dich daran (Task/Erinnerung)?"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "m12",
+      "nummer": 12,
+      "titel": "Luzides Traeumen",
+      "kurztitel": "Luzid",
+      "status": "fertig",
+      "datei": "Kurs-12-Luzides-Traeumen.md",
+      "funktion": "Im Traum bewusst werden - sicher und wiederholbar",
+      "leitfrage": "Wie werde ich mir im Traum bewusst und kann ihn steuern?",
+      "phase": [
+        0
+      ],
+      "prioritaet": "niedrig",
+      "voraussetzungen": [],
+      "geschaetzteZeit": "Wochen-Projekt, taeglich wenige Minuten",
+      "kernaussagen": [
+        "Ein luzider Traum ist ein Traum, in dem du *weißt*, dass du träumst. Von dort reicht das Spektrum von „nur bewusst\" bis „vollständig steuernd\".",
+        "Wenn du dich nicht an Träume erinnerst, hattest du trotzdem welche — du hast sie nur nicht gespeichert. Ohne Traumerinnerung ist luzides Träumen unmöglich. Sie ist Schritt eins, immer.",
+        "Aufschreiben trainiert das Gehirn, Träume für wichtig zu halten — und macht deine persönlichen Traumzeichen (Kap. 5) sichtbar. Es ist das mit Abstand wirksamste einzelne Werkzeug.",
+        "Ein Realitätscheck ist ein kleiner Test „Träume ich gerade?\", den du tagsüber zur Gewohnheit machst — damit er irgendwann im Traum auftaucht und dich luzid werden lässt."
+      ],
+      "kapitel": [
+        {
+          "nr": 1,
+          "titel": "Was luzides Träumen ist (und was nicht)",
+          "kern": "Ein luzider Traum ist ein Traum, in dem du *weißt*, dass du träumst. Von dort reicht das Spektrum von „nur bewusst\" bis „vollständig steuernd\".",
+          "checks": [
+            "In welcher Schlafphase entstehen die meisten Träume — und wann in der Nacht ist diese Phase am längsten?"
+          ]
+        },
+        {
+          "nr": 2,
+          "titel": "Traumerinnerung: die Grundvoraussetzung",
+          "kern": "Wenn du dich nicht an Träume erinnerst, hattest du trotzdem welche — du hast sie nur nicht gespeichert. Ohne Traumerinnerung ist luzides Träumen unmöglich. Sie ist Schritt eins, immer.",
+          "checks": [
+            "Was ist die wichtigste Handlung im ersten Moment nach dem Aufwachen, um einen Traum nicht zu verlieren?"
+          ]
+        },
+        {
+          "nr": 3,
+          "titel": "Das Traumtagebuch",
+          "kern": "Aufschreiben trainiert das Gehirn, Träume für wichtig zu halten — und macht deine persönlichen Traumzeichen (Kap. 5) sichtbar. Es ist das mit Abstand wirksamste einzelne Werkzeug.",
+          "checks": [
+            "Wo genau (welche App/Notiz/Log-Ordner, in Griffweite vom Bett) führst du ab heute dein Traumtagebuch?"
+          ]
+        },
+        {
+          "nr": 4,
+          "titel": "Realitätschecks",
+          "kern": "Ein Realitätscheck ist ein kleiner Test „Träume ich gerade?\", den du tagsüber zur Gewohnheit machst — damit er irgendwann im Traum auftaucht und dich luzid werden lässt.",
+          "checks": [
+            "Welchen Realitätscheck wählst du als Haupt-Check, und an welche zwei Alltags-Auslöser koppelst du ihn?"
+          ]
+        },
+        {
+          "nr": 5,
+          "titel": "Traumzeichen erkennen",
+          "kern": "Traumzeichen sind Dinge, die in deinen Träumen immer wieder vorkommen. Sie zu kennen heißt: Wenn eines auftaucht, weißt du sofort — ich träume.",
+          "checks": [
+            "Nenne (aus deiner bisherigen Erinnerung oder deinem Tagebuch) ein wiederkehrendes Element deiner Träume, das dein erstes Traumzeichen sein könnte."
+          ]
+        },
+        {
+          "nr": 6,
+          "titel": "Die MILD-Technik",
+          "kern": "MILD (Mnemonic Induction of Lucid Dreams): Du programmierst dich beim Einschlafen mit der festen Absicht, im nächsten Traum zu bemerken, dass du träumst — und stellst es dir lebhaft vor.",
+          "checks": [
+            "Formuliere deinen persönlichen MILD-Satz in einem klaren, kurzen Satz."
+          ]
+        },
+        {
+          "nr": 7,
+          "titel": "WBTB — Wake Back To Bed",
+          "kern": "Weck dich nach ~5 Stunden kurz auf, sei ein paar Minuten wach, geh mit MILD-Absicht zurück ins Bett. Du landest dann direkt in einer langen, dichten REM-Phase mit erhöhter Bewusstheit — der stärkste Hebel überhaupt.",
+          "checks": [
+            "An welchem Wochentag (mit Ausschlaf-Möglichkeit) probierst du WBTB — und wie viele Stunden nach dem Einschlafen stellst du den Wecker?"
+          ]
+        },
+        {
+          "nr": 8,
+          "titel": "WILD — direkt hineingleiten",
+          "kern": "WILD (Wake Initiated Lucid Dream): Du bleibst beim Einschlafen bewusst und gleitest direkt aus dem Wachzustand in den Traum — ohne das Bewusstsein zu verlieren.",
+          "checks": [
+            "Warum gelingt WILD am ehesten nach WBTB und nicht direkt zu Beginn der Nacht?"
+          ]
+        },
+        {
+          "nr": 9,
+          "titel": "Stabilisieren im Traum",
+          "kern": "Der häufigste Anfängerfehler: Vor Aufregung wird man luzid — und wacht sofort auf. Stabilisieren hält dich im Traum.",
+          "checks": [
+            "Nenne zwei Stabilisierungs-Techniken, die du im nächsten luziden Moment sofort anwenden willst."
+          ]
+        },
+        {
+          "nr": 10,
+          "titel": "Steuern & Fähigkeiten",
+          "kern": "Im Traum steuerst du weniger durch „Befehl\" als durch Erwartung und indirekte Tricks. Wer zweifelt, scheitert; wer selbstverständlich erwartet, gelingt.",
+          "checks": [
+            "Welche EINE kleine Sache willst du im ersten luziden Traum bewusst ausprobieren, um deine Erwartung/Kontrolle aufzubauen?"
+          ]
+        },
+        {
+          "nr": 11,
+          "titel": "Schlafhygiene & Sicherheit",
+          "kern": "Luzides Träumen baut auf gutem Schlaf auf — nicht dagegen. Ruinierst du deinen Schlaf für Luzidität, verlierst du beides.",
+          "checks": [
+            "Wie viele Stunden Kernschlaf sicherst du dir, bevor du überhaupt eine Technik wie WBTB einsetzt?"
+          ]
+        },
+        {
+          "nr": 12,
+          "titel": "Fallstricke & Durchhalten",
+          "kern": "Luzides Träumen ist ein Wochen-Projekt, kein Nachmittags-Trick. Die meisten scheitern nicht an Unfähigkeit, sondern an falschen Erwartungen und zu frühem Aufgeben.",
+          "checks": [
+            "Auf welcher Stufe des Fahrplans stehst du gerade — und was ist dein einziger Fokus für die nächsten 7 Tage?"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "m13",
+      "nummer": 13,
+      "titel": "Dein Gehirn verstehen & nutzen",
+      "kurztitel": "Gehirn",
+      "status": "fertig",
+      "datei": "Kurs-13-Das-Gehirn.md",
+      "funktion": "Wie das Gehirn aufgebaut ist und funktioniert - und wie du es steuerst",
+      "leitfrage": "Warum wirkt Manifestieren, und wie wende ich es wirklich an?",
+      "phase": [
+        0
+      ],
+      "prioritaet": "mittel",
+      "voraussetzungen": [],
+      "geschaetzteZeit": "Wochen-Projekt, taeglich wenige Minuten",
+      "kernaussagen": [
+        "Das Gehirn ist ein Team aus Systemen: Willenskraft allein verliert gegen Gewohnheit und Angst - zieh die alten Systeme auf deine Seite.",
+        "Neuroplastizitaet: was du wiederholst, wirst du. Haeufigkeit schlaegt Intensitaet.",
+        "RAS, Dopamin und Amygdala lassen sich gezielt fuer deine Ziele nutzen.",
+        "Handeln erzeugt Gefuehl - die kostenlose Version des Zielverhaltens macht dich zur Person."
+      ],
+      "kapitel": [
+        {
+          "nr": 1,
+          "titel": "Wie dein Gehirn grob aufgebaut ist",
+          "kern": "Dein Gehirn ist kein einheitliches Organ, sondern ein Team aus Systemen unterschiedlichen Alters. Wer sie kennt, hört auf, gegen sich selbst zu kämpfen.",
+          "checks": [
+            "Nenne eine Situation, in der dein „kluger Plan\" gegen eine Gewohnheit oder Angst verloren hat. Welches System hat gewonnen — und warum? ---"
+          ]
+        },
+        {
+          "nr": 2,
+          "titel": "Neuronen & Neuroplastizität: du formst dich selbst",
+          "kern": "„Neurons that fire together, wire together.\" Jede Wiederholung eines Gedankens oder Verhaltens verstärkt die zuständige Nervenbahn. Du bist kein fertiges Produkt — du bist formbar, lebenslang.",
+          "checks": [
+            "Welche eine Bahn willst du in den nächsten 30 Tagen zur „Autobahn\" machen — durch tägliche, kleine Wiederholung? --- # TEIL II — DIE STEUERUNGS-SYSTEME"
+          ]
+        },
+        {
+          "nr": 3,
+          "titel": "Das RAS: dein Aufmerksamkeits-Filter",
+          "kern": "Das Retikuläre Aktivierungssystem filtert die Flut an Reizen auf das, was du für wichtig hältst. Was du bewusst priorisierst, zeigt dir dein Gehirn dann überall.",
+          "checks": [
+            "Formuliere eine Identität in einem Satz („Ich bin jemand, der …\"). Was würde dein RAS ab morgen stärker bemerken, wenn dieser Satz wahr wäre? ---"
+          ]
+        },
+        {
+          "nr": 4,
+          "titel": "Dopamin: das Antriebs-System",
+          "kern": "Dopamin ist der Stoff der Vorfreude, nicht des Genusses. Es wird v. a. bei der Erwartung einer Belohnung ausgeschüttet — und zieht dich zur Handlung.",
+          "checks": [
+            "Woraus ziehst du gerade billiges Dopamin? Und wie könntest du einen echten Fortschritt so sichtbar machen, dass er belohnend wird? ---"
+          ]
+        },
+        {
+          "nr": 5,
+          "titel": "Die Amygdala: Sicherheit vor Neuem",
+          "kern": "Die Amygdala wittert bei allem Ungewohnten Gefahr und bremst Veränderung. Große Sprünge lösen Widerstand aus — winzige Schritte fliegen unter ihrem Radar.",
+          "checks": [
+            "Welchen Vorsatz schiebst du auf? Schrumpfe ihn auf eine Version, die so klein ist, dass „nein\" lächerlich wäre. --- # TEIL III — ANWENDUNG"
+          ]
+        },
+        {
+          "nr": 6,
+          "titel": "Mentales Training: der Geist als Übungsraum",
+          "kern": "Beim lebhaften Vorstellen einer Handlung feuern fast dieselben Hirnareale wie beim realen Tun. Der Geist ist ein echter Übungsraum — wenn du ihn richtig nutzt.",
+          "checks": [
+            "Welche eine Handlung willst du morgen mental proben — mit allen Sinnen und aus deiner Perspektive? ---"
+          ]
+        },
+        {
+          "nr": 7,
+          "titel": "Identität & Verhaltensaktivierung: Handeln vor Gefühl",
+          "kern": "Du musst dich nicht erst „wie die Person fühlen\", um zu handeln. Handlung erzeugt Gefühl mindestens so oft wie umgekehrt. Und jede Handlung ist eine Stimme für eine Identität.",
+          "checks": [
+            "Nenne eine „teure\" Version deines Ziels — und die kostenlose Handlung dahinter, die du diese Woche tun kannst. ---"
+          ]
+        },
+        {
+          "nr": 8,
+          "titel": "Dein 7-Tage-Startplan",
+          "kern": "Wissen ohne Anwendung verpufft (Kap. 2 — ungenutzte Bahnen bauen ab). Diese Woche verankerst du alle Mechanismen in Handlung.",
+          "checks": [
+            "Welchen der sieben Tage setzt du sofort nach diesem Kapitel um — und wann genau heute?"
+          ]
+        }
+      ]
+    }
+  ],
+  "lernpfad": {
+    "phase1": {
+      "titel": "Verdienen",
+      "rot": [
+        "m7",
+        "m8",
+        "m2",
+        "m2b"
+      ],
+      "gelb": [
+        "m4",
+        "m9",
+        "m1",
+        "m10"
+      ],
+      "gruen": [
+        "m3",
+        "m11",
+        "m12"
+      ],
+      "ignorieren": [
+        "m5",
+        "m6"
+      ],
+      "hinweis": "Anfangen und Zeit zuerst. Dann Verkauf. Struktur kommt spaeter."
+    },
+    "phase2": {
+      "titel": "Vermehren",
+      "rot": [
+        "m6",
+        "m3"
+      ],
+      "gelb": [
+        "m1",
+        "m5",
+        "m9"
+      ],
+      "gruen": [
+        "m4",
+        "m9",
+        "m10"
+      ],
+      "ignorieren": [],
+      "hinweis": "Systeme sind der Schritt, der Einkommen zu Vermoegen macht."
+    },
+    "phase3": {
+      "titel": "Schuetzen",
+      "rot": [
+        "m5"
+      ],
+      "gelb": [
+        "m6"
+      ],
+      "gruen": [
+        "m1"
+      ],
+      "ignorieren": [],
+      "hinweis": "Struktur, Haftungstrennung, Diversifikation."
+    },
+    "phase4": {
+      "titel": "Bewahren",
+      "rot": [
+        "m5"
+      ],
+      "gelb": [],
+      "gruen": [],
+      "ignorieren": [],
+      "hinweis": "Stiftung und Nachfolge. Jahrzehnte weg."
+    }
+  },
+  "kurzfassung": [
+    "Etwas koennen, das selten ist",
+    "Es verkaufen, indem du diagnostizierst statt ueberredest",
+    "Gefunden werden von den Richtigen",
+    "Weniger ausgeben, als reinkommt",
+    "Es so bauen, dass es ohne dich laeuft",
+    "Den Ueberschuss in Produktives stecken",
+    "Struktur drumherum, wenn es genug zu strukturieren gibt"
+  ],
+  "leitsatz": "Multiplikation braucht einen Faktor. Bau erst den Faktor.",
+  "reihenfolge": {
+    "hinweis": "Empfohlene Lernreihenfolge. Weicht bewusst von den Kursnummern ab - Nummern sind Themengebiete, diese Liste ist der Pfad.",
+    "pfad": [
+      {
+        "pos": 1,
+        "id": "m7",
+        "warum": "Ohne Umsetzung bleibt alles andere Theorie"
+      },
+      {
+        "pos": 2,
+        "id": "m8",
+        "warum": "Ohne Zeit gibt es nichts umzusetzen"
+      },
+      {
+        "pos": 3,
+        "id": "m2",
+        "warum": "Die Faehigkeit, die sofort Geld bringt"
+      },
+      {
+        "pos": 4,
+        "id": "m2b",
+        "warum": "Vertiefung: produktunabhaengig verkaufen und sich selbst"
+      },
+      {
+        "pos": 5,
+        "id": "m4",
+        "warum": "Das Fundament unter Verkauf und Marketing - inkl. Social Media"
+      },
+      {
+        "pos": 6,
+        "id": "m3",
+        "warum": "1:viele statt 1:1"
+      },
+      {
+        "pos": 7,
+        "id": "m9",
+        "warum": "Werkzeug, das alles andere beschleunigt"
+      },
+      {
+        "pos": 8,
+        "id": "m1",
+        "warum": "Behalten, was reinkommt - relevant ab dem ersten Euro"
+      },
+      {
+        "pos": 9,
+        "id": "m6",
+        "warum": "Erst wenn es etwas zu systematisieren gibt"
+      },
+      {
+        "pos": 10,
+        "id": "m5",
+        "warum": "Zuletzt. Struktur multipliziert, sie erschafft nicht."
+      },
+      {
+        "pos": 11,
+        "id": "m10",
+        "warum": "Skill-Kurs - phasenunabhaengig, wenn du Kapazitaet hast"
+      },
+      {
+        "pos": 12,
+        "id": "m11",
+        "warum": "Skill-Kurs - phasenunabhaengig, wenn du Kapazitaet hast"
+      },
+      {
+        "pos": 13,
+        "id": "m12",
+        "warum": "Skill-Kurs - phasenunabhaengig, wenn du Kapazitaet hast"
+      },
+      {
+        "pos": 14,
+        "id": "m13",
+        "warum": "Skill-Kurs - Grundlagen fuer Manifestieren, phasenunabhaengig"
+      }
+    ]
+  }
+}

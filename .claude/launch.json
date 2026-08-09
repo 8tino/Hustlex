@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "lifeos-dev",
+      "runtimeExecutable": "C:/Users/Gamer/AppData/Roaming/fnm/node-versions/v24.16.0/installation/node.exe",
+      "runtimeArgs": ["dev.mjs"],
+      "port": 5173
+    },
+    {
+      "name": "lifeos-static-preview",
+      "runtimeExecutable": "py",
+      "runtimeArgs": ["-m", "http.server", "5179", "--directory", "dist"],
+      "port": 5179
+    }
+  ]
+}

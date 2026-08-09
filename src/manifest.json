@@ -1,0 +1,40 @@
+{
+  "name": "LifeOS",
+  "version": "2.0.0",
+  "description": "Personal optimization PWA · modular build",
+  "buildOrder": {
+    "styles": "alphabetical from src/styles/*.css",
+    "scripts": [
+      "src/core/*.js (alphabetical: 01-storage → 02-constants → 03-state → 04-helpers)",
+      "src/ui/*.js (alphabetical)",
+      "src/screens/*.js (alphabetical)"
+    ]
+  },
+  "engine": [
+    { "id": "render", "file": "screens/00-render.js", "status": "done", "notes": "renderScreen dispatch" },
+    { "id": "init",   "file": "screens/99-init.js",   "status": "done", "notes": "boot, evening-review prompt, 60s re-render loop" }
+  ],
+  "screens": [
+    { "id": "home",     "file": "screens/home.js",     "status": "done", "notes": "Dashboard + Daily Challenge (getDC chk re-attach fix)" },
+    { "id": "fokus",    "file": "screens/fokus.js",    "status": "done", "notes": "Discipline Engine + Day Planner" },
+    { "id": "quests",   "file": "screens/quests.js",   "status": "done" },
+    { "id": "vitals",   "file": "screens/vitals.js",   "status": "done" },
+    { "id": "intel",    "file": "screens/intel.js",    "status": "done", "notes": "Knowledge + Body Fix + KI-Doc tabs" },
+    { "id": "ich",      "file": "screens/ich.js",      "status": "done", "notes": "Goals + Values + Habits + Achievements" },
+    { "id": "wachstum", "file": "screens/wachstum.js", "status": "done", "notes": "Journal + Learning" },
+    { "id": "markt",    "file": "screens/markt.js",    "status": "done", "notes": "Kapital-Radar: Morgen-Briefing, Indizes, Krypto, Geldfluss/Sektoren, Insider, Analysten, Stimmen der Entscheider, News, Watchlist (optional Finnhub-Live). Inhalte = recherchierter Schnappschuss in MARKT_DATA; Override via localStorage los_markt." }
+  ],
+  "ui": [
+    { "id": "toast",     "file": "ui/01-toast.js",    "status": "done" },
+    { "id": "statusbar", "file": "ui/02-statusbar.js", "status": "done" },
+    { "id": "nav",       "file": "ui/03-nav.js",       "status": "done" },
+    { "id": "overlay",   "file": "ui/04-overlay.js",   "status": "done" },
+    { "id": "onboard",   "file": "ui/05-onboard.js",   "status": "done" }
+  ],
+  "designSystem": {
+    "philosophy": "iOS dark mode (Apple). True black #000, solid high-contrast cards (#1C1C1E/#2C2C2E), white text, Apple-blue accent #0A84FF, hairline separators, SF/system font. NO glass blur on surfaces, NO gold, NO serif. The token names (--glass-*, --gold) are kept for compatibility but now hold solid/blue values.",
+    "tokens": "src/styles/01-base.css",
+    "components": "src/styles/02-components.css",
+    "animations": "src/styles/03-animations.css"
+  }
+}
