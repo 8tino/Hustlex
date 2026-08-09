@@ -24,7 +24,7 @@ function renderStatusBar() {
       '<div style="flex:1;min-width:0;">' +
         '<div style="display:flex;align-items:baseline;gap:8px;margin-bottom:6px;">' +
           '<span id="sb_name" class="serif gold" style="font-size:14px;letter-spacing:.3px;' +
-            'overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">LifeOS</span>' +
+            'overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">HustleX</span>' +
           '<span id="sb_level" class="label" style="font-size:10px;white-space:nowrap;">RECRUIT · LV1</span>' +
           '<span id="sb_pro" class="pill pill-gold" style="font-size:6px;display:none;">PRO</span>' +
         '</div>' +

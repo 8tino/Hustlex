@@ -165,7 +165,7 @@ function showSettings() {
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = 'LifeOS_Export_' + new Date().toLocaleDateString('de-DE').replace(/\./g, '-') + '.json';
+    a.download = 'HustleX_Export_' + new Date().toLocaleDateString('de-DE').replace(/\./g, '-') + '.json';
     a.click();
     haptic('success'); showToast('Export heruntergeladen!');
   };

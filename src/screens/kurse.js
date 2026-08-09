@@ -5,7 +5,7 @@
 //      phase filter via lernpfad, chapter full text + control questions.
 //   2) EIGENE KURSE — self-built courses with lessons, exam & certificate.
 //
-//   Progress lives in localStorage like the rest of LifeOS (→ cloud sync
+//   Progress lives in localStorage like the rest of HustleX (→ cloud sync
 //   + auto-backup):
 //     los_kurse_fortschritt = { "m1.4": { done:true, checks:{0:true,2:true} } }
 //     los_courses           = [ …custom courses… ]
@@ -603,7 +603,7 @@ function showCertificate(courseId, score) {
     '<div class="serif gold" style="font-size:19px;line-height:1.4;">' + esc(c.title) + '</div>' +
     (score != null ? '<div style="font-size:13px;color:var(--green);margin-top:12px;">Ergebnis: ' + score + '%</div>' : '') +
     '<div style="height:1px;background:var(--edge);margin:18px 0;"></div>' +
-    '<div style="font-size:12px;color:var(--t-3);">' + date.toLocaleDateString('de-DE', { day: 'numeric', month: 'long', year: 'numeric' }) + ' · LifeOS</div>';
+    '<div style="font-size:12px;color:var(--t-3);">' + date.toLocaleDateString('de-DE', { day: 'numeric', month: 'long', year: 'numeric' }) + ' · HustleX</div>';
   inner.appendChild(cert);
   const ok = h('button', { textContent: 'STARK! →' });
   ok.className = 'btn btn-gold tap'; ok.style.marginTop = '16px';

@@ -55,7 +55,7 @@ function assistantContext() {
   const disc = (typeof getDiscState === 'function') ? getDiscState() : { streak: 0 };
   const nn = (typeof getNN === 'function') ? getNN() : { items: [] };
   const lines = [
-    'Du bist der LifeOS-Assistent: knapp, direkt, motivierend, auf Deutsch.',
+    'Du bist der HustleX-Assistent: knapp, direkt, motivierend, auf Deutsch.',
     'Du kannst Aktionen per Tool ausführen (Ziele, Aufgaben, Gewohnheiten, Kurse, Journal, Finanzen …). Nutze ein Tool NUR, wenn der Nutzer wirklich etwas anlegen/eintragen will; sonst antworte einfach. Bestätige ausgeführte Aktionen in einem kurzen Satz.',
     '',
     'NUTZER-KONTEXT:',

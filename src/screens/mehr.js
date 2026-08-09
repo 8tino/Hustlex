@@ -10,7 +10,7 @@ function renderMehr(s) {
     '<div class="h2">Werkzeuge & <span class="gold">Einstellungen</span></div>';
 
   const acts = [
-    { ic: '❔', name: 'Tutorial · So funktioniert LifeOS', sub: 'Navigation, Gesten & alle Bereiche erklärt', fn: () => openTutorial() },
+    { ic: '❔', name: 'Tutorial · So funktioniert HustleX', sub: 'Navigation, Gesten & alle Bereiche erklärt', fn: () => openTutorial() },
     { ic: '❓', name: 'Hilfe & FAQ', sub: 'Antworten & Kontakt, falls du nicht weiterkommst', fn: () => openHelp() },
     { ic: '🎛', name: 'App anpassen', sub: 'Sektionen ein-/ausblenden · Task-Ordner verwalten', fn: () => openCustomize() },
     { ic: '📥', name: 'Notizen einsortieren', sub: 'Notizen einfügen → automatisch in die Bereiche verteilen', fn: () => openNotesImport() },
@@ -83,8 +83,8 @@ function openReport(kind) {
     const ti = title.value.trim(); if (!ti) { showToast('Bitte kurz einen Titel eingeben', '✎'); return; }
     const entry = { id: Date.now(), kind, title: ti, body: body.value.trim(), at: new Date().toISOString(), v: (typeof SW_VERSION !== 'undefined' ? SW_VERSION : '') };
     const all = getFeedback(); all.unshift(entry); ls('los_feedback', all);
-    const subject = encodeURIComponent('[LifeOS ' + (isBug ? 'Bug' : 'Idee') + '] ' + ti);
-    const mailBody = encodeURIComponent((body.value.trim() || '(keine Details)') + '\n\n—\nVersion: ' + entry.v + '\nGesendet aus LifeOS');
+    const subject = encodeURIComponent('[HustleX ' + (isBug ? 'Bug' : 'Idee') + '] ' + ti);
+    const mailBody = encodeURIComponent((body.value.trim() || '(keine Details)') + '\n\n—\nVersion: ' + entry.v + '\nGesendet aus HustleX');
     try { window.open('mailto:' + FEEDBACK_EMAIL + '?subject=' + subject + '&body=' + mailBody, '_blank'); } catch (e) {}
     haptic('success'); showToast(isBug ? 'Danke! Fehler notiert' : 'Danke! Idee notiert', '💚'); closeOverlay();
   };
@@ -105,7 +105,7 @@ function openReport(kind) {
 
 // ─── TUTORIAL · Navigation & Bereiche erklärt ───────────
 const TUTORIAL_SLIDES = [
-  { ic: '👋', t: 'Willkommen bei LifeOS', b: 'Dein persönliches Betriebssystem fürs Leben — Körper, Aufgaben, Ziele, Wissen an einem Ort. Ganz unten wechselst du zwischen <b>5 Bereichen</b>.' },
+  { ic: '👋', t: 'Willkommen bei HustleX', b: 'Dein persönliches Betriebssystem fürs Leben — Körper, Aufgaben, Ziele, Wissen an einem Ort. Ganz unten wechselst du zwischen <b>5 Bereichen</b>.' },
   { ic: '🧭', t: 'Die 5 Bereiche unten', b: '<b>◈ Heute</b> — dein Überblick für den Tag.<br><b>♡ Körper</b> — Essen, Wasser, Schlaf, Gewohnheiten.<br><b>◎ Aufgaben</b> — Tagesplan, Tasks, Log, Disziplin.<br><b>✦ Wachstum</b> — Ziele, Kurse, Skills, Finanzen.<br><b>⋯ Mehr</b> — Werkzeuge & Einstellungen.' },
   { ic: '👉', t: 'Navigieren & Gesten', b: 'Von der <b>linken Kante nach rechts wischen</b> = eine Ebene zurück (wie am iPhone).<br><br>Überschriften mit einem <b>Pfeil</b> kannst du antippen zum <b>Auf- und Zuklappen</b> — so bleibt alles kurz und übersichtlich.' },
   { ic: '🔗', t: 'Alles hängt zusammen', b: 'Trägst du dein <b>Wasser</b> in Körper ein, hakt sich der „Trinken"-Task von selbst ab — kein doppeltes Eintragen. Beim Task tippst du auf <b>⛓</b>, um ihn mit einem Körper-Wert zu verknüpfen.' },
@@ -173,7 +173,7 @@ function openCustomize(firstRun) {
     '<div class="label" style="margin-bottom:6px;">PERSONALISIEREN</div>' +
     '<div class="h2" style="margin-bottom:14px;">App <span class="gold">anpassen</span></div>');
   if (firstRun) {
-    const intro = div('glass-accent', '<div style="font-size:13px;color:var(--t-2);line-height:1.6;">Richte dir LifeOS ein, wie du es willst: blende Sektionen aus, die du nicht brauchst, und leg dir Task-Ordner an. <b>Alles ist jederzeit hier änderbar</b> — du findest das später unter <b>Mehr → 🎛 App anpassen</b>.</div>');
+    const intro = div('glass-accent', '<div style="font-size:13px;color:var(--t-2);line-height:1.6;">Richte dir HustleX ein, wie du es willst: blende Sektionen aus, die du nicht brauchst, und leg dir Task-Ordner an. <b>Alles ist jederzeit hier änderbar</b> — du findest das später unter <b>Mehr → 🎛 App anpassen</b>.</div>');
     intro.style.marginBottom = '14px'; inner.appendChild(intro);
     try { ls('los_customize_seen', true); } catch (e) {}
   }
@@ -266,7 +266,7 @@ function openConnections() {
   // ── 0. Mit Claude besprechen (ohne Key, über dein Abo) ──
   inner.appendChild(div('label', 'MIT CLAUDE BESPRECHEN · OHNE KEY'));
   const tc = div('glass', ''); tc.style.cssText = 'padding:14px;margin-bottom:16px;';
-  tc.insertAdjacentHTML('beforeend', '<div style="font-size:13px;color:var(--t-2);line-height:1.6;">Der einfachste Weg — <b>gratis & ohne API-Key</b>, über dein normales Claude-Abo: Tipp auf den Knopf, dann liegt dein aktueller LifeOS-Stand in der Zwischenablage und Claude öffnet sich. Einfügen (⌘/Strg + V) — und Claude ist dein Coach. Antworten mit neuen Aufgaben/Zielen holst du über „Notizen einsortieren" zurück in die App.</div>');
+  tc.insertAdjacentHTML('beforeend', '<div style="font-size:13px;color:var(--t-2);line-height:1.6;">Der einfachste Weg — <b>gratis & ohne API-Key</b>, über dein normales Claude-Abo: Tipp auf den Knopf, dann liegt dein aktueller HustleX-Stand in der Zwischenablage und Claude öffnet sich. Einfügen (⌘/Strg + V) — und Claude ist dein Coach. Antworten mit neuen Aufgaben/Zielen holst du über „Notizen einsortieren" zurück in die App.</div>');
   const tcb = h('button', { textContent: '💬  Mit Claude besprechen' }); tcb.className = 'btn btn-gold tap'; tcb.style.marginTop = '12px';
   tcb.onclick = () => talkToClaude();
   tc.appendChild(tcb);
@@ -331,25 +331,25 @@ function openConnections() {
   const ocard = div('glass', ''); ocard.style.cssText = 'padding:14px;';
   ocard.insertAdjacentHTML('beforeend', '<div style="font-size:13px;color:var(--t-2);line-height:1.6;">Exportiere deine Daten als eine Markdown-Datei — direkt in deinen Obsidian-Vault ziehbar. Gesperrte Bereiche (oben) werden <b>nicht</b> exportiert. Notizen aus Obsidian zurück holst du über „Notizen einsortieren".</div>');
   const exp = h('button', { textContent: '⬇  Als Markdown exportieren' }); exp.className = 'btn btn-gold tap'; exp.style.marginTop = '12px';
-  exp.onclick = () => { const md = buildMarkdownExport(); downloadText('LifeOS-Export-' + today().replace(/[^a-z0-9]+/gi, '-') + '.md', md); showToast('Markdown exportiert', '📄'); };
+  exp.onclick = () => { const md = buildMarkdownExport(); downloadText('HustleX-Export-' + today().replace(/[^a-z0-9]+/gi, '-') + '.md', md); showToast('Markdown exportiert', '📄'); };
   ocard.appendChild(exp);
   inner.appendChild(ocard);
 
-  inner.insertAdjacentHTML('beforeend', '<div style="font-size:11px;color:var(--t-4);margin-top:14px;line-height:1.6;">Hinweis: Eine echte „live" MCP-Anbindung, bei der dein Claude von außen direkt in LifeOS schreibt, braucht einen eigenen Server (später geplant). Schon jetzt möglich: KI-Kurse & Assistent laufen über dein Konto und respektieren die Berechtigungen oben.</div>');
+  inner.insertAdjacentHTML('beforeend', '<div style="font-size:11px;color:var(--t-4);margin-top:14px;line-height:1.6;">Hinweis: Eine echte „live" MCP-Anbindung, bei der dein Claude von außen direkt in HustleX schreibt, braucht einen eigenen Server (später geplant). Schon jetzt möglich: KI-Kurse & Assistent laufen über dein Konto und respektieren die Berechtigungen oben.</div>');
   openOverlay();
 }
 
-// Keyless bridge to Claude: copy a coaching briefing (your LifeOS snapshot,
+// Keyless bridge to Claude: copy a coaching briefing (your HustleX snapshot,
 // respecting the scope toggles) to the clipboard and open claude.ai. The user
 // pastes it into their normal Claude subscription — no API key, no cost.
 async function talkToClaude() {
   const intro =
-    'Du bist mein persönlicher Coach. Unten ist mein aktueller Stand aus meiner LifeOS-App ' +
+    'Du bist mein persönlicher Coach. Unten ist mein aktueller Stand aus meiner HustleX-App ' +
     '(Ziele, Wünsche, Gewohnheiten, Journal, Log, Finanzen — je nach Freigabe). ' +
     'Lies ihn und hilf mir konkret weiter: erkenne Muster, nenn mir die 3 wichtigsten nächsten ' +
     'Schritte für heute und frag nach, wenn dir etwas fehlt.\n\n' +
     'Wenn du mir Aufgaben, Ziele oder Notizen zurückgibst, schreib sie als einfache Liste (eine pro Zeile) — ' +
-    'die importiere ich in LifeOS über „Notizen einsortieren".\n\n---\n\n';
+    'die importiere ich in HustleX über „Notizen einsortieren".\n\n---\n\n';
   const text = intro + buildMarkdownExport();
 
   let copied = false;
@@ -370,7 +370,7 @@ async function talkToClaude() {
 
 function buildMarkdownExport() {
   const L = []; const p = STATE.profile || {};
-  L.push('# LifeOS Export — ' + new Date().toLocaleDateString('de-DE'));
+  L.push('# HustleX Export — ' + new Date().toLocaleDateString('de-DE'));
   if (p.name) L.push('', '**Profil:** ' + p.name);
 
   if (aiScopeAllowed('ziele')) {
@@ -395,7 +395,7 @@ function buildMarkdownExport() {
     const f = ls('los_fin'); const tx = (f && f.tx) || [];
     if (tx.length) { L.push('', '## Finanzen (letzte 30)'); tx.slice(-30).forEach(t => L.push('- ' + (t.date || t.d || '') + ' ' + (t.text || t.desc || t.note || t.n || '') + ': ' + (t.amount != null ? t.amount : (t.betrag != null ? t.betrag : (t.value != null ? t.value : ''))) + '€')); }
   }
-  L.push('', '---', '_Exportiert aus LifeOS · ' + new Date().toISOString() + '_');
+  L.push('', '---', '_Exportiert aus HustleX · ' + new Date().toISOString() + '_');
   return L.join('\n');
 }
 
