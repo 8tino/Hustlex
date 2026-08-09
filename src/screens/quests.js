@@ -29,24 +29,32 @@ function addUserQuest(cat) {
   saveUserQuests(u); renderScreen('quests');
 }
 
-// Progressive daily multiplier: the more of today's quests are done, the bigger
-// the multiplier on their combined XP. 1 done = ×1, then +0.25 per further quest
-// (capped ×3). Fully reversible — the bonus is recomputed from scratch on every
-// toggle, so un-checking removes exactly the right amount (no point farming).
+// Daily quest XP = effective base × growing multiplier, recomputed from scratch
+// on every toggle (fully reversible → un-checking removes exactly the right XP).
+//   · multiplier grows ×1 → ×3 the more you finish (rewards doing a lot)
+//   · effective base has DIMINISHING RETURNS past a soft threshold — no hard cap,
+//     so genuine high-volume users keep earning, but spamming junk quests to farm
+//     points flattens out (10× the quests ≠ 10× the points).
 function questMult(n) { return n <= 1 ? 1 : Math.min(3, 1 + (n - 1) * 0.25); }
 function questDoneCount() { return getQuests().filter(q => STATE.day.habits.includes(q.id)).length; }
-function recomputeQuestBonus() {
+const QUEST_SOFT = 150;         // XP-worth of quests/day that counts in full
+function questEffectiveBase(baseSum) {
+  if (baseSum <= QUEST_SOFT) return baseSum;
+  return Math.round(QUEST_SOFT + Math.sqrt((baseSum - QUEST_SOFT) * QUEST_SOFT));  // sqrt taper, no cliff
+}
+function recomputeQuestXP() {
   const doneQ = getQuests().filter(q => STATE.day.habits.includes(q.id));
   const n = doneQ.length;
   const baseSum = doneQ.reduce((a, q) => a + (q.xp || 0), 0);
-  const target = Math.round(baseSum * (questMult(n) - 1));   // extra XP beyond the flat base
-  const prev = STATE.day.questBonus || 0;
+  const target = Math.round(questEffectiveBase(baseSum) * questMult(n));
+  const prev = STATE.day.questAwarded || 0;
   const delta = target - prev;
   if (delta !== 0) {
     STATE.totalXP = Math.max(0, STATE.totalXP + delta);
     ls('los_xp', STATE.totalXP);
-    STATE.day.questBonus = target; saveDay();
+    STATE.day.questAwarded = target; saveDay();
     if (delta > 0 && n >= 2) { haptic('achievement'); showToast((typeof LANG !== 'undefined' && LANG === 'en' ? 'Combo ×' : 'Kombo ×') + questMult(n) + '!', '🔥'); }
+    if (typeof checkAchievements === 'function') checkAchievements();
     if (typeof updateStatusBar === 'function') updateStatusBar();
   }
 }
@@ -101,11 +109,10 @@ function renderQuests(s) {
       if (STATE.day.habits.includes(hb.id)) {
         STATE.day.habits = STATE.day.habits.filter(x => x !== hb.id);
         STATE.day.xp = Math.max(0, STATE.day.xp - hb.xp);
-        if (typeof subXP === 'function') subXP(hb.xp, hb.cat);
       } else {
-        STATE.day.habits.push(hb.id); STATE.day.xp += hb.xp; addXP(hb.xp, hb.cat, true); // flat, no click-combo
+        STATE.day.habits.push(hb.id); STATE.day.xp += hb.xp; haptic('success');
       }
-      saveDay(); recomputeQuestBonus(); renderScreen('quests'); updateStatusBar();
+      saveDay(); recomputeQuestXP(); renderScreen('quests'); updateStatusBar();  // single XP source (diminishing + multiplier)
     };
     const tapArea = div('tap', '<span style="font-size:20px;">' + hb.icon + '</span>' +
       '<div style="flex:1;min-width:0;"><div style="font-size:14px;color:' + (done ? 'var(--green)' : 'var(--t-1)') + ';">' + esc(hb.label) + '</div>' +
