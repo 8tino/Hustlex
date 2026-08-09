@@ -21,7 +21,7 @@ const I18N_WORDS = {
     'nach Körper-Basis': 'after body base', 'vor Kampf & Tricks': 'before fighting & tricks',
     'zuerst': 'first', 'parallel': 'parallel', 'Reihenfolge': 'order',
     // workout composed fragments
-    'Übungen': 'exercises', 'Übung': 'exercise', 'Sätze': 'sets', 'Satz': 'set', 'SATZ': 'SET', 'WDH': 'REPS',
+    'Übungen': 'exercises', 'Übung': 'exercise', 'Sätze': 'sets', 'WDH': 'REPS',
     'Volumen': 'volume', 'LÄUFT': 'ACTIVE', 'Rekord': 'Record', 'als eigene Übung anlegen': 'create as custom exercise',
     // home / deadline composed fragments
     'noch': 'still', 'Tage': 'days', 'Tag': 'day', 'überfällig': 'overdue', 'alles schaffen': 'complete all',
@@ -467,6 +467,9 @@ const I18N_PHRASES = {
     'KÖRPER · GYM': 'BODY · GYM', '＋ Neues Workout starten': '＋ Start new workout', 'Routinen': 'Routines',
     'Noch keine Routinen. Beende ein Workout und speichere es als Routine — dann startest du es mit einem Tap.': 'No routines yet. Finish a workout and save it as a routine — then start it with one tap.',
     'Persönliche Rekorde': 'Personal records', 'Noch keine Rekorde erfasst.': 'No records logged yet.', 'Letzte Workouts': 'Recent workouts',
+    'Rekorde': 'Records', 'Verlauf': 'History', 'ZUVOR': 'PREV', 'SATZ': 'SET',
+    'DER ERSTE SATZ DES TAGES': 'THE FIRST WORD OF THE DAY', '📖 GEDANKE AUS EINEM BUCH': '📖 A THOUGHT FROM A BOOK', 'LOS GEHT’S →': 'LET’S GO →',
+    'Noch keine Workouts. Tippe oben auf „Neues Workout starten".': 'No workouts yet. Tap "Start new workout" above.',
     'Noch keine Workouts. Tippe oben auf „Neues Workout starten".': 'No workouts yet. Tap "Start new workout" above.',
     '＋ Übung hinzufügen': '＋ Add exercise', '✓ Workout beenden': '✓ Finish workout', '📋 Als Routine speichern': '📋 Save as routine',
     'Verwerfen': 'Discard', 'Erst Übungen hinzufügen': 'Add exercises first', 'Routine gespeichert': 'Routine saved',

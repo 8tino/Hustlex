@@ -75,11 +75,43 @@ function woPR(exId) {
   return { maxW, best1rm };
 }
 
+// Most recent past performance of an exercise (for the "previous" reference).
+function woLastExercise(exId) {
+  const ws = getWorkouts().slice().reverse();
+  for (const w of ws) {
+    const ex = (w.exercises || []).find(e => e.exId === exId);
+    if (ex && (ex.sets || []).length) return { date: w.date || w.id, sets: ex.sets };
+  }
+  return null;
+}
+// Sets for a new exercise instance: prefilled from last time (with a `prev`
+// reference so progression is visible), or one empty set if never trained.
+function woSetsFromLast(exId) {
+  const last = woLastExercise(exId);
+  if (last) return last.sets.map(st => ({ weight: st.weight, reps: st.reps, done: false, prev: { weight: st.weight, reps: st.reps } }));
+  return [{ weight: '', reps: '', done: false }];
+}
+// All exercises that have any recorded set → best weight + e1RM, ranked.
+function woAllRecords() {
+  const map = {};
+  getWorkouts().forEach(w => (w.exercises || []).forEach(ex => (ex.sets || []).forEach(st => {
+    if (!st.done) return;
+    const wgt = +st.weight || 0, r = +st.reps || 0, e = woE1RM(wgt, r);
+    const m = map[ex.exId] || (map[ex.exId] = { exId: ex.exId, name: ex.name, maxW: 0, best1rm: 0 });
+    if (wgt > m.maxW) m.maxW = wgt;
+    if (e > m.best1rm) m.best1rm = e;
+  })));
+  return Object.values(map).sort((a, b) => b.best1rm - a.best1rm);
+}
+
 // ─── Screen dispatch ───
+// WO_VIEW = 'active' shows the running session; 'home' shows the start page even
+// while a session runs in the background (so you can leave without ending it).
+let WO_VIEW = 'active';
 function renderWorkout(s) {
   s.className = 'screen on';
   const active = getActiveWO();
-  if (active) return woRenderActive(s, active);
+  if (active && WO_VIEW !== 'home') return woRenderActive(s, active);
   woRenderHome(s);
 }
 
@@ -88,10 +120,27 @@ function woRenderHome(s) {
   s.innerHTML = '<div class="label" style="margin-bottom:4px;">KÖRPER · GYM</div>' +
     '<div class="h2">Workout-<span class="gold italic">Log</span></div>';
 
-  const start = h('button', { textContent: '＋ Neues Workout starten' });
+  // Resume banner — a session is running in the background.
+  const act = getActiveWO();
+  if (act) {
+    const resume = div('glass-accent tap');
+    resume.style.cssText = 'margin:14px 0 8px;display:flex;align-items:center;gap:12px;border-left:3px solid var(--green,#30D158);';
+    resume.innerHTML = '<span style="font-size:22px;">▶</span>' +
+      '<div style="flex:1;min-width:0;"><div style="font-size:14px;font-weight:600;color:var(--t-1);">' + (LANG === 'en' ? 'Resume workout' : 'Workout fortsetzen') + '</div>' +
+      '<div style="font-size:11px;color:var(--t-3);margin-top:1px;">' + esc(act.name || 'Workout') + ' · ' + woDoneSets(act) + ' ' + (LANG === 'en' ? 'sets' : 'Sätze') + '</div></div>' +
+      '<span style="color:var(--t-3);font-size:18px;">›</span>';
+    resume.onclick = () => { WO_VIEW = 'active'; renderScreen('workout'); };
+    s.appendChild(resume);
+  }
+
+  const start = h('button', { textContent: act ? (LANG === 'en' ? '＋ New workout' : '＋ Neues Workout') : (LANG === 'en' ? '＋ Start new workout' : '＋ Neues Workout starten') });
   start.className = 'btn tap';
-  start.style.cssText = 'width:100%;background:var(--blue);color:#fff;font-weight:600;font-size:15px;padding:14px;border:none;border-radius:var(--r-md);margin:14px 0 8px;';
-  start.onclick = () => { setActiveWO({ id: Date.now(), name: 'Workout', startedAt: Date.now(), exercises: [] }); renderScreen('workout'); haptic('success'); };
+  start.style.cssText = 'width:100%;background:' + (act ? 'var(--glass-2)' : 'var(--blue)') + ';color:' + (act ? 'var(--t-2)' : '#fff') + ';font-weight:600;font-size:15px;padding:14px;border:' + (act ? '1px solid var(--edge)' : 'none') + ';border-radius:var(--r-md);margin:' + (act ? '0 0 8px' : '14px 0 8px') + ';';
+  start.onclick = () => {
+    if (getActiveWO() && !confirm(LANG === 'en' ? 'A workout is still running. Discard it and start a new one?' : 'Es läuft noch ein Workout. Verwerfen und ein neues starten?')) return;
+    setActiveWO({ id: Date.now(), name: 'Workout', startedAt: Date.now(), exercises: [] });
+    WO_VIEW = 'active'; renderScreen('workout'); haptic('success');
+  };
   s.appendChild(start);
 
   // Routines
@@ -108,8 +157,9 @@ function woRenderHome(s) {
     const go = h('button', { textContent: 'Start' });
     go.className = 'tap'; go.style.cssText = 'font-size:12px;font-weight:600;padding:7px 14px;background:var(--blue);color:#fff;border:none;border-radius:var(--r-sm);';
     go.onclick = () => {
-      setActiveWO({ id: Date.now(), name: r.name, startedAt: Date.now(), exercises: (r.exercises || []).map(e => ({ exId: e.exId, name: e.name, sets: [{ weight: '', reps: '', done: false }] })) });
-      renderScreen('workout'); haptic('success');
+      if (getActiveWO() && !confirm(LANG === 'en' ? 'A workout is still running. Discard it and start this routine?' : 'Es läuft noch ein Workout. Verwerfen und diese Routine starten?')) return;
+      setActiveWO({ id: Date.now(), name: r.name, startedAt: Date.now(), exercises: (r.exercises || []).map(e => ({ exId: e.exId, name: e.name, sets: woSetsFromLast(e.exId) })) });
+      WO_VIEW = 'active'; renderScreen('workout'); haptic('success');
     };
     const del = h('button', { textContent: '🗑' });
     del.className = 'tap'; del.style.cssText = 'font-size:13px;background:none;color:var(--t-3);padding-left:4px;';
@@ -119,41 +169,62 @@ function woRenderHome(s) {
   });
   s.appendChild(rsec);
 
-  // PRs
+  // Records — every trained exercise, best weight + estimated 1RM, searchable.
   const workouts = getWorkouts();
   if (workouts.length) {
-    const prsec = section('Persönliche Rekorde', 'wo_prs', true); const pb = prsec._body;
-    const bigLifts = ['squat', 'bench', 'deadlift', 'ohp', 'pullup'];
-    let any = false;
-    bigLifts.forEach(id => {
-      const pr = woPR(id); if (!pr.maxW && !pr.best1rm) return;
-      any = true;
-      const row = div('row');
-      row.innerHTML = '<span style="font-size:16px;">🏆</span>' +
-        '<div style="flex:1;"><div style="font-size:13px;color:var(--t-1);">' + esc(woExName(id)) + '</div></div>' +
-        '<div style="text-align:right;"><div style="font-size:13px;font-weight:700;color:var(--gold);">' + pr.maxW + ' kg</div>' +
-        '<div style="font-size:10px;color:var(--t-3);">e1RM ' + pr.best1rm + ' kg</div></div>';
-      pb.appendChild(row);
-    });
-    if (!any) pb.appendChild(div('', '<div style="font-size:12px;color:var(--t-3);">Noch keine Rekorde erfasst.</div>'));
+    const recs = woAllRecords();
+    const prsec = section('Rekorde', 'wo_prs', true); const pb = prsec._body;
+    if (recs.length > 6) {
+      const rs = h('input', { type: 'search', placeholder: LANG === 'en' ? '🔍 Search exercise…' : '🔍 Übung suchen…' });
+      rs.className = 'inp'; rs.style.marginBottom = '8px';
+      const list = div(''); list.style.cssText = 'display:flex;flex-direction:column;gap:4px;';
+      const paintR = () => {
+        list.innerHTML = ''; const q = rs.value.toLowerCase().trim();
+        recs.filter(r => !q || r.name.toLowerCase().includes(q)).forEach(r => list.appendChild(recRow(r)));
+      };
+      rs.oninput = paintR; pb.appendChild(rs); pb.appendChild(list); paintR();
+    } else {
+      recs.forEach(r => pb.appendChild(recRow(r)));
+    }
     s.appendChild(prsec);
   }
+  function recRow(r) {
+    const row = div('row');
+    row.innerHTML = '<span style="font-size:16px;">🏆</span>' +
+      '<div style="flex:1;min-width:0;"><div style="font-size:13px;color:var(--t-1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + esc(r.name) + '</div></div>' +
+      '<div style="text-align:right;"><div style="font-size:13px;font-weight:700;color:var(--gold);">' + r.maxW + ' kg</div>' +
+      '<div style="font-size:10px;color:var(--t-3);">e1RM ' + r.best1rm + ' kg</div></div>';
+    return row;
+  }
 
-  // History
-  const hsec = section('Letzte Workouts', 'wo_history', true); const hb = hsec._body;
+  // History — searchable by name/date, full date shown, tap for detail.
+  const hsec = section('Verlauf', 'wo_history', true); const hb = hsec._body;
   if (!workouts.length) {
     hb.appendChild(div('', '<div style="font-size:12px;color:var(--t-3);line-height:1.6;">Noch keine Workouts. Tippe oben auf „Neues Workout starten".</div>'));
+  } else {
+    const all = workouts.slice().reverse();
+    const hs = h('input', { type: 'search', placeholder: LANG === 'en' ? '🔍 Search workout / date…' : '🔍 Workout / Datum suchen…' });
+    hs.className = 'inp'; hs.style.marginBottom = '8px';
+    const hlist = div(''); hlist.style.cssText = 'display:flex;flex-direction:column;gap:6px;';
+    const fmtDate = d => d.toLocaleDateString(LANG === 'en' ? 'en-GB' : 'de-DE', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+    const paintH = () => {
+      hlist.innerHTML = ''; const q = hs.value.toLowerCase().trim();
+      const items = all.filter(w => { const d = new Date(w.date || w.id); return !q || (w.name || '').toLowerCase().includes(q) || fmtDate(d).toLowerCase().includes(q); }).slice(0, 60);
+      if (!items.length) { hlist.appendChild(div('', '<div style="font-size:12px;color:var(--t-3);padding:4px;">' + (LANG === 'en' ? 'No match.' : 'Nichts gefunden.') + '</div>')); return; }
+      items.forEach(w => {
+        const row = div('row tap');
+        const d = new Date(w.date || w.id);
+        row.innerHTML = '<span style="font-size:18px;">🏋</span>' +
+          '<div style="flex:1;min-width:0;"><div style="font-size:14px;font-weight:600;color:var(--t-1);">' + esc(w.name || 'Workout') + '</div>' +
+          '<div style="font-size:11px;color:var(--t-3);margin-top:1px;">' + fmtDate(d) + ' · ' + woDoneSets(w) + ' Sätze · ' + (w.volume || woVolume(w)).toLocaleString(LANG === 'en' ? 'en-US' : 'de-DE') + ' kg Volumen' + (w.durationMin ? ' · ' + w.durationMin + ' min' : '') + '</div></div>' +
+          '<span style="color:var(--t-3);font-size:16px;">›</span>';
+        row.onclick = () => woOpenDetail(w.id);
+        hlist.appendChild(row);
+      });
+    };
+    if (all.length > 6) hb.appendChild(hs);
+    hb.appendChild(hlist); paintH();
   }
-  workouts.slice().reverse().slice(0, 15).forEach(w => {
-    const row = div('row tap');
-    const d = new Date(w.date || w.id);
-    row.innerHTML = '<span style="font-size:18px;">🏋</span>' +
-      '<div style="flex:1;min-width:0;"><div style="font-size:14px;font-weight:600;color:var(--t-1);">' + esc(w.name || 'Workout') + '</div>' +
-      '<div style="font-size:11px;color:var(--t-3);margin-top:1px;">' + d.toLocaleDateString('de-DE', { day: 'numeric', month: 'short' }) + ' · ' + woDoneSets(w) + ' Sätze · ' + (w.volume || woVolume(w)).toLocaleString('de-DE') + ' kg Volumen' + (w.durationMin ? ' · ' + w.durationMin + ' min' : '') + '</div></div>' +
-      '<span style="color:var(--t-3);font-size:16px;">›</span>';
-    row.onclick = () => woOpenDetail(w.id);
-    hb.appendChild(row);
-  });
   s.appendChild(hsec);
 }
 
@@ -161,8 +232,14 @@ function woRenderHome(s) {
 function woFmtClock(secs) { secs = Math.max(0, secs); const m = Math.floor(secs / 60), ss = secs % 60; return m + ':' + String(ss).padStart(2, '0'); }
 
 function woRenderActive(s, w) {
+  s.innerHTML = '';
+  // Back to the workout start page — the session keeps running in the background.
+  const back = h('button', { textContent: '‹ ' + (LANG === 'en' ? 'Back' : 'Zurück') });
+  back.className = 'tap'; back.style.cssText = 'background:none;color:var(--gold-soft,#409CFF);font-size:14px;padding:2px 0 10px;';
+  back.onclick = () => { WO_VIEW = 'home'; renderScreen('workout'); };
+  s.appendChild(back);
   const secs = Math.round((Date.now() - (w.startedAt || Date.now())) / 1000);
-  s.innerHTML = '<div class="label" style="margin-bottom:4px;">LÄUFT · <span id="wo_timer" style="font-variant-numeric:tabular-nums;">' + woFmtClock(secs) + '</span></div>';
+  s.insertAdjacentHTML('beforeend', '<div class="label" style="margin-bottom:4px;">LÄUFT · <span id="wo_timer" style="font-variant-numeric:tabular-nums;">' + woFmtClock(secs) + '</span></div>');
 
   // name
   const nameI = h('input', { type: 'text', value: w.name || 'Workout' });
@@ -196,21 +273,28 @@ function woRenderActive(s, w) {
     const pr = woPR(ex.exId);
     if (pr.maxW) card.appendChild(div('', '<div style="font-size:10px;color:var(--t-3);margin-bottom:8px;">Rekord: ' + pr.maxW + ' kg · e1RM ' + pr.best1rm + ' kg</div>'));
 
-    // set header
-    const hdr = div(''); hdr.style.cssText = 'display:grid;grid-template-columns:28px 1fr 1fr 40px;gap:6px;font-size:10px;color:var(--t-3);letter-spacing:.5px;margin-bottom:4px;padding:0 2px;';
-    hdr.innerHTML = '<div>SATZ</div><div>KG</div><div>WDH</div><div></div>';
+    // set header — SET | PREV (last time) | KG | REPS | ✓
+    const GRID = 'display:grid;grid-template-columns:24px 1.1fr 1fr 1fr 38px;gap:6px;';
+    const hdr = div(''); hdr.style.cssText = GRID + 'font-size:10px;color:var(--t-3);letter-spacing:.5px;margin-bottom:4px;padding:0 2px;';
+    hdr.innerHTML = '<div>SATZ</div><div style="text-align:center;">ZUVOR</div><div>KG</div><div>WDH</div><div></div>';
     card.appendChild(hdr);
 
     (ex.sets || []).forEach((st, si) => {
-      const row = div(''); row.style.cssText = 'display:grid;grid-template-columns:28px 1fr 1fr 40px;gap:6px;align-items:center;margin-bottom:5px;';
+      const row = div(''); row.style.cssText = GRID + 'align-items:center;margin-bottom:5px;';
       const num = div('', '<div style="font-size:13px;color:var(--t-3);text-align:center;">' + (si + 1) + '</div>');
+      // previous performance reference + progression arrow
+      const pv = st.prev;
+      let prevTxt = pv && (pv.weight || pv.reps) ? (pv.weight || 0) + '×' + (pv.reps || 0) : '–';
+      let arrow = '';
+      if (pv) { const c = woE1RM(st.weight, st.reps), p = woE1RM(pv.weight, pv.reps); if (c && p) { if (c > p) arrow = ' <span style="color:var(--green);">▲</span>'; else if (c < p) arrow = ' <span style="color:#FF453A;">▼</span>'; } }
+      const prevCell = div('', '<div style="font-size:11px;color:var(--t-4);text-align:center;white-space:nowrap;">' + prevTxt + arrow + '</div>');
       // done rows get a green tint but stay fully editable (adjust weight anytime)
       const inpDone = st.done ? 'background:rgba(48,209,88,.10);border-color:rgba(48,209,88,.35);' : '';
-      const wI = h('input', { type: 'number', inputMode: 'decimal', value: st.weight, placeholder: '–' });
-      wI.className = 'inp'; wI.style.cssText = 'padding:8px;text-align:center;font-size:14px;' + inpDone;
+      const wI = h('input', { type: 'number', inputMode: 'decimal', value: st.weight, placeholder: pv ? String(pv.weight || '') : '–' });
+      wI.className = 'inp'; wI.style.cssText = 'padding:8px 4px;text-align:center;font-size:14px;' + inpDone;
       wI.oninput = e => { st.weight = e.target.value; setActiveWO(w); };
-      const rI = h('input', { type: 'number', inputMode: 'numeric', value: st.reps, placeholder: '–' });
-      rI.className = 'inp'; rI.style.cssText = 'padding:8px;text-align:center;font-size:14px;' + inpDone;
+      const rI = h('input', { type: 'number', inputMode: 'numeric', value: st.reps, placeholder: pv ? String(pv.reps || '') : '–' });
+      rI.className = 'inp'; rI.style.cssText = 'padding:8px 4px;text-align:center;font-size:14px;' + inpDone;
       rI.oninput = e => { st.reps = e.target.value; setActiveWO(w); };
       const chk = h('button', { textContent: '✓' });
       chk.className = 'tap';
@@ -218,10 +302,10 @@ function woRenderActive(s, w) {
         (st.done ? 'background:rgba(48,209,88,.18);border:1px solid rgba(48,209,88,.4);color:var(--green);'
                  : 'background:var(--glass-2);border:1px solid var(--edge);color:var(--t-3);');
       chk.onclick = () => { st.done = !st.done; if (st.done) st.doneAt = Date.now(); else delete st.doneAt; setActiveWO(w); renderScreen('workout'); if (st.done) haptic('success'); };
-      // long-press a set number to remove it
+      // tap a set number to remove it
       num.style.cursor = 'pointer'; num.title = 'Satz entfernen';
       num.onclick = () => { if ((ex.sets || []).length > 1) { ex.sets.splice(si, 1); setActiveWO(w); renderScreen('workout'); } };
-      row.appendChild(num); row.appendChild(wI); row.appendChild(rI); row.appendChild(chk);
+      row.appendChild(num); row.appendChild(prevCell); row.appendChild(wI); row.appendChild(rI); row.appendChild(chk);
       card.appendChild(row);
     });
 
@@ -262,7 +346,7 @@ function woRenderActive(s, w) {
 
   const discard = h('button', { textContent: 'Verwerfen' });
   discard.className = 'btn btn-ghost tap'; discard.style.cssText = 'width:100%;font-size:12px;color:var(--red,#FF453A);';
-  discard.onclick = () => { if (confirm(LANG === 'en' ? 'Discard workout? Unsaved sets will be lost.' : 'Workout verwerfen? Nicht gespeicherte Sätze gehen verloren.')) { localStorage.removeItem('los_wo_active'); renderScreen('workout'); } };
+  discard.onclick = () => { if (confirm(LANG === 'en' ? 'Discard workout? Unsaved sets will be lost.' : 'Workout verwerfen? Nicht gespeicherte Sätze gehen verloren.')) { localStorage.removeItem('los_wo_active'); WO_VIEW = 'active'; renderScreen('workout'); } };
   s.appendChild(discard);
 }
 
@@ -280,7 +364,7 @@ function woOpenPicker(w) {
   const listWrap = div(''); inner.appendChild(listWrap);
   const addPick = (ex) => {
     w.exercises = w.exercises || [];
-    w.exercises.push({ exId: ex.id, name: ex.n, sets: [{ weight: '', reps: '', done: false }] });
+    w.exercises.push({ exId: ex.id, name: ex.n, sets: woSetsFromLast(ex.id) });
     setActiveWO(w); closeOverlay(); renderScreen('workout'); haptic('light');
   };
   const paint = (q) => {
@@ -322,7 +406,7 @@ function woFinish(w) {
   const rec = { id: w.id, date: Date.now(), name: w.name || 'Workout', durationMin, volume: vol,
     exercises: (w.exercises || []).map(e => ({ exId: e.exId, name: e.name, sets: (e.sets || []).filter(st => st.done).map(st => ({ weight: st.weight, reps: st.reps, done: true })) })) };
   const all = getWorkouts(); all.push(rec); saveWorkouts(all);
-  localStorage.removeItem('los_wo_active');
+  localStorage.removeItem('los_wo_active'); WO_VIEW = 'active';
   if (typeof addXP === 'function') addXP(50, 'body');
   // Log-Integration
   try {
@@ -349,7 +433,7 @@ function woOpenDetail(id) {
   (w.exercises || []).forEach(ex => {
     const card = div('glass'); card.style.marginBottom = '10px';
     let rows = '';
-    (ex.sets || []).forEach((st, i) => { rows += '<div style="display:flex;justify-content:space-between;font-size:13px;color:var(--t-2);padding:3px 0;"><span>Satz ' + (i + 1) + '</span><span>' + (st.weight || 0) + ' kg × ' + (st.reps || 0) + '</span></div>'; });
+    (ex.sets || []).forEach((st, i) => { rows += '<div style="display:flex;justify-content:space-between;font-size:13px;color:var(--t-2);padding:3px 0;"><span>' + (LANG === 'en' ? 'Set ' : 'Satz ') + (i + 1) + '</span><span>' + (st.weight || 0) + ' kg × ' + (st.reps || 0) + '</span></div>'; });
     card.innerHTML = '<div style="font-size:15px;font-weight:600;color:var(--t-1);margin-bottom:6px;">' + esc(ex.name) + '</div>' + rows;
     inner.appendChild(card);
   });
