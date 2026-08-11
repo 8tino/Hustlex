@@ -106,13 +106,22 @@ function _trWords(raw) {
   for (const k in w) { const re = new RegExp('(^|[^\\p{L}])' + k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '(?=$|[^\\p{L}])', 'gu'); const nx = out.replace(re, (m, p1) => p1 + w[k]); if (nx !== out) { out = nx; changed = true; } }
   return changed ? out : null;
 }
+// Never translate dynamic content (AI answers, the user's own text). Any element
+// tagged .notranslate — and its subtree — is left exactly as written.
+function _isNoTr(node) {
+  let e = node && node.nodeType === 3 ? node.parentElement : node;
+  while (e) { if (e.classList && e.classList.contains('notranslate')) return true; e = e.parentElement; }
+  return false;
+}
 function _trTextNode(n) {
   const raw = n.nodeValue;
   if (!raw || !/[A-Za-zÀ-ÿ]/.test(raw)) return;
+  if (_isNoTr(n)) return;
   const ex = _trExact(raw); if (ex != null && ex !== raw) { n.nodeValue = ex; return; }
   const wd = _trWords(raw); if (wd != null && wd !== raw) n.nodeValue = wd;
 }
 function _trAttr(elm, attr) {
+  if (_isNoTr(elm)) return;
   const v = elm.getAttribute(attr); if (!v) return;
   const ex = _trExact(v); if (ex != null && ex !== v) elm.setAttribute(attr, ex);
 }

@@ -143,7 +143,14 @@ async function aiFetch(payload) {
     body: JSON.stringify(payload),
   });
   const d = await r.json().catch(() => ({}));
-  if (!r.ok) throw new Error(d.error || ('KI-Fehler ' + r.status));
+  if (!r.ok) {
+    // d.error may be a string OR an object ({message,type,...}) — never let it
+    // stringify to "[object Object]".
+    const em = typeof d.error === 'string' ? d.error
+             : (d.error && (d.error.message || d.error.msg)) ? (d.error.message || d.error.msg)
+             : (d.message || ('KI-Fehler ' + r.status));
+    throw new Error(em);
+  }
   return d;
 }
 

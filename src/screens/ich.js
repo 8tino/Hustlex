@@ -351,7 +351,7 @@ function renderIch(s) {
 
           // Actions fold away so the goal list stays compact.
           const more = document.createElement('details'); more.className = 'sect'; more.style.marginTop = '8px';
-          more.innerHTML = '<summary class="sect-sum" style="padding:8px 2px;">Aktionen & Optionen</summary>';
+          more.innerHTML = '<summary class="sect-sum" style="padding:8px 2px;">Bearbeiten · KI-Plan · mehr</summary>';
           const mbody = div('sect-body'); mbody.style.paddingBottom = '4px';
           mbody.appendChild(todayBtn);
 

@@ -217,14 +217,15 @@ function aiBlock(label, prompt, color) {
   btn.style.cssText = 'margin-top:4px;font-size:11px;letter-spacing:1.5px;';
   if (color) btn.style.color = color;
 
-  const res = div('glass', '');
+  const res = div('glass notranslate', '');   // AI output is dynamic — never run it through the UI translator
   res.style.cssText = 'margin-top:8px;font-size:13px;color:var(--t-2);line-height:1.85;white-space:pre-line;display:none;';
 
   btn.onclick = async () => {
     if (res.style.display === 'block') { res.style.display = 'none'; btn.textContent = '◈  ' + label; return; }
-    btn.textContent = '◈  ANALYSIERE…'; btn.style.opacity = '.5';
-    try { res.textContent = await callAI(prompt); }
-    catch (e) { res.textContent = '⚠ ' + (e.message || 'Verbindungsfehler.'); }
+    btn.textContent = '◈  ' + ((typeof LANG !== 'undefined' && LANG === 'en') ? 'ANALYZING…' : 'ANALYSIERE…'); btn.style.opacity = '.5';
+    const langHint = (typeof LANG !== 'undefined' && LANG === 'en') ? ' Answer in English.' : ' Antworte auf Deutsch.';
+    try { res.textContent = await callAI(prompt + langHint); }
+    catch (e) { res.textContent = '⚠ ' + (e.message || ((typeof LANG !== 'undefined' && LANG === 'en') ? 'Connection error.' : 'Verbindungsfehler.')); }
     res.style.display = 'block';
     btn.style.opacity = '1'; btn.textContent = '◈  ' + label;
   };

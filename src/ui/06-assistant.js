@@ -210,7 +210,7 @@ function initAssistant() {
         '<div class="label gold">✦ ' + t('assist.title', 'HUSTLEX ASSISTENT') + '</div>' +
         '<button id="assist_close" class="tap" style="background:none;color:var(--t-3);font-size:18px;">×</button>' +
       '</div>' +
-      '<div id="assist_msgs" class="assist-msgs"></div>' +
+      '<div id="assist_msgs" class="assist-msgs notranslate"></div>' +
       '<div class="assist-input">' +
         '<button id="assist_mic" class="btn btn-glass tap" style="width:46px;height:46px;padding:0;flex-shrink:0;border-radius:var(--r-md);font-size:18px;" title="Sprechen">🎤</button>' +
         '<input id="assist_inp" class="inp" type="text" placeholder="Sag oder schreib, was dir fehlt…"/>' +

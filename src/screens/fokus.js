@@ -416,7 +416,10 @@ function renderPlanner(s) {
   // Beliebiges Datum wählen — auch weit in die Zukunft (nicht nur die Woche).
   const dateRow = div(''); dateRow.style.cssText = 'display:flex;gap:8px;align-items:center;margin-bottom:6px;';
   dateRow.insertAdjacentHTML('beforeend', '<span style="font-size:12px;color:var(--t-3);flex:1;">Anderes Datum planen:</span>');
-  const dpick = h('input', { type: 'date', value: new Date(ds).toISOString().slice(0, 10), min: new Date().toISOString().slice(0, 10) });
+  // Local Y-M-D (never toISOString — that shifts a day across timezones → the
+  // "pick the 14th, get the 15th" bug).
+  const ymd = dd => dd.getFullYear() + '-' + String(dd.getMonth() + 1).padStart(2, '0') + '-' + String(dd.getDate()).padStart(2, '0');
+  const dpick = h('input', { type: 'date', value: ymd(new Date(ds)), min: ymd(new Date()) });
   dpick.className = 'inp'; dpick.style.cssText = 'width:auto;font-size:14px;padding:8px 10px;';
   dpick.onchange = e => { if (!e.target.value) return; const d = new Date(e.target.value + 'T00:00:00'); PLAN_DATE = (d.toDateString() === today() ? null : d.toDateString()); renderScreen('fokus'); };
   dateRow.appendChild(dpick);

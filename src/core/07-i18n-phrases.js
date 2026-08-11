@@ -127,6 +127,7 @@ const I18N_PHRASES = {
     'Noch keine Wünsche. Tipp oben, um einen hinzuzufügen.': 'No wishes yet. Tap above to add one.',
     'KURZFRISTIG': 'SHORT-TERM', 'MITTELFRISTIG': 'MID-TERM', 'LANGFRISTIG': 'LONG-TERM',
     'DEINE IDENTITÄT': 'YOUR IDENTITY', '＋ Identität festlegen': '＋ Set identity', 'Thema hinzufügen': 'Add topic',
+    'Bearbeiten · KI-Plan · mehr': 'Edit · AI plan · more', 'Anderes Datum planen:': 'Plan another date:',
     '＋ Skill hinzufügen': '＋ Add skill', 'Phasen': 'phases', 'Phase': 'phase',
     // ── manifest tool ──
     'Manifestieren heißt nicht „wünschen". Es heißt: die Identität wählen — und ab heute so handeln und fühlen. Du kannst mit wenig Geld schon die': 'Manifesting isn\'t „wishing". It means: choose the identity — and act and feel that way from today. Even with little money you can already do the',
