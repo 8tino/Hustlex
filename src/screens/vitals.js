@@ -131,7 +131,7 @@ function renderVitals(s) {
       return;
     }
     // grouped collapsible view
-    const order = ['Eigene', 'Protein', 'Carbs', 'Gemüse & Obst', 'Fette & Nüsse'];
+    const order = ['Eigene', 'Protein', 'Milchprodukte', 'Carbs', 'Gemüse', 'Obst', 'Fette & Nüsse', 'Getränke', 'Snacks & Süßes'];
     const groups = {};
     all.forEach(f => { const c = f.custom ? 'Eigene' : (f.cat || 'Sonstiges'); (groups[c] = groups[c] || []).push(f); });
     const keys = order.filter(k => groups[k]).concat(Object.keys(groups).filter(k => !order.includes(k)));

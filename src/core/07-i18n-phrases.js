@@ -301,6 +301,23 @@ const I18N_PHRASES = {
     'Olivenöl 1 EL': 'Olive oil 1 tbsp', 'Kokosöl 1 EL': 'Coconut oil 1 tbsp', 'Tahini 1 EL': 'Tahini 1 tbsp', 'Kokosnuss 40g': 'Coconut 40g',
     'Griech. Joghurt 200g': 'Greek yogurt 200g', 'Skyr 200g': 'Skyr 200g', 'Feta 50g': 'Feta 50g', 'Mozzarella 100g': 'Mozzarella 100g',
     'Honig 1 EL': 'Honey 1 tbsp', 'Ahornsirup 1 EL': 'Maple syrup 1 tbsp',
+    // ── food categories ──
+    'Eigene': 'Own', 'Gemüse': 'Vegetables', 'Obst': 'Fruit', 'Milchprodukte': 'Dairy', 'Getränke': 'Drinks', 'Snacks & Süßes': 'Snacks & Sweets', 'Sonstiges': 'Other',
+    // ── dairy ──
+    'Milch 250ml': 'Milk 250ml', 'Hafermilch 250ml': 'Oat milk 250ml', 'Sojamilch 250ml': 'Soy milk 250ml', 'Butter 10g': 'Butter 10g',
+    'Sahne 30g': 'Cream 30g', 'Cheddar 30g': 'Cheddar 30g', 'Gouda 30g': 'Gouda 30g', 'Frischkäse 30g': 'Cream cheese 30g',
+    // ── drinks ──
+    'Orangensaft 250ml': 'Orange juice 250ml', 'Apfelsaft 250ml': 'Apple juice 250ml', 'Cola 330ml': 'Cola 330ml', 'Kaffee schwarz': 'Black coffee',
+    'Grüner Tee': 'Green tea', 'Bier 500ml': 'Beer 500ml', 'Rotwein 150ml': 'Red wine 150ml',
+    // ── snacks & sweets ──
+    'Zartbitterschokolade 30g': 'Dark chocolate 30g', 'Vollmilchschokolade 30g': 'Milk chocolate 30g', 'Proteinriegel': 'Protein bar',
+    'Reiswaffeln x2': 'Rice cakes x2', 'Popcorn 30g': 'Popcorn 30g', 'Chips 30g': 'Chips 30g', 'Gummibärchen 30g': 'Gummy bears 30g',
+    'Studentenfutter 40g': 'Trail mix 40g', 'Müsliriegel': 'Muesli bar',
+    // ── more protein / carbs / veg / fruit ──
+    'Seitan 100g': 'Seitan 100g', 'Räuchertofu 100g': 'Smoked tofu 100g', 'Hähnchen-Aufschnitt 50g': 'Chicken cold cuts 50g', 'Kabanossi 50g': 'Kabanossi 50g', 'Räucherlachs 50g': 'Smoked salmon 50g',
+    'Bagel': 'Bagel', 'Tortilla-Wrap': 'Tortilla wrap', 'Cornflakes 40g': 'Cornflakes 40g', 'Pfannkuchen x1': 'Pancake x1',
+    'Sellerie 100g': 'Celery 100g', 'Lauch 100g': 'Leek 100g', 'Radieschen 100g': 'Radishes 100g', 'Fenchel 100g': 'Fennel 100g',
+    'Aprikose x2': 'Apricot x2', 'Pflaume x2': 'Plum x2', 'Feige x2': 'Fig x2', 'Cranberries 40g': 'Cranberries 40g', 'Rosinen 30g': 'Raisins 30g',
     'Rinderhack 150g': 'Ground beef 150g', 'Rinderleber 100g': 'Beef liver 100g', 'Schweinefilet 150g': 'Pork tenderloin 150g', 'Lammfleisch 150g': 'Lamb 150g',
     'Hähnchenschenkel 150g': 'Chicken thigh 150g', 'Ente 150g': 'Duck 150g', 'Forelle 150g': 'Trout 150g', 'Kabeljau 150g': 'Cod 150g',
     'Makrele 150g': 'Mackerel 150g', 'Sardinen 100g': 'Sardines 100g', 'Garnelen 150g': 'Shrimp 150g', 'Tempeh 100g': 'Tempeh 100g',
