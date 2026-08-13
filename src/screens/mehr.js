@@ -286,12 +286,40 @@ function openConnections() {
 
   // ── 1. Eigenes Claude-Konto (BYOK) ──
   const byok = ls('los_byok') || { key: '', on: false, model: BEST_AI_MODEL };
+  if (!byok.model) byok.model = BEST_AI_MODEL;
   inner.appendChild(div('label', 'EIGENES CLAUDE-KONTO (KI)'));
   const bcard = div('glass', ''); bcard.style.cssText = 'padding:14px;margin-bottom:14px;';
-  bcard.insertAdjacentHTML('beforeend', '<div style="font-size:13px;color:var(--t-2);line-height:1.6;">Verbinde dein eigenes Anthropic-Konto. Dann läuft die KI (KI-Kurse, Tipps, Assistent) über <b>deinen</b> Key — mit freier Modellwahl (Opus 5) und ohne Server-Limit. Der Key bleibt nur auf deinem Gerät (E2EE-gesichert), nie im Code.</div>');
+  bcard.insertAdjacentHTML('beforeend', '<div style="font-size:13px;color:var(--t-2);line-height:1.6;">Verbinde dein eigenes Anthropic-Konto. Dann läuft die KI (KI-Kurse, Tipps, Assistent) über <b>deinen</b> Key — mit freier Modellwahl und ohne Server-Limit. Der Key bleibt nur auf deinem Gerät (E2EE-gesichert), nie im Code.</div>');
+
+  // Step-by-step so a non-technical user can set it up in a minute.
+  bcard.insertAdjacentHTML('beforeend',
+    '<div style="margin:14px 0 4px;padding:12px 14px;border-radius:12px;background:var(--glass-2);border:1px solid var(--edge);">' +
+    '<div class="label" style="margin-bottom:8px;">IN 3 SCHRITTEN</div>' +
+    '<div style="font-size:12.5px;color:var(--t-2);line-height:1.8;">' +
+    '<b>1.</b> Auf <b>console.anthropic.com</b> anmelden (oder registrieren).<br>' +
+    '<b>2.</b> Links auf <b>API Keys</b> → <b>Create Key</b> → kopieren (beginnt mit <code>sk-ant-…</code>).<br>' +
+    '<b>3.</b> Key unten einfügen, <b>Testen</b>, dann <b>AN</b> schalten. Fertig.' +
+    '</div></div>');
+  const getKeyLink = h('a', { textContent: '↗ Key holen · console.anthropic.com', href: 'https://console.anthropic.com/settings/keys', target: '_blank', rel: 'noopener' });
+  getKeyLink.style.cssText = 'display:inline-block;margin:10px 0 2px;font-size:12.5px;color:var(--gold);text-decoration:none;font-weight:600;';
+  bcard.appendChild(getKeyLink);
+
   const keyInp = h('input', { type: 'password', value: byok.key || '', placeholder: 'sk-ant-…' });
-  keyInp.className = 'inp'; keyInp.style.cssText = 'width:100%;font-size:14px;margin:12px 0 8px;';
+  keyInp.className = 'inp'; keyInp.style.cssText = 'width:100%;font-size:14px;margin:10px 0 8px;';
   bcard.appendChild(keyInp);
+
+  // Modellwahl
+  bcard.insertAdjacentHTML('beforeend', '<div class="label" style="margin:8px 0 6px;">MODELL</div>');
+  const modSel = h('select'); modSel.className = 'inp'; modSel.style.cssText = 'width:100%;font-size:13px;margin-bottom:4px;';
+  [
+    { v: 'claude-opus-5', l: 'Opus 5 · stärkstes Modell (teurer)' },
+    { v: 'claude-sonnet-5', l: 'Sonnet 5 · schnell & günstig (empfohlen)' },
+    { v: 'claude-haiku-4-5-20251001', l: 'Haiku 4.5 · am günstigsten' },
+  ].forEach(m => { const o = h('option', { value: m.v, textContent: m.l }); if (byok.model === m.v) o.selected = true; modSel.appendChild(o); });
+  modSel.onchange = () => { byok.model = modSel.value; };
+  bcard.appendChild(modSel);
+  bcard.insertAdjacentHTML('beforeend', '<div style="font-size:11px;color:var(--t-4);margin:0 0 10px;line-height:1.5;">Tipp: <b>Sonnet 5</b> reicht für fast alles und kostet dich am wenigsten. Opus nur für die anspruchsvollsten Aufgaben.</div>');
+
   // on/off toggle
   const tRow = div(''); tRow.style.cssText = 'display:flex;align-items:center;gap:10px;margin-bottom:8px;';
   tRow.innerHTML = '<span style="flex:1;font-size:13px;color:var(--t-1);">KI über meinen Key nutzen</span>';
@@ -299,18 +327,24 @@ function openConnections() {
   const paintT = () => { tBtn.textContent = byok.on ? 'AN' : 'AUS'; tBtn.style.cssText = 'width:64px;padding:8px 0;border-radius:99px;font-size:12px;font-weight:700;border:1px solid ' + (byok.on ? 'var(--green)' : 'var(--edge)') + ';background:' + (byok.on ? 'rgba(92,184,117,.15)' : 'var(--glass-2)') + ';color:' + (byok.on ? 'var(--green)' : 'var(--t-3)') + ';'; };
   paintT(); tBtn.onclick = () => { byok.on = !byok.on; paintT(); }; tRow.appendChild(tBtn); bcard.appendChild(tRow);
   const saveB = h('button', { textContent: '✓ Speichern' }); saveB.className = 'btn btn-gold tap'; saveB.style.cssText = 'font-size:13px;';
-  saveB.onclick = () => { ls('los_byok', { key: keyInp.value.trim(), on: byok.on, model: BEST_AI_MODEL }); showToast('Claude-Konto gespeichert', '🔗'); };
+  saveB.onclick = () => { ls('los_byok', { key: keyInp.value.trim(), on: byok.on, model: byok.model }); showToast('Claude-Konto gespeichert', '🔗'); };
   bcard.appendChild(saveB);
   const testB = h('button', { textContent: '⚡ Testen' }); testB.className = 'btn btn-glass tap'; testB.style.cssText = 'font-size:13px;margin-top:6px;';
   testB.onclick = async () => {
-    ls('los_byok', { key: keyInp.value.trim(), on: true, model: BEST_AI_MODEL });
+    const k = keyInp.value.trim();
+    if (!k) { showToast('Bitte zuerst einen Key einfügen', '⚠'); return; }
+    ls('los_byok', { key: k, on: true, model: byok.model });
     testB.disabled = true; testB.innerHTML = '<span class="anim-spin">⚙</span> Teste…';
-    try { const r = await callAI('Antworte nur mit: OK', 'Du bist ein Test.', 20); showToast(r.includes('OK') || r.length ? 'Verbindung ok ✓' : 'Antwort: ' + r, '✅'); }
+    try {
+      const r = await callAI('Antworte nur mit: OK', 'Du bist ein Test.', 20, byok.model);
+      byok.on = true; paintT();
+      showToast(r && r.length ? 'Verbindung ok ✓' : 'Antwort leer — Key prüfen', '✅');
+    }
     catch (e) { showToast('Fehler: ' + (e.message || e), '⚠'); }
     finally { testB.disabled = false; testB.textContent = '⚡ Testen'; }
   };
   bcard.appendChild(testB);
-  bcard.insertAdjacentHTML('beforeend', '<div style="font-size:11px;color:var(--t-4);margin-top:10px;line-height:1.5;">Key bekommst du auf console.anthropic.com → API Keys. Setz dort ein Monats-Limit. Sicherheitshinweis: gib den Key nur hier ein, teile ihn nirgends.</div>');
+  bcard.insertAdjacentHTML('beforeend', '<div style="font-size:11px;color:var(--t-4);margin-top:10px;line-height:1.5;">💡 Setz auf console.anthropic.com unter <b>Billing → Limits</b> ein Monats-Limit (z. B. 10 €), dann kann nichts entgleisen. Sicherheit: gib den Key nur hier ein, teile ihn nirgends.</div>');
   inner.appendChild(bcard);
 
   // ── 2. KI-Berechtigungen (Zugriff pro Bereich) ──
