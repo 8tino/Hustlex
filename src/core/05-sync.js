@@ -135,6 +135,15 @@ async function sbSaveVault(ciphertext, iv) {
 // ─── AI proxy (Supabase Edge Function) ────────────────
 // Calls the server-side `ai` function with the user's JWT. The Anthropic key
 // lives only as a server secret, never in the client.
+// Best-effort deletion of the user's cloud data (encrypted vault + backups).
+// RLS scopes each DELETE to the signed-in user's own rows. The decisive step is
+// clearing the local key afterwards — without it the cloud ciphertext (if any
+// remains) is permanently unreadable (true E2EE deletion).
+async function deleteAccountData() {
+  try { await sbAuthedFetch(SUPABASE_URL + '/rest/v1/vault_backups?created_at=not.is.null', { method: 'DELETE', headers: { Prefer: 'return=minimal' } }); } catch (e) {}
+  try { await sbAuthedFetch(SUPABASE_URL + '/rest/v1/vaults?updated_at=not.is.null', { method: 'DELETE', headers: { Prefer: 'return=minimal' } }); } catch (e) {}
+}
+
 async function aiFetch(payload) {
   if (!SYNC.token) throw new Error('Bitte zuerst anmelden (KI braucht eine Online-Sitzung).');
   const r = await sbAuthedFetch(SUPABASE_URL + '/functions/v1/ai', {

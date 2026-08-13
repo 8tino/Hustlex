@@ -191,5 +191,19 @@ function showSettings() {
   };
   inner.appendChild(rbtn);
 
+  // Konto & alle Daten endgültig löschen (DSGVO-Betroffenenrecht + Store-Pflicht).
+  const EN = (typeof LANG !== 'undefined' && LANG === 'en');
+  const dbtn = h('button', { textContent: EN ? '🗑  Delete account & all data' : '🗑  Konto & alle Daten löschen' }, '');
+  dbtn.className = 'btn tap';
+  dbtn.style.cssText = 'width:100%;margin-top:10px;background:rgba(255,69,58,.12);border:1px solid rgba(255,69,58,.35);color:#FF453A;font-weight:600;padding:12px;border-radius:var(--r-md);';
+  dbtn.onclick = async () => {
+    if (!confirm(EN ? 'Delete your account and ALL data — in the cloud and on this device? This cannot be undone.' : 'Konto und ALLE Daten löschen — in der Cloud und auf diesem Gerät? Das kann nicht rückgängig gemacht werden.')) return;
+    dbtn.disabled = true; dbtn.style.opacity = '.6'; dbtn.textContent = EN ? 'Deleting…' : 'Lösche…';
+    try { if (typeof deleteAccountData === 'function') await deleteAccountData(); } catch (e) {}
+    try { Object.keys(localStorage).filter(k => k.startsWith('los_')).forEach(k => localStorage.removeItem(k)); } catch (e) {}
+    location.reload();
+  };
+  inner.appendChild(dbtn);
+
   openOverlay();
 }

@@ -194,6 +194,7 @@ const I18N_PHRASES = {
     '＋ Non-Negotiable heute': '＋ Non-negotiable today', '＋ Idee in Tagesplan': '＋ Idea to day plan',
     // ── mehr ──
     'Werkzeuge &': 'Tools &', 'Einstellungen': 'Settings', 'EINSTELLUNGEN': 'SETTINGS', 'KI-Assistent': 'AI Assistant',
+    'Rechtliches': 'Legal', 'Impressum · Datenschutz · AGB': 'Imprint · Privacy · Terms',
     'Notizen': 'Notes', 'Notizen einsortieren': 'Sort notes', 'App anpassen': 'Customize app', 'Hilfe & FAQ': 'Help & FAQ',
     'Fehler melden': 'Report a bug', 'Verbesserung vorschlagen': 'Suggest an improvement', 'Verbindungen': 'Connections',
     'Notizen einfügen → automatisch in die Bereiche verteilen': 'Paste notes → automatically sorted into areas',

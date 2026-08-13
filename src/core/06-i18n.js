@@ -34,6 +34,8 @@ const I18N = {
     'lock.otherAccount': 'Other account / new device',
     'lock.e2eeWarn': '⚠ End-to-end encrypted: without your password the data <b>cannot</b> be recovered. Store it safely.',
     'lock.testHint': '🧪 Test version — not everything is final yet. Please don\'t enter sensitive data.',
+    'lock.consent': 'I accept the', 'lock.terms': 'Terms', 'lock.and': 'and', 'lock.privacy': 'Privacy Policy',
+    'lock.errConsent': 'Please accept the Terms & Privacy Policy.',
     'lock.errEmail': 'Please enter a valid e-mail.',
     'lock.errPw': 'Password must be at least 8 characters.',
     'lock.errPw2': 'The passwords don\'t match.',

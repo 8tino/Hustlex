@@ -37,6 +37,11 @@ function showLock() {
             '<div class="label" style="font-size:10px;margin-bottom:6px;">' + t('lock.repeat', 'PASSWORT WIEDERHOLEN') + '</div>' +
             '<input id="lk_pw2" class="inp" type="password" autocomplete="new-password" placeholder="••••••••"/>' +
           '</div>') +
+        (returning ? '' :
+          '<label style="display:flex;gap:9px;align-items:flex-start;font-size:12px;color:var(--t-2);line-height:1.5;cursor:pointer;">' +
+            '<input id="lk_consent" type="checkbox" style="margin-top:2px;width:16px;height:16px;flex:none;"/>' +
+            '<span>' + t('lock.consent', 'Ich akzeptiere die') + ' <span id="lk_agb" class="tap" style="color:var(--gold-soft);text-decoration:underline;">' + t('lock.terms', 'AGB') + '</span> ' + t('lock.and', 'und') + ' <span id="lk_ds" class="tap" style="color:var(--gold-soft);text-decoration:underline;">' + t('lock.privacy', 'Datenschutzerklärung') + '</span>.</span>' +
+          '</label>') +
         '<div id="lk_err" style="display:none;font-size:12px;color:var(--red);line-height:1.5;"></div>' +
         '<button id="lk_go" class="btn btn-gold tap" style="margin-top:4px;">' + (returning ? t('lock.unlock', 'ENTSPERREN') : t('lock.create', 'KONTO ERSTELLEN & STARTEN')) + '</button>' +
       '</div>' +
@@ -62,6 +67,8 @@ function showLock() {
   if (pw2) pw2.onkeydown = e => { if (e.key === 'Enter') lockSubmit(); };
   const other = el('lk_other');
   if (other) other.onclick = () => { localStorage.removeItem('los_e2e'); showLock(); };
+  const agbL = el('lk_agb'); if (agbL) agbL.onclick = (e) => { e.preventDefault(); e.stopPropagation(); if (typeof openLegal === 'function') openLegal('agb'); };
+  const dsL = el('lk_ds'); if (dsL) dsL.onclick = (e) => { e.preventDefault(); e.stopPropagation(); if (typeof openLegal === 'function') openLegal('datenschutz'); };
   setTimeout(() => (returning ? pw : el('lk_email')).focus(), 50);
 }
 
@@ -82,6 +89,8 @@ async function lockSubmit() {
   if (!email || !/.+@.+\..+/.test(email)) return lockErr(t('lock.errEmail', 'Bitte eine gültige E-Mail eingeben.'));
   if (pw.length < 8) return lockErr(t('lock.errPw', 'Passwort muss mindestens 8 Zeichen haben.'));
   if (pw2El && pw !== pw2El.value) return lockErr(t('lock.errPw2', 'Die Passwörter stimmen nicht überein.'));
+  const consentEl = el('lk_consent');
+  if (!returning && consentEl && !consentEl.checked) return lockErr(t('lock.errConsent', 'Bitte AGB & Datenschutz akzeptieren.'));
 
   const go = el('lk_go');
   const original = go.textContent;
@@ -90,6 +99,7 @@ async function lockSubmit() {
 
   try {
     await e2eeLogin(email, pw);            // online: sign-in or create + pull/push
+    if (!returning && typeof setConsent === 'function') setConsent();   // record accepted consent (versioned)
     hideLock(); startApp(); return;
   } catch (err) {
     // Network down but returning user with correct password → unlock offline.

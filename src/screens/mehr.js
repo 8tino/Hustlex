@@ -19,6 +19,7 @@ function renderMehr(s) {
     { ic: '🔗', name: 'Verbindungen', sub: 'Eigenes Claude-Konto (KI) · Obsidian / Markdown-Export', fn: () => openConnections() },
     { ic: '🐞', name: 'Fehler melden', sub: 'Bug gefunden? Sag Bescheid', fn: () => openReport('bug') },
     { ic: '💡', name: 'Verbesserung vorschlagen', sub: 'Feature-Wunsch oder was dir fehlt (z. B. Social verknüpfen)', fn: () => openReport('idea') },
+    { ic: '⚖️', name: 'Rechtliches', sub: 'Impressum · Datenschutz · AGB', fn: () => openLegal() },
     { ic: '⚙', name: 'Einstellungen', sub: 'Profil, Cloud-Sync, Backup, Export', fn: () => showSettings() },
   ];
   acts.forEach(a => {
