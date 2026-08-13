@@ -215,6 +215,8 @@ const I18N_PHRASES = {
     'KI über meinen Key nutzen': 'Use AI via my key',
     '✓ Speichern': '✓ Save', '⚡ Testen': '⚡ Test',
     'KI-ZUGRIFF · BERECHTIGUNGEN': 'AI ACCESS · PERMISSIONS',
+    'Pro aktiv — unbegrenzte KI.': 'Pro active — unlimited AI.',
+    'Eigener Key aktiv — unbegrenzte KI.': 'Own key active — unlimited AI.',
     // ── customize (App anpassen) ──
     'anpassen': 'customize', 'nicht': 'not', 'Maßeinheit für Lebensmittel': 'Unit for food',
     'sehen willst. Standard: alles an.': 'want to see. Default: all on.',

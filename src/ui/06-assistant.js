@@ -270,7 +270,10 @@ async function assistantFetch(payload) {
     if (!r.ok) throw new Error(d?.error?.message || ('KI-Fehler ' + r.status));
     return d;
   }
-  return aiFetch(payload);
+  if (typeof aiQuotaGate === 'function') aiQuotaGate();
+  const res = await aiFetch(payload);
+  if (typeof aiRecordUse === 'function') aiRecordUse();
+  return res;
 }
 
 // Spracheingabe: Mikro antippen → sprechen → Text landet im Feld & wird gesendet.

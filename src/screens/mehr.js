@@ -274,6 +274,27 @@ function openConnections() {
     '<div class="label" style="margin-bottom:6px;">VERBINDUNGEN</div>' +
     '<div class="h2" style="margin-bottom:14px;">KI & <span class="gold">Integrationen</span></div>');
 
+  // Gratis-Kontingent heute (nur ohne eigenen Key & ohne Pro relevant).
+  if (typeof aiUsageLeft === 'function') {
+    const _EN = (typeof LANG !== 'undefined' && LANG === 'en');
+    const left = aiUsageLeft();
+    const tot = (typeof AI_FREE_DAILY !== 'undefined' ? AI_FREE_DAILY : 12);
+    const qc = div('glass', ''); qc.style.cssText = 'padding:12px 14px;margin-bottom:16px;display:flex;align-items:center;gap:10px;';
+    if (left === Infinity) {
+      qc.innerHTML = '<span style="font-size:18px;">∞</span><div class="notranslate" style="font-size:12.5px;color:var(--t-2);line-height:1.5;">' +
+        (isProActive() ? (_EN ? 'Pro active — unlimited AI.' : 'Pro aktiv — unbegrenzte KI.') : (_EN ? 'Own key active — unlimited AI.' : 'Eigener Key aktiv — unbegrenzte KI.')) + '</div>';
+    } else {
+      qc.innerHTML = '<span style="font-size:18px;">⚡</span><div class="notranslate" style="flex:1;font-size:12.5px;color:var(--t-2);line-height:1.5;">' +
+        (_EN ? '<b>' + left + '</b> of ' + tot + ' free AI requests left today. Own key or Pro = unlimited.'
+             : 'Heute noch <b>' + left + '</b> von ' + tot + ' gratis KI-Anfragen. Eigener Key oder Pro = unbegrenzt.') + '</div>';
+      const up = h('button', { textContent: 'Pro' }); up.className = 'tap';
+      up.style.cssText = 'flex:none;padding:7px 14px;border-radius:99px;font-size:12px;font-weight:700;border:1px solid var(--gold);background:rgba(197,164,90,.14);color:var(--gold);';
+      up.onclick = () => { if (typeof openUpgrade === 'function') openUpgrade(); };
+      qc.appendChild(up);
+    }
+    inner.appendChild(qc);
+  }
+
   // ── 0. Mit Claude besprechen (ohne Key, über dein Abo) ──
   inner.appendChild(div('label', 'MIT CLAUDE BESPRECHEN · OHNE KEY'));
   const tc = div('glass', ''); tc.style.cssText = 'padding:14px;margin-bottom:16px;';

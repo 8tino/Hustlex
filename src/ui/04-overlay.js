@@ -72,7 +72,7 @@ function showSettings() {
     const upbtn = h('button', { textContent: 'UPGRADE ZU PRO · 9,99€/Mo →' }, '');
     upbtn.className = 'btn btn-gold tap';
     upbtn.style.marginBottom = '10px';
-    upbtn.onclick = () => { STATE.isPro = true; ls('los_pro', true); updateStatusBar(); closeOverlay(); };
+    upbtn.onclick = () => { if (typeof openUpgrade === 'function') openUpgrade(); else { STATE.isPro = true; ls('los_pro', true); updateStatusBar(); closeOverlay(); } };
     inner.appendChild(upbtn);
   }
 

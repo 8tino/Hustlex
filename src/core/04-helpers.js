@@ -260,9 +260,12 @@ async function callAI(prompt, system, maxTokens, model) {
   }
 
   // Sonst: über die Supabase Edge Function (Server-Key, Login nötig).
+  // Gratis-Tageslimit prüfen (nur ohne eigenen Key & ohne Pro).
+  if (typeof aiQuotaGate === 'function') aiQuotaGate();
   const payload = { system: sys, max_tokens: mt, messages: [{ role: 'user', content: prompt }] };
   if (model) payload.model = model;
   const d = await aiFetch(payload);
+  if (typeof aiRecordUse === 'function') aiRecordUse();
   return d?.content?.[0]?.text || 'Fehler.';
 }
 
