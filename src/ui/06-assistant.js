@@ -299,6 +299,7 @@ function assistantVoice() {
 
 async function assistantSend() {
   if (ASSIST.busy) return;
+  if (typeof aiConsentOk === 'function' && !aiConsentOk()) { openAIConsent(() => assistantSend()); return; }
   const inp = el('assist_inp');
   const text = (inp.value || '').trim();
   if (!text) return;

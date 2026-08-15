@@ -39,7 +39,7 @@ const HELP_FAQ = [
   { q: 'Wie blende ich Sektionen aus?', a: 'Mehr → 🎛 App anpassen. Dort schaltest du einzelne Sektionen an/aus und legst Task-Ordner an.' },
   { q: 'Wie hängt die App zusammen?', a: 'Trägst du z. B. dein Wasser in Körper ein, hakt sich der „Trinken"-Task von selbst ab. Beim Task per ⛓ mit einem Körper-Wert verknüpfen.' },
   { q: 'Funktioniert die KI?', a: 'Die ✦-KI-Knöpfe brauchen eine Anbindung: entweder dein eigener Key (Mehr → 🔗 Verbindungen) oder der keyless-Weg „💬 Mit Claude besprechen".' },
-  { q: 'Sind meine Daten sicher?', a: 'Ja — alles ist Ende-zu-Ende-verschlüsselt und liegt zuerst auf deinem Gerät. Ohne dein Passwort kommt niemand ran (auch wir nicht).' },
+  { q: 'Sind meine Daten sicher?', a: 'Ja — deine Daten sind Ende-zu-Ende-verschlüsselt gespeichert und liegen zuerst auf deinem Gerät. Ohne dein Passwort kommt niemand an den Tresor (auch wir nicht). Nur wenn du eine KI-Funktion aktiv nutzt, wird der jeweilige Ausschnitt an Anthropic gesendet, um die Antwort zu erzeugen.' },
   { q: 'Ich habe mein Passwort vergessen.', a: 'Aus Sicherheitsgründen (echtes E2EE) gibt es keinen Reset — ohne Passwort sind die Cloud-Daten nicht entschlüsselbar. Lokale Daten auf dem Gerät bleiben, solange du angemeldet bist.' },
 ];
 function openHelp() {

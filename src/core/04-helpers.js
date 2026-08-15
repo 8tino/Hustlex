@@ -249,6 +249,7 @@ function aiBlock(label, prompt, color) {
   res.style.cssText = 'margin-top:8px;font-size:13px;color:var(--t-2);line-height:1.85;white-space:pre-line;display:none;';
 
   btn.onclick = async () => {
+    if (typeof aiConsentOk === 'function' && !aiConsentOk()) { openAIConsent(() => btn.click()); return; }
     if (res.style.display === 'block') { res.style.display = 'none'; btn.textContent = '◈  ' + label; return; }
     btn.textContent = '◈  ' + ((typeof LANG !== 'undefined' && LANG === 'en') ? 'ANALYZING…' : 'ANALYSIERE…'); btn.style.opacity = '.5';
     const langHint = (typeof LANG !== 'undefined' && LANG === 'en') ? ' Answer in English.' : ' Antworte auf Deutsch.';

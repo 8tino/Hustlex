@@ -47,6 +47,34 @@ function getConsent() { return ls('los_consent') || null; }
 function consentOk() { const c = getConsent(); return !!(c && c.v >= CONSENT_VERSION && c.accepted); }
 function setConsent() { ls('los_consent', { v: CONSENT_VERSION, accepted: true, at: new Date().toISOString() }); }
 
+// ─── KI-Einwilligung (separat, einmalig) ──────────────
+// Best Practice: bevor Daten (inkl. sensibler wie Ernährung/Gewicht) für eine
+// KI-Antwort an Anthropic gehen, holt die App eine ausdrückliche Zustimmung.
+function aiConsentOk() { return !!ls('los_ai_consent'); }
+function setAIConsent() { ls('los_ai_consent', { accepted: true, at: new Date().toISOString() }); }
+// Zeigt einen einmaligen Hinweis; ruft onAccept nach Zustimmung auf.
+function openAIConsent(onAccept) {
+  const EN = (typeof LANG !== 'undefined' && LANG === 'en');
+  const byok = ls('los_byok');
+  const ownKey = !!(byok && byok.on && byok.key);
+  const inner = el('overlay_inner'); inner.innerHTML = ''; inner.appendChild(overlayBackBtn());
+  inner.insertAdjacentHTML('beforeend',
+    '<div class="label" style="margin-bottom:6px;">' + (EN ? 'AI · ONE-TIME NOTICE' : 'KI · EINMALIGER HINWEIS') + '</div>' +
+    '<div class="h2" style="margin-bottom:12px;">' + (EN ? 'How the <span class="gold">AI</span> works' : 'So funktioniert die <span class="gold">KI</span>') + '</div>' +
+    '<div class="glass" style="padding:14px;font-size:13px;color:var(--t-2);line-height:1.7;margin-bottom:14px;">' +
+      (EN
+        ? 'Your data is <b>encrypted at rest</b> — no one can read your vault. When you <b>actively use an AI feature</b>, the relevant part is sent ' + (ownKey ? 'via <b>your own</b> Anthropic key ' : 'to <b>Anthropic (USA)</b> ') + 'to generate the answer. API data is <b>not used for training</b>. You can turn AI off anytime and use your own key under Connections.'
+        : 'Deine Daten sind <b>verschlüsselt gespeichert</b> — niemand kann deinen Tresor lesen. Wenn du eine <b>KI-Funktion aktiv nutzt</b>, wird der jeweilige Ausschnitt ' + (ownKey ? 'über <b>deinen eigenen</b> Anthropic-Key ' : 'an <b>Anthropic (USA)</b> ') + 'gesendet, um die Antwort zu erzeugen. API-Daten werden <b>nicht zum Training</b> genutzt. Du kannst die KI jederzeit ausschalten oder unter Verbindungen deinen eigenen Key nutzen.') +
+    '</div>');
+  const ok = h('button', { textContent: EN ? '✓ Understood — enable AI' : '✓ Verstanden — KI aktivieren' }); ok.className = 'btn btn-gold tap';
+  ok.onclick = () => { setAIConsent(); closeOverlay(); if (typeof onAccept === 'function') setTimeout(onAccept, 60); };
+  inner.appendChild(ok);
+  const dsBtn = h('button', { textContent: EN ? 'Read privacy policy' : 'Datenschutz lesen' }); dsBtn.className = 'btn btn-ghost tap'; dsBtn.style.cssText = 'margin-top:8px;font-size:12px;';
+  dsBtn.onclick = () => openLegal('datenschutz');
+  inner.appendChild(dsBtn);
+  openOverlay();
+}
+
 // ─── Rechtliches-Overlay ──────────────────────────────
 function openLegal(section) {
   const EN = (typeof LANG !== 'undefined' && LANG === 'en');
