@@ -44,7 +44,7 @@ function homeDomains() {
     STATE.day.sleep ? Math.min(1, parseFloat(sh) / cfg.sleepGoal) : 0,
     Math.min(1, STATE.day.recovery.length / 2),
   ]) * 100;
-  const tasks = (typeof getTasks === 'function') ? getTasks() : [];
+  const tasks = (typeof getTasksToday === 'function') ? getTasksToday() : ((typeof getTasks === 'function') ? getTasks() : []);
   const td = (typeof getTasksDone === 'function') ? getTasksDone() : [];
   const nn = getNN(), cats = getCats(), plan = getPlan();
   const parts = [];
@@ -104,7 +104,7 @@ function renderHome(s) {
 
   // ── "Noch offen heute" ──
   const items = [];
-  const tasks = (typeof getTasks === 'function') ? getTasks() : [];
+  const tasks = (typeof getTasksToday === 'function') ? getTasksToday() : ((typeof getTasks === 'function') ? getTasks() : []);
   const td = (typeof getTasksDone === 'function') ? getTasksDone() : [];
   const tOpen = tasks.filter(x => (typeof taskDone === 'function' ? !taskDone(x) : !td.includes(x.id)));
   if (tOpen.length) items.push({ ic: '☑', title: 'Tasks', sub: (tasks.length - tOpen.length) + '/' + tasks.length + ' · noch: ' + tOpen[0].text, view: 'tasks' });
