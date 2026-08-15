@@ -74,6 +74,7 @@ const I18N_PHRASES = {
     'FETT': 'FAT', 'CARBS': 'CARBS', 'KCAL': 'KCAL', 'Carbs': 'Carbs', 'Carbs g': 'Carbs g', 'Fett g': 'Fat g', 'Protein g': 'Protein g',
     'Fett': 'Fat', 'Kohlenhydrate': 'Carbs', '⚙ Makros & Ziele verwalten': '⚙ Manage macros & goals', 'ZULETZT': 'RECENT',
     'Backwaren': 'Baked goods', 'Fast Food & Fertig': 'Fast food & ready', 'EIGENE MAKROS · PRO PORTION': 'YOUR MACROS · PER SERVING',
+    'Körpergewicht': 'Body weight', 'Gewicht in kg': 'Weight in kg', 'Eintragen': 'Log',
     'Frühstück': 'Breakfast', 'Mittag': 'Lunch', 'Abend': 'Dinner', 'Snack': 'Snack', 'Morgen': 'Morning',
     '🌅 Morgen': '🌅 Morning', '☀️ Mittag': '☀️ Noon', '🌙 Abend': '🌙 Evening',
     '🌅 Morgens': '🌅 Morning', '☀️ Mittags': '☀️ Noon', '🌙 Abends': '🌙 Evening',

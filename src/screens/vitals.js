@@ -244,6 +244,13 @@ function renderVitals(s) {
     s.appendChild(sleepSec);
   }
 
+  // Körpergewicht
+  if (moduleOn('v_weight')) {
+    const wSec = section(LANG === 'en' ? 'Body weight' : 'Körpergewicht', 'v_weight', false);
+    wSec._body.appendChild(renderWeightWidget(s));
+    s.appendChild(wSec);
+  }
+
   // Supplements — nach Tageszeit gruppiert (einklappbar), erledigte nach unten
   const suppSec = section('Supplements', 'v_supps', false); const spb = suppSec._body;
   spb.appendChild(renderSuppAdd(s));
@@ -841,6 +848,61 @@ function pushRecentFood(f) {
   let a = getRecentFoods().filter(x => x.id !== f.id);
   a.unshift({ id: f.id, n: f.n, ic: f.ic || '🍽', kcal: f.kcal, p: f.p, c: f.c, f: f.f });
   ls('los_recent_foods', a.slice(0, 10));
+}
+
+// ─── KÖRPERGEWICHT ────────────────────────────────────
+// Log: los_weight = [{ date:'YYYY-MM-DD', kg }] (ein Eintrag pro Tag, upsert).
+function getWeightLog() { return (ls('los_weight') || []).slice().sort((a, b) => a.date.localeCompare(b.date)); }
+function logWeight(kg) {
+  const date = ymdLocal();
+  const a = (ls('los_weight') || []).filter(x => x.date !== date);
+  a.push({ date, kg: Math.round(kg * 10) / 10 });
+  ls('los_weight', a);
+}
+function delWeight(date) { ls('los_weight', (ls('los_weight') || []).filter(x => x.date !== date)); }
+function ymdLocal() { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+
+function renderWeightWidget(s) {
+  const EN = (typeof LANG !== 'undefined' && LANG === 'en');
+  const log = getWeightLog();
+  const wrap = div('');
+  const cur = log.length ? log[log.length - 1] : null;
+  const cfg = getCfg();
+  const goalW = cfg.weightGoal || 0;
+
+  // Aktueller Stand + Trend.
+  if (cur) {
+    const first = log.length > 1 ? log[Math.max(0, log.length - 8)] : cur;
+    const delta = Math.round((cur.kg - first.kg) * 10) / 10;
+    const card = div('glass', ''); card.style.cssText = 'padding:14px;margin-bottom:10px;';
+    const dCol = delta === 0 ? 'var(--t-3)' : (goalW && cur.kg > goalW) === (delta < 0) ? 'var(--green)' : 'var(--gold)';
+    card.innerHTML = '<div style="display:flex;align-items:flex-end;gap:12px;">' +
+      '<div><div style="font-size:30px;font-weight:800;line-height:1;color:var(--t-1);">' + cur.kg + '<span style="font-size:14px;color:var(--t-3);"> kg</span></div>' +
+      '<div style="font-size:11px;color:var(--t-3);margin-top:3px;">' + (EN ? 'last ' : 'zuletzt ') + log.length + (EN ? ' entries' : ' Einträge') + (goalW ? ' · ' + (EN ? 'goal ' : 'Ziel ') + goalW + ' kg' : '') + '</div></div>' +
+      '<div style="flex:1;text-align:right;"><span style="font-size:13px;font-weight:700;color:' + dCol + ';">' + (delta > 0 ? '+' : '') + delta + ' kg</span>' +
+      '<div style="font-size:10px;color:var(--t-3);">' + (EN ? 'recent trend' : 'letzter Trend') + '</div></div></div>';
+    if (log.length > 1 && typeof sparkline === 'function') {
+      const sw = div('notranslate'); sw.style.cssText = 'margin-top:10px;';
+      sw.innerHTML = sparkline(log.slice(-14).map(x => x.kg), '#0A84FF', 260, 40);
+      card.appendChild(sw);
+    }
+    wrap.appendChild(card);
+  }
+
+  // Eingabe.
+  const row = div(''); row.style.cssText = 'display:flex;gap:8px;align-items:center;';
+  const inp = h('input', { type: 'number', inputmode: 'decimal', step: '0.1', placeholder: EN ? 'Weight in kg' : 'Gewicht in kg', value: cur ? cur.kg : '' });
+  inp.className = 'inp'; inp.style.cssText = 'flex:1;font-size:15px;';
+  const save = h('button', { textContent: EN ? 'Log' : 'Eintragen' }); save.className = 'btn btn-gold tap'; save.style.cssText = 'flex:none;font-size:13px;padding:11px 16px;';
+  save.onclick = () => { const v = parseFloat(inp.value); if (!(v > 0)) { inp.classList.add('anim-shake'); setTimeout(() => inp.classList.remove('anim-shake'), 450); return; } logWeight(v); haptic('success'); showToast(EN ? 'Weight logged' : 'Gewicht eingetragen', '⚖️'); renderVitals(s); };
+  row.appendChild(inp); row.appendChild(save); wrap.appendChild(row);
+
+  // Ziel setzen.
+  const goalBtn = h('button', { textContent: goalW ? (EN ? '🎯 Goal: ' : '🎯 Ziel: ') + goalW + ' kg' : (EN ? '🎯 Set goal' : '🎯 Zielgewicht setzen') });
+  goalBtn.className = 'btn btn-ghost tap'; goalBtn.style.cssText = 'margin-top:8px;font-size:12px;';
+  goalBtn.onclick = () => { const v = parseFloat((prompt(EN ? 'Target weight (kg):' : 'Zielgewicht (kg):', goalW || '') || '').replace(',', '.')); if (v > 0) { saveCfg({ weightGoal: Math.round(v * 10) / 10 }); renderVitals(s); } else if (v === 0) { saveCfg({ weightGoal: 0 }); renderVitals(s); } };
+  wrap.appendChild(goalBtn);
+  return wrap;
 }
 
 // ─── MAHLZEITEN-KOMBIS ────────────────────────────────

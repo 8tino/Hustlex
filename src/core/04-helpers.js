@@ -34,6 +34,26 @@ function checkCircle(done) {
 // toggles these under Mehr → 🎛 App anpassen (store los_modules).
 function moduleOn(key) { const m = ls('los_modules') || {}; return m[key] !== false; }
 
+// ─── Akzentfarbe (app-weit) ───
+// Überschreibt die --gold-* Variablen zur Laufzeit. Standard: Apple-Blau.
+const ACCENTS = [
+  { id: 'blue',   name: 'Blau',    c: '#0A84FF', soft: '#409CFF', deep: '#0060DF', rgb: '10,132,255' },
+  { id: 'gold',   name: 'Gold',    c: '#C5A45A', soft: '#D4B76A', deep: '#A88A3E', rgb: '197,164,90' },
+  { id: 'green',  name: 'Grün',    c: '#30D158', soft: '#5CE07C', deep: '#24A845', rgb: '48,209,88' },
+  { id: 'purple', name: 'Violett', c: '#BF5AF2', soft: '#D07EF6', deep: '#9A3FCF', rgb: '191,90,242' },
+  { id: 'orange', name: 'Orange',  c: '#FF9F0A', soft: '#FFB340', deep: '#D9800A', rgb: '255,159,10' },
+  { id: 'pink',   name: 'Pink',    c: '#FF375F', soft: '#FF6482', deep: '#D92448', rgb: '255,55,95' },
+];
+function applyAccent() {
+  try {
+    const a = ACCENTS.find(x => x.id === (ls('los_accent') || 'blue')) || ACCENTS[0];
+    const r = document.documentElement.style;
+    r.setProperty('--gold', a.c); r.setProperty('--gold-soft', a.soft); r.setProperty('--gold-deep', a.deep);
+    r.setProperty('--gold-glow', 'rgba(' + a.rgb + ',0.30)'); r.setProperty('--gold-tint', 'rgba(' + a.rgb + ',0.14)');
+  } catch (e) {}
+}
+if (typeof document !== 'undefined') applyAccent();
+
 // Collapsible section — keeps long screens compact and remembers (per key)
 // what the user expanded. Append content to the returned element's ._body.
 function section(title, key, defaultOpen) {

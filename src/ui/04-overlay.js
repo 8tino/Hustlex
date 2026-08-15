@@ -47,6 +47,23 @@ function showSettings() {
     inner.appendChild(langCard);
   }
 
+  // Akzentfarbe
+  if (typeof ACCENTS !== 'undefined') {
+    const EN = (typeof LANG !== 'undefined' && LANG === 'en');
+    const accCard = div('glass', '<div class="label" style="margin-bottom:10px;">' + (EN ? 'ACCENT COLOR' : 'AKZENTFARBE') + '</div>');
+    accCard.style.marginBottom = '12px';
+    const swatches = div(''); swatches.style.cssText = 'display:flex;gap:10px;flex-wrap:wrap;';
+    const cur = ls('los_accent') || 'blue';
+    ACCENTS.forEach(a => {
+      const b = h('button', {}); b.className = 'tap'; b.title = a.name;
+      b.style.cssText = 'width:34px;height:34px;border-radius:50%;background:' + a.c + ';border:2px solid ' + (a.id === cur ? '#fff' : 'transparent') + ';box-shadow:0 0 0 1px var(--edge);cursor:pointer;';
+      b.onclick = () => { ls('los_accent', a.id); applyAccent(); showSettings(); };
+      swatches.appendChild(b);
+    });
+    accCard.appendChild(swatches);
+    inner.appendChild(accCard);
+  }
+
   if (STATE.profile) {
     const pc = div('glass-accent anim-fade-up', '');
     pc.style.marginBottom = '12px';

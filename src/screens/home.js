@@ -215,7 +215,62 @@ function renderHome(s) {
   if (!dc.done && dcPct >= 100) dcCard.insertAdjacentHTML('beforeend', '<div style="text-align:center;font-size:13px;color:var(--green);font-weight:700;margin-top:8px;">Antippen zum Abschließen →</div>');
   s.appendChild(dcCard);
 
+  // ── 7-Tage-Trend (einklappbar, aus den Tagesstatistiken) ──
+  s.appendChild(homeTrendCard());
+
   // ── AI tip ──
   const ctx = 'Nutzer: ' + (STATE.profile?.name || '?') + ', Ziel: ' + gp.name + '. Heute: ' + Math.round(d.overall) + '% erledigt. Offen: ' + (items.map(i => i.title).join(', ') || 'nichts') + '. Energie: ' + (STATE.day.energy || '?') + '/5.';
   s.appendChild(aiBlock('WAS TUE ICH JETZT?', ctx + ' Gib 3 konkrete nächste Schritte. Kein Intro. Deutsch.'));
+}
+
+// Last 7 days from the per-day snapshots; today's row uses live values.
+function homeWeekStats() {
+  const cfg = getCfg(), tot = getTotals();
+  const out = [];
+  for (let i = 6; i >= 0; i--) {
+    const dd = new Date(Date.now() - i * 86400000);
+    const st = ls('los_daystat_' + dd.toDateString()) || {};
+    const live = i === 0;
+    out.push({
+      d: dd,
+      xp: live ? STATE.day.xp : (st.xp || 0),
+      p: live ? tot.p : (st.p || 0),
+      water: live ? STATE.day.water : (st.water || 0),
+      sleep: live ? (parseFloat(getSleepHours()) || 0) : (parseFloat(st.sleepH) || 0),
+    });
+  }
+  return out;
+}
+// Tiny inline-SVG sparkline.
+function sparkline(vals, color, w, h) {
+  w = w || 90; h = h || 24; const max = Math.max.apply(null, vals.concat([1]));
+  const step = vals.length > 1 ? w / (vals.length - 1) : w;
+  const pts = vals.map((v, i) => (i * step).toFixed(1) + ',' + (h - (v / max) * (h - 4) - 2).toFixed(1)).join(' ');
+  const last = vals[vals.length - 1], lx = w, ly = h - (last / max) * (h - 4) - 2;
+  return '<svg width="' + w + '" height="' + h + '" viewBox="0 0 ' + (w + 4) + ' ' + h + '" style="overflow:visible;">' +
+    '<polyline points="' + pts + '" fill="none" stroke="' + color + '" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" opacity=".85"/>' +
+    '<circle cx="' + lx.toFixed(1) + '" cy="' + ly.toFixed(1) + '" r="2.6" fill="' + color + '"/></svg>';
+}
+function homeTrendCard() {
+  const EN = (typeof LANG !== 'undefined' && LANG === 'en');
+  const wk = homeWeekStats();
+  const det = document.createElement('details'); det.className = 'glass'; det.style.cssText = 'padding:12px 14px;';
+  det.innerHTML = '<summary style="cursor:pointer;font-size:13px;font-weight:600;color:var(--t-1);">📈 ' + (EN ? '7-day trend' : '7-Tage-Trend') + '</summary>';
+  const body = div(''); body.style.cssText = 'margin-top:10px;display:flex;flex-direction:column;gap:10px;';
+  const rows = [
+    ['XP', wk.map(x => x.xp), '#FF9F0A', v => Math.round(v)],
+    [EN ? 'Sleep' : 'Schlaf', wk.map(x => x.sleep), '#BF5AF2', v => v ? v.toFixed(1) + 'h' : '–'],
+    ['Protein', wk.map(x => x.p), '#30D158', v => Math.round(v) + 'g'],
+    [EN ? 'Water' : 'Wasser', wk.map(x => x.water), '#0A84FF', v => (v / 1000).toFixed(1) + 'L'],
+  ];
+  rows.forEach(([label, vals, color, fmt]) => {
+    const avg = vals.reduce((a, b) => a + b, 0) / vals.length;
+    const r = div(''); r.style.cssText = 'display:flex;align-items:center;gap:12px;';
+    r.innerHTML = '<div style="flex:1;min-width:0;"><div style="font-size:13px;color:var(--t-1);">' + label + '</div>' +
+      '<div style="font-size:11px;color:var(--t-3);margin-top:1px;">' + (EN ? 'today ' : 'heute ') + fmt(vals[vals.length - 1]) + ' · ⌀ ' + fmt(avg) + '</div></div>' +
+      '<div style="flex:none;">' + sparkline(vals, color) + '</div>';
+    body.appendChild(r);
+  });
+  det.appendChild(body);
+  return det;
 }
