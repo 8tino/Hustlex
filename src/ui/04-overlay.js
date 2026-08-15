@@ -64,6 +64,15 @@ function showSettings() {
     inner.appendChild(accCard);
   }
 
+  // Erinnerungen (native Push)
+  if (typeof openReminders === 'function') {
+    const EN = (typeof LANG !== 'undefined' && LANG === 'en');
+    const remBtn = h('button', { textContent: EN ? '🔔  Reminders' : '🔔  Erinnerungen' }, '');
+    remBtn.className = 'btn btn-glass tap'; remBtn.style.cssText = 'margin-bottom:12px;font-size:13px;';
+    remBtn.onclick = () => openReminders();
+    inner.appendChild(remBtn);
+  }
+
   if (STATE.profile) {
     const pc = div('glass-accent anim-fade-up', '');
     pc.style.marginBottom = '12px';

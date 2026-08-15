@@ -1,0 +1,12 @@
+{
+  "appId": "com.hustlex.app",
+  "appName": "HustleX",
+  "webDir": "dist",
+  "backgroundColor": "#000000",
+  "plugins": {
+    "LocalNotifications": {
+      "smallIcon": "ic_stat_icon",
+      "iconColor": "#0A84FF"
+    }
+  }
+}

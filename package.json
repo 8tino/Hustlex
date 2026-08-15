@@ -9,10 +9,21 @@
     "dev": "node dev.mjs",
     "icons": "node tools/gen-icons.mjs",
     "deploy": "node build.mjs && node tools/deploy.mjs",
-    "deploy:public": "HUSTLEX_PUBLIC=1 node build.mjs && node tools/deploy.mjs"
+    "deploy:public": "HUSTLEX_PUBLIC=1 node build.mjs && node tools/deploy.mjs",
+    "cap:sync": "node build.mjs && npx cap sync",
+    "cap:ios": "node build.mjs && npx cap sync ios && npx cap open ios",
+    "cap:android": "node build.mjs && npx cap sync android && npx cap open android"
   },
   "devDependencies": {
-    "chokidar": "^3.6.0"
+    "chokidar": "^3.6.0",
+    "@capacitor/cli": "^6.2.0"
+  },
+  "dependencies": {
+    "@capacitor/core": "^6.2.0",
+    "@capacitor/ios": "^6.2.0",
+    "@capacitor/android": "^6.2.0",
+    "@capacitor/app": "^6.0.2",
+    "@capacitor/local-notifications": "^6.1.0"
   },
   "private": true,
   "optionalDependencies": {
