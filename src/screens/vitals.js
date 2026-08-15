@@ -111,6 +111,35 @@ function renderVitals(s) {
   const mealSec = section('Mahlzeiten', 'v_meals', false); const mb = mealSec._body;
   mb.appendChild(renderMealAdd(s));
 
+  // Schnell-Aktionen: Barcode scannen · Gestern kopieren · Kombi speichern.
+  const qa = div(''); qa.style.cssText = 'display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;';
+  const qaBtn = (label, fn) => { const b = h('button', { textContent: label }); b.className = 'btn btn-glass tap'; b.style.cssText = 'font-size:12.5px;flex:1;min-width:calc(50% - 4px);'; b.onclick = fn; return b; };
+  qa.appendChild(qaBtn(LANG === 'en' ? '📷 Barcode' : '📷 Barcode', () => openBarcode(s)));
+  qa.appendChild(qaBtn(LANG === 'en' ? '📋 Copy yesterday' : '📋 Gestern kopieren', () => copyYesterday(s)));
+  qa.appendChild(qaBtn(LANG === 'en' ? '💾 Save as combo' : '💾 Als Kombi speichern', () => saveTodayAsCombo(s)));
+  mb.appendChild(qa);
+
+  // Meine Kombis — mehrere Foods mit 1 Tipp loggen.
+  const combos = getCombos();
+  if (combos.length) {
+    const det = document.createElement('details'); det.className = 'glass'; det.style.cssText = 'padding:10px 14px;margin-bottom:8px;';
+    det.innerHTML = '<summary style="cursor:pointer;font-size:13px;font-weight:600;color:var(--t-1);">🍱 ' + (LANG === 'en' ? 'My combos' : 'Meine Kombis') + ' <span style="color:var(--t-3);font-weight:400;">· ' + combos.length + '</span></summary>';
+    const body = div(''); body.style.cssText = 'margin-top:8px;display:flex;flex-direction:column;gap:8px;';
+    combos.forEach(cb => {
+      const tot = (cb.items || []).reduce((a, it) => ({ kcal: a.kcal + (it.kcal || 0), p: a.p + (it.p || 0) }), { kcal: 0, p: 0 });
+      const r = div('row notranslate', '<span style="font-size:18px;">' + (cb.ic || '🍱') + '</span>' +
+        '<div style="flex:1;min-width:0;"><div style="font-size:13px;color:var(--t-1);">' + cb.name + '</div>' +
+        '<div style="font-size:11px;color:var(--t-3);margin-top:1px;">' + (cb.items || []).length + (LANG === 'en' ? ' items · ' : ' Teile · ') + tot.kcal + ' kcal · ' + tot.p + 'g P</div></div>');
+      const logB = h('button', { textContent: LANG === 'en' ? '→ log' : '→ loggen' }); logB.className = 'tap';
+      logB.style.cssText = 'flex:none;padding:6px 10px;border-radius:8px;background:rgba(92,184,117,.12);border:1px solid rgba(92,184,117,.25);color:var(--green);font-size:11px;';
+      logB.onclick = () => logCombo(cb, s);
+      const delB = h('button', { textContent: '×' }); delB.style.cssText = 'background:none;color:var(--t-4);font-size:15px;flex:none;padding-left:4px;';
+      delB.onclick = () => { saveCombos(getCombos().filter(x => x.id !== cb.id)); renderVitals(s); };
+      r.appendChild(logB); r.appendChild(delB); body.appendChild(r);
+    });
+    det.appendChild(body); mb.appendChild(det);
+  }
+
   // Zuletzt gegessen — Ein-Tipp-Wiederholung (1 Portion).
   const recent = getRecentFoods();
   if (recent.length) {
@@ -812,6 +841,129 @@ function pushRecentFood(f) {
   let a = getRecentFoods().filter(x => x.id !== f.id);
   a.unshift({ id: f.id, n: f.n, ic: f.ic || '🍽', kcal: f.kcal, p: f.p, c: f.c, f: f.f });
   ls('los_recent_foods', a.slice(0, 10));
+}
+
+// ─── MAHLZEITEN-KOMBIS ────────────────────────────────
+// Mehrere Foods als benannte Kombi (z. B. „Mein Frühstück") → 1 Tipp loggt alle.
+function getCombos() { return ls('los_combos') || []; }
+function saveCombos(a) { ls('los_combos', a); }
+function logCombo(combo, s) {
+  (combo.items || []).forEach((it, i) => STATE.day.meals.push(Object.assign({}, it, { id: Date.now() + i })));
+  saveDay(); updateStatusBar(); haptic('success');
+  showToast(combo.name + (LANG === 'en' ? ' logged' : ' geloggt'), combo.ic || '🍱');
+  renderVitals(s);
+}
+function saveTodayAsCombo(s) {
+  const EN = (typeof LANG !== 'undefined' && LANG === 'en');
+  if (!STATE.day.meals.length) { showToast(EN ? 'Nothing logged today yet' : 'Heute noch nichts geloggt', 'ℹ'); return; }
+  const name = (prompt(EN ? 'Name for this combo (e.g. My breakfast):' : 'Name für die Kombi (z. B. Mein Frühstück):') || '').trim();
+  if (!name) return;
+  const items = STATE.day.meals.map(m => ({ n: m.n, kcal: m.kcal, p: m.p, c: m.c, f: m.f, ic: m.ic || '🍽', x: m.x || {} }));
+  const a = getCombos(); a.unshift({ id: 'k' + Date.now(), name, ic: '🍱', items });
+  saveCombos(a); haptic('success'); showToast(EN ? 'Combo saved' : 'Kombi gespeichert', '🍱'); renderVitals(s);
+}
+
+// ─── GESTERN KOPIEREN ─────────────────────────────────
+function yesterdayDateStr() { return new Date(Date.now() - 86400000).toDateString(); }
+function getYesterdayMeals() { return ls('los_daymeals_' + yesterdayDateStr()) || []; }
+function copyYesterday(s) {
+  const EN = (typeof LANG !== 'undefined' && LANG === 'en');
+  const y = getYesterdayMeals();
+  if (!y.length) { showToast(EN ? 'Nothing logged yesterday' : 'Gestern nichts geloggt', 'ℹ'); return; }
+  y.forEach((it, i) => STATE.day.meals.push(Object.assign({}, it, { id: Date.now() + i })));
+  saveDay(); updateStatusBar(); haptic('success');
+  showToast(EN ? y.length + ' meals copied' : y.length + ' Mahlzeiten kopiert', '📋'); renderVitals(s);
+}
+
+// ─── BARCODE-SCANNER (OpenFoodFacts) ──────────────────
+// Sucht ein Produkt per Barcode (EAN) in der offenen OpenFoodFacts-Datenbank.
+// Kamera-Scan nur wo BarcodeDetector unterstützt wird (Android/Chrome); sonst
+// manuelle Eingabe der Nummer. Es wird nur die Barcode-Nummer gesendet.
+async function offLookup(ean) {
+  const url = 'https://world.openfoodfacts.org/api/v2/product/' + encodeURIComponent(ean) +
+    '.json?fields=product_name,brands,nutriments,serving_size';
+  const r = await fetch(url);
+  const d = await r.json().catch(() => ({}));
+  if (d.status !== 1 || !d.product) return null;
+  const p = d.product, nu = p.nutriments || {};
+  const hasServ = nu['energy-kcal_serving'] != null || nu['proteins_serving'] != null;
+  const per = k => (hasServ ? nu[k + '_serving'] : nu[k + '_100g']) || 0;
+  const brand = p.brands ? p.brands.split(',')[0].trim() + ' ' : '';
+  let name = (brand + (p.product_name || 'Produkt')).replace(/\s+/g, ' ').trim().slice(0, 40);
+  if (!hasServ) name += ' 100g';
+  return {
+    n: name,
+    kcal: Math.round(hasServ ? (nu['energy-kcal_serving'] || 0) : (nu['energy-kcal_100g'] || 0)),
+    p: Math.round(per('proteins')), c: Math.round(per('carbohydrates')), f: Math.round(per('fat')),
+  };
+}
+
+function openBarcode(s) {
+  const EN = (typeof LANG !== 'undefined' && LANG === 'en');
+  const inner = el('overlay_inner'); inner.innerHTML = ''; inner.appendChild(overlayBackBtn());
+  inner.insertAdjacentHTML('beforeend',
+    '<div class="label" style="margin-bottom:6px;">BARCODE</div>' +
+    '<div class="h2" style="margin-bottom:6px;">' + (EN ? 'Scan a <span class="gold">product</span>' : 'Produkt <span class="gold">scannen</span>') + '</div>' +
+    '<div style="font-size:12px;color:var(--t-3);line-height:1.6;margin-bottom:16px;">' +
+      (EN ? 'Looks up the free OpenFoodFacts database. Only the barcode number is sent.'
+          : 'Sucht in der freien OpenFoodFacts-Datenbank. Es wird nur die Barcode-Nummer gesendet.') + '</div>');
+
+  const status = div('notranslate', ''); status.style.cssText = 'font-size:13px;color:var(--t-2);min-height:20px;margin-bottom:12px;';
+  const result = div(''); result.style.cssText = 'margin-bottom:12px;';
+
+  const doLookup = async (ean) => {
+    if (!ean) return;
+    status.textContent = (EN ? 'Searching… ' : 'Suche… ') + ean; result.innerHTML = '';
+    try {
+      const food = await offLookup(ean);
+      if (!food) { status.textContent = EN ? 'Not found. Try manual entry below.' : 'Nicht gefunden. Trag die Werte unten selbst ein.'; return; }
+      status.textContent = EN ? 'Found:' : 'Gefunden:';
+      const card = div('glass notranslate', '<div style="font-size:14px;color:var(--t-1);font-weight:600;">' + food.n + '</div>' +
+        '<div style="font-size:12px;color:var(--t-3);margin-top:3px;">' + food.kcal + ' kcal · ' + food.p + 'g P · ' + food.c + 'g C · ' + food.f + 'g F</div>');
+      card.style.cssText = 'padding:12px 14px;';
+      const add = h('button', { textContent: EN ? '＋ Add & log' : '＋ Hinzufügen & loggen' }); add.className = 'btn btn-gold tap'; add.style.cssText = 'margin-top:10px;font-size:13px;';
+      add.onclick = () => {
+        const f = { id: 'c' + Date.now(), n: food.n, kcal: food.kcal, p: food.p, c: food.c, f: food.f, ic: '📦', custom: true, x: {} };
+        addCustomFood(f); STATE.day.meals.push(Object.assign({}, f, { id: Date.now() })); pushRecentFood(f);
+        saveDay(); updateStatusBar(); haptic('success'); showToast(EN ? 'Logged' : 'Geloggt', '📦'); closeOverlay(); renderVitals(s);
+      };
+      card.appendChild(add); result.appendChild(card);
+    } catch (e) { status.textContent = (EN ? 'Error: ' : 'Fehler: ') + (e.message || e); }
+  };
+
+  // Kamera-Scan, falls unterstützt.
+  if ('BarcodeDetector' in window) {
+    const scanBtn = h('button', { textContent: EN ? '📷 Scan with camera' : '📷 Mit Kamera scannen' }); scanBtn.className = 'btn btn-glass tap'; scanBtn.style.cssText = 'font-size:13px;margin-bottom:10px;';
+    scanBtn.onclick = async () => {
+      try {
+        const video = document.createElement('video'); video.setAttribute('playsinline', ''); video.style.cssText = 'width:100%;border-radius:12px;margin-bottom:10px;background:#000;';
+        result.innerHTML = ''; result.appendChild(video);
+        const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+        video.srcObject = stream; await video.play();
+        const det = new window.BarcodeDetector({ formats: ['ean_13', 'ean_8', 'upc_a', 'upc_e'] });
+        status.textContent = EN ? 'Point at the barcode…' : 'Auf den Barcode halten…';
+        let done = false;
+        const stop = () => { done = true; try { stream.getTracks().forEach(t => t.stop()); } catch (e) {} };
+        const tick = async () => {
+          if (done) return;
+          try { const codes = await det.detect(video); if (codes && codes.length) { stop(); video.remove(); doLookup(codes[0].rawValue); return; } } catch (e) {}
+          requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+      } catch (e) { status.textContent = EN ? 'Camera not available — enter the number below.' : 'Kamera nicht verfügbar — Nummer unten eingeben.'; }
+    };
+    inner.appendChild(scanBtn);
+  }
+
+  // Manuelle Eingabe (immer verfügbar).
+  inner.insertAdjacentHTML('beforeend', '<div class="label" style="margin-bottom:6px;">' + (EN ? 'BARCODE NUMBER' : 'BARCODE-NUMMER') + '</div>');
+  const inp = h('input', { type: 'number', inputmode: 'numeric', placeholder: 'z. B. 4008400202136' }); inp.className = 'inp'; inp.style.cssText = 'width:100%;font-size:15px;margin-bottom:8px;';
+  const go = h('button', { textContent: EN ? '🔍 Look up' : '🔍 Suchen' }); go.className = 'btn btn-gold tap'; go.style.cssText = 'font-size:13px;';
+  go.onclick = () => doLookup(inp.value.trim());
+  inp.onkeydown = e => { if (e.key === 'Enter') go.click(); };
+  inner.appendChild(inp); inner.appendChild(go);
+  inner.appendChild(status); inner.appendChild(result);
+  openOverlay();
 }
 
 // Collapsible "own meal" form

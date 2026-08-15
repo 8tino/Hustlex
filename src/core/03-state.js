@@ -44,6 +44,15 @@ function saveDay() {
       mood: STATE.day.mood,
       energy: STATE.day.energy,
     });
+    // Full meals snapshot per day so "copy yesterday" can rebuild the meals.
+    ls('los_daymeals_' + STATE.day.date, STATE.day.meals);
+    // Prune old meal snapshots — keep the most recent ~10 days.
+    const mk = Object.keys(localStorage).filter(k => k.startsWith('los_daymeals_'));
+    if (mk.length > 10) {
+      mk.map(k => ({ k, d: new Date(k.slice(13)).getTime() || 0 }))
+        .sort((a, b) => a.d - b.d).slice(0, mk.length - 10)
+        .forEach(o => { try { localStorage.removeItem(o.k); } catch (e) {} });
+    }
   } catch (e) {}
 }
 
