@@ -52,8 +52,23 @@ function renderVitals(s) {
       '</div><div class="label" style="text-align:center;font-size:10px;margin-top:2px;">' + st.l + '</div>'));
   });
   mac.appendChild(mg);
-  mac.appendChild(macroBar('Protein', t.p, cfg.proteinGoal, 'g', 'var(--green)'));
-  const kb = macroBar('Kalorien', t.kcal, cfg.kcalGoal, '', 'var(--gold)'); kb.style.marginTop = '10px'; mac.appendChild(kb);
+  const kb = macroBar('Kalorien', t.kcal, cfg.kcalGoal, '', 'var(--gold)'); mac.appendChild(kb);
+  [
+    ['Protein', t.p, cfg.proteinGoal, 'var(--green)'],
+    ['Kohlenhydrate', t.c, cfg.carbsGoal, 'var(--blue)'],
+    ['Fett', t.f, cfg.fatGoal, 'var(--purple)'],
+  ].forEach(([l, v, g, c]) => { const b = macroBar(l, v, g, 'g', c); b.style.marginTop = '10px'; mac.appendChild(b); });
+  // Eigene Makros als zusätzliche Balken (nur mit gesetztem Ziel sinnvoll).
+  getMacros().forEach(m2 => {
+    const v = Math.round((t.x && t.x[m2.id]) || 0);
+    const b = macroBar((m2.ic ? m2.ic + ' ' : '') + m2.name, v, m2.goal || 0, m2.unit || 'g', m2.color || 'var(--t-2)');
+    b.style.marginTop = '10px'; b.classList.add('notranslate'); mac.appendChild(b);
+  });
+  // Makros/Ziele verwalten
+  const manageMac = h('button', { textContent: '⚙ Makros & Ziele verwalten' });
+  manageMac.className = 'btn btn-ghost tap'; manageMac.style.cssText = 'margin-top:12px;font-size:12px;';
+  manageMac.onclick = () => openNutritionSettings(s);
+  mac.appendChild(manageMac);
   s.appendChild(mac);
 
   // Water
@@ -96,6 +111,25 @@ function renderVitals(s) {
   const mealSec = section('Mahlzeiten', 'v_meals', false); const mb = mealSec._body;
   mb.appendChild(renderMealAdd(s));
 
+  // Zuletzt gegessen — Ein-Tipp-Wiederholung (1 Portion).
+  const recent = getRecentFoods();
+  if (recent.length) {
+    const rc = div(''); rc.style.cssText = 'margin-bottom:10px;';
+    rc.appendChild(div('label', (LANG === 'en' ? 'RECENT' : 'ZULETZT') ));
+    const chips = div(''); chips.style.cssText = 'display:flex;gap:8px;overflow-x:auto;padding:8px 2px 4px;';
+    recent.slice(0, 8).forEach(rf => {
+      const full = getFoods().find(x => x.id === rf.id) || rf;
+      const c = h('button', { textContent: (full.ic || '🍽') + ' ' + full.n }); c.className = 'tap notranslate';
+      c.style.cssText = 'flex:none;padding:8px 12px;border-radius:99px;font-size:12.5px;border:1px solid var(--edge);background:var(--glass-2);color:var(--t-2);white-space:nowrap;';
+      c.onclick = () => {
+        STATE.day.meals.push({ id: Date.now(), n: full.n, kcal: full.kcal, p: full.p, c: full.c, f: full.f, ic: full.ic || '🍽', x: scaleFoodX(full, 1) });
+        pushRecentFood(full); saveDay(); updateStatusBar(); haptic('success'); showToast(full.n + (LANG === 'en' ? ' logged' : ' geloggt'), '🍽'); renderVitals(s);
+      };
+      chips.appendChild(c);
+    });
+    rc.appendChild(chips); mb.appendChild(rc);
+  }
+
   const search = h('input', { type: 'search', placeholder: '🔍 Lebensmittel suchen…' });
   search.className = 'inp'; search.style.cssText = 'width:100%;font-size:14px;';
   mb.appendChild(search);
@@ -131,7 +165,7 @@ function renderVitals(s) {
       return;
     }
     // grouped collapsible view
-    const order = ['Eigene', 'Protein', 'Milchprodukte', 'Carbs', 'Gemüse', 'Obst', 'Fette & Nüsse', 'Getränke', 'Snacks & Süßes'];
+    const order = ['Eigene', 'Protein', 'Milchprodukte', 'Carbs', 'Backwaren', 'Gemüse', 'Obst', 'Fette & Nüsse', 'Getränke', 'Snacks & Süßes', 'Fast Food & Fertig'];
     const groups = {};
     all.forEach(f => { const c = f.custom ? 'Eigene' : (f.cat || 'Sonstiges'); (groups[c] = groups[c] || []).push(f); });
     const keys = order.filter(k => groups[k]).concat(Object.keys(groups).filter(k => !order.includes(k)));
@@ -322,6 +356,42 @@ function updateCustomFood(f) { const a = ls('los_foods') || []; const i = a.find
 function addCustomFood(f) { const a = ls('los_foods') || []; a.unshift(f); ls('los_foods', a); }
 function delCustomFood(id) { ls('los_foods', (ls('los_foods') || []).filter(x => x.id !== id)); }
 
+// ─── EIGENE MAKROS ────────────────────────────────────
+// Frei definierbare Ernährungswerte über kcal/P/C/F hinaus (Ballaststoffe,
+// Zucker, gesätt. Fett …). Definition in los_macros: [{id,name,unit,goal,color,ic}].
+// Pro-Food-Werte liegen in food.x[id]; geloggte Mahlzeiten tragen meal.x mit.
+const MACRO_COLORS = ['#5AC8FA', '#FF9F0A', '#FF375F', '#BF5AF2', '#64D2FF', '#FFD60A', '#30D158', '#FF6482', '#AC8E68'];
+// Häufige Makros als Ein-Tipp-Vorschläge (mit sinnvollem Standardziel).
+const MACRO_PRESETS = [
+  { name: 'Ballaststoffe', unit: 'g', goal: 30, ic: '🌾' },
+  { name: 'Zucker', unit: 'g', goal: 50, ic: '🍬' },
+  { name: 'Gesätt. Fett', unit: 'g', goal: 20, ic: '🧈' },
+  { name: 'Salz', unit: 'g', goal: 6, ic: '🧂' },
+  { name: 'Koffein', unit: 'mg', goal: 400, ic: '☕' },
+  { name: 'Omega-3', unit: 'g', goal: 2, ic: '🐟' },
+];
+function getMacros() { return ls('los_macros') || []; }
+function saveMacros(a) { ls('los_macros', a); }
+function addMacro(m) {
+  const a = getMacros();
+  const id = 'mx' + Date.now().toString(36);
+  a.push(Object.assign({ id, unit: 'g', goal: 0, color: MACRO_COLORS[a.length % MACRO_COLORS.length], ic: '🔹' }, m, { id }));
+  saveMacros(a); return id;
+}
+function updateMacro(id, patch) { const a = getMacros(); const i = a.findIndex(x => x.id === id); if (i >= 0) { a[i] = Object.assign({}, a[i], patch); saveMacros(a); } }
+function delMacro(id) {
+  saveMacros(getMacros().filter(x => x.id !== id));
+  // Werte aus Overrides & eigenen Foods aufräumen (optional, hält Daten sauber).
+  const ov = getFoodOverrides(); Object.keys(ov).forEach(k => { if (ov[k].x) delete ov[k].x[id]; }); ls('los_food_overrides', ov);
+  const cf = ls('los_foods') || []; cf.forEach(f => { if (f.x) delete f.x[id]; }); ls('los_foods', cf);
+}
+// Skaliert die x-Werte eines Foods um den Faktor qty → für's Logging.
+function scaleFoodX(f, qty) {
+  const out = {};
+  getMacros().forEach(mac => { const base = (f.x && f.x[mac.id]) || 0; if (base) out[mac.id] = Math.round(base * qty * 10) / 10; });
+  return out;
+}
+
 // Edit the macro values of any food (built-in → stored as an override).
 function openFoodEdit(f, s) {
   const inner = el('overlay_inner'); inner.innerHTML = ''; inner.appendChild(overlayBackBtn());
@@ -345,13 +415,28 @@ function openFoodEdit(f, s) {
   [['PROTEIN g', f.p, 'p'], ['CARBS g', f.c, 'c'], ['FETT g', f.f, 'f']].forEach(([l, v, k]) => { const w = mkField(l, v, k); w.style.cssText = 'flex:1;'; macRow.appendChild(w); });
   inner.appendChild(macRow);
 
+  // Eigene Makros pro Portion (nur wenn welche definiert sind).
+  const macros = getMacros();
+  if (macros.length) {
+    inner.insertAdjacentHTML('beforeend', '<div class="label" style="margin-bottom:6px;">EIGENE MAKROS · PRO PORTION</div>');
+    const xWrap = div(''); xWrap.style.cssText = 'display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;';
+    macros.forEach(m2 => { const w = mkField((m2.ic ? m2.ic + ' ' : '') + m2.name + ' ' + (m2.unit || 'g'), (f.x && f.x[m2.id] != null) ? f.x[m2.id] : '', 'x_' + m2.id); w.style.cssText = 'flex:1 1 45%;'; w.classList.add('notranslate'); xWrap.appendChild(w); });
+    inner.appendChild(xWrap);
+  }
+
   const read = () => {
-    const get = k => inner.querySelector('input[data-key="' + k + '"]').value;
-    return {
+    const get = k => { const el2 = inner.querySelector('input[data-key="' + k + '"]'); return el2 ? el2.value : ''; };
+    const patch = {
       n: get('n').trim() || f.n, ic: get('ic').trim() || '🍽',
       kcal: Math.round(parseFloat(get('kcal')) || 0), p: Math.round(parseFloat(get('p')) || 0),
       c: Math.round(parseFloat(get('c')) || 0), f: Math.round(parseFloat(get('f')) || 0),
     };
+    if (macros.length) {
+      const x = {};
+      macros.forEach(m2 => { const v = parseFloat(get('x_' + m2.id)); if (v > 0) x[m2.id] = Math.round(v * 10) / 10; });
+      patch.x = x;
+    }
+    return patch;
   };
   const save = h('button', { textContent: '✓ Speichern' }); save.className = 'btn btn-gold tap';
   save.onclick = () => {
@@ -482,7 +567,9 @@ function openFoodQty(f, s) {
     STATE.day.meals.push({
       id: Date.now(), n: f.n + (qty !== 1 ? ' ×' + (qty % 1 === 0 ? qty : qty.toFixed(1)) : ''),
       kcal: Math.round(f.kcal * qty), p: Math.round(f.p * qty), c: Math.round(f.c * qty), f: Math.round(f.f * qty), ic: f.ic || '🍽',
+      x: scaleFoodX(f, qty),
     });
+    if (typeof pushRecentFood === 'function') pushRecentFood(f);
     saveDay(); updateStatusBar(); haptic('success'); closeOverlay(); renderVitals(s);
   };
   inner.appendChild(log);
@@ -598,14 +685,133 @@ function openPlanPicker(slot, s) {
   openOverlay();
 }
 
-function editGoals(s) {
+// Beibehaltener Name — öffnet jetzt das saubere Overlay statt prompt().
+function editGoals(s) { openNutritionSettings(s); }
+
+// Ein Overlay für alles: Tagesziele (kcal/P/C/F/Wasser/Schlaf) + eigene Makros
+// anlegen/bearbeiten/löschen. Alles anpassbar, an einem Ort.
+function openNutritionSettings(s) {
+  const EN = (typeof LANG !== 'undefined' && LANG === 'en');
   const cfg = getCfg();
-  const p = parseInt(prompt('Protein-Ziel (g/Tag):', cfg.proteinGoal) || cfg.proteinGoal);
-  const w = parseInt(prompt('Wasser-Ziel (ml/Tag):', cfg.waterGoal) || cfg.waterGoal);
-  const k = parseInt(prompt('Kalorien-Ziel (kcal/Tag):', cfg.kcalGoal) || cfg.kcalGoal);
-  const sl = parseFloat((prompt('Schlaf-Ziel (h/Tag, z. B. 7.5):', cfg.sleepGoal) || cfg.sleepGoal).toString().replace(',', '.'));
-  saveCfg({ proteinGoal: p || cfg.proteinGoal, waterGoal: w || cfg.waterGoal, kcalGoal: k || cfg.kcalGoal, sleepGoal: (sl > 0 ? sl : cfg.sleepGoal) });
-  showToast('Ziele gespeichert', '🎯'); renderVitals(s); updateStatusBar();
+  const inner = el('overlay_inner'); inner.innerHTML = ''; inner.appendChild(overlayBackBtn());
+  inner.insertAdjacentHTML('beforeend',
+    '<div class="label" style="margin-bottom:6px;">' + (EN ? 'NUTRITION' : 'ERNÄHRUNG') + '</div>' +
+    '<div class="h2" style="margin-bottom:16px;">' + (EN ? 'Goals & <span class="gold">macros</span>' : 'Ziele & <span class="gold">Makros</span>') + '</div>');
+
+  // ── Standard-Tagesziele ──
+  inner.appendChild(div('label', EN ? 'DAILY GOALS' : 'TAGESZIELE'));
+  const gc = div('glass', ''); gc.style.cssText = 'padding:14px;margin-bottom:16px;';
+  const gInputs = {};
+  const gField = (label, key, val, step) => {
+    const wrap = div(''); wrap.style.cssText = 'flex:1 1 45%;';
+    wrap.insertAdjacentHTML('beforeend', '<div class="label" style="margin-bottom:4px;">' + label + '</div>');
+    const i = h('input', { type: 'number', value: String(val), inputmode: 'decimal', step: step || '1' });
+    i.className = 'inp'; i.style.cssText = 'width:100%;font-size:15px;'; gInputs[key] = i; wrap.appendChild(i); return wrap;
+  };
+  const grid = div(''); grid.style.cssText = 'display:flex;flex-wrap:wrap;gap:10px;';
+  grid.appendChild(gField(EN ? 'CALORIES' : 'KALORIEN', 'kcalGoal', cfg.kcalGoal));
+  grid.appendChild(gField('PROTEIN g', 'proteinGoal', cfg.proteinGoal));
+  grid.appendChild(gField((EN ? 'CARBS' : 'KOHLENHYDRATE') + ' g', 'carbsGoal', cfg.carbsGoal));
+  grid.appendChild(gField((EN ? 'FAT' : 'FETT') + ' g', 'fatGoal', cfg.fatGoal));
+  grid.appendChild(gField(EN ? 'WATER ml' : 'WASSER ml', 'waterGoal', cfg.waterGoal, '50'));
+  grid.appendChild(gField(EN ? 'SLEEP h' : 'SCHLAF h', 'sleepGoal', cfg.sleepGoal, '0.5'));
+  gc.appendChild(grid);
+  const gsave = h('button', { textContent: EN ? '✓ Save goals' : '✓ Ziele speichern' }); gsave.className = 'btn btn-gold tap'; gsave.style.cssText = 'margin-top:12px;font-size:13px;';
+  gsave.onclick = () => {
+    const num = (k, d) => { const v = parseFloat(gInputs[k].value); return v > 0 ? v : d; };
+    saveCfg({ kcalGoal: num('kcalGoal', cfg.kcalGoal), proteinGoal: num('proteinGoal', cfg.proteinGoal), carbsGoal: num('carbsGoal', cfg.carbsGoal), fatGoal: num('fatGoal', cfg.fatGoal), waterGoal: num('waterGoal', cfg.waterGoal), sleepGoal: num('sleepGoal', cfg.sleepGoal) });
+    haptic('success'); showToast(EN ? 'Goals saved' : 'Ziele gespeichert', '🎯'); updateStatusBar(); openNutritionSettings(s);
+  };
+  gc.appendChild(gsave);
+  inner.appendChild(gc);
+
+  // ── Eigene Makros ──
+  inner.appendChild(div('label', EN ? 'YOUR OWN MACROS' : 'EIGENE MAKROS'));
+  inner.insertAdjacentHTML('beforeend', '<div style="font-size:12px;color:var(--t-3);line-height:1.6;margin:2px 0 10px;">' +
+    (EN ? 'Track anything beyond the basics — fiber, sugar, caffeine… It appears as a bar here and a field on every food.'
+        : 'Verfolge alles über die Basics hinaus — Ballaststoffe, Zucker, Koffein… Erscheint als Balken hier und als Feld bei jedem Lebensmittel.') + '</div>');
+
+  const macros = getMacros();
+  macros.forEach(m2 => {
+    const row = div('glass notranslate', ''); row.style.cssText = 'padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;gap:10px;';
+    row.innerHTML = '<span style="font-size:18px;flex:none;">' + (m2.ic || '🔹') + '</span>' +
+      '<div style="flex:1;min-width:0;"><div style="font-size:14px;color:var(--t-1);">' + m2.name + '</div>' +
+      '<div style="font-size:11px;color:var(--t-3);margin-top:1px;">' + (EN ? 'Goal' : 'Ziel') + ': ' + (m2.goal || 0) + ' ' + (m2.unit || 'g') + '/' + (EN ? 'day' : 'Tag') + '</div></div>';
+    const ed = h('button', { textContent: '✎' }); ed.className = 'tap'; ed.style.cssText = 'background:none;color:var(--t-3);font-size:14px;flex:none;';
+    ed.onclick = () => openMacroEdit(m2, s);
+    const del = h('button', { textContent: '×' }); del.className = 'tap'; del.style.cssText = 'background:none;color:var(--t-4);font-size:16px;flex:none;';
+    del.onclick = () => { if (confirm((EN ? 'Delete macro ' : 'Makro löschen: ') + m2.name + '?')) { delMacro(m2.id); openNutritionSettings(s); } };
+    row.appendChild(ed); row.appendChild(del); inner.appendChild(row);
+  });
+
+  // Presets (nur die, die es noch nicht gibt) als Ein-Tipp-Chips.
+  const existing = macros.map(m => m.name.toLowerCase());
+  const presets = MACRO_PRESETS.filter(p => !existing.includes(p.name.toLowerCase()));
+  if (presets.length) {
+    inner.insertAdjacentHTML('beforeend', '<div class="label" style="margin:12px 0 6px;">' + (EN ? 'QUICK ADD' : 'SCHNELL HINZUFÜGEN') + '</div>');
+    const chips = div(''); chips.style.cssText = 'display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;';
+    presets.forEach(p => {
+      const c = h('button', { textContent: p.ic + ' ' + p.name }); c.className = 'tap notranslate';
+      c.style.cssText = 'padding:8px 12px;border-radius:99px;font-size:12.5px;border:1px solid var(--edge);background:var(--glass-2);color:var(--t-2);';
+      c.onclick = () => { addMacro(p); haptic('success'); openNutritionSettings(s); };
+      chips.appendChild(c);
+    });
+    inner.appendChild(chips);
+  }
+
+  const addBtn = h('button', { textContent: EN ? '＋ New macro' : '＋ Neues Makro' }); addBtn.className = 'btn btn-glass tap'; addBtn.style.cssText = 'font-size:13px;';
+  addBtn.onclick = () => openMacroEdit(null, s);
+  inner.appendChild(addBtn);
+
+  openOverlay();
+}
+
+// Anlegen/Bearbeiten eines eigenen Makros.
+function openMacroEdit(m, s) {
+  const EN = (typeof LANG !== 'undefined' && LANG === 'en');
+  const isNew = !m;
+  const inner = el('overlay_inner'); inner.innerHTML = '';
+  const back = h('button', { textContent: '← ' + (EN ? 'BACK' : 'ZURÜCK') }); back.className = 'btn btn-ghost tap'; back.style.marginBottom = '24px';
+  back.onclick = () => openNutritionSettings(s); inner.appendChild(back);
+  inner.insertAdjacentHTML('beforeend',
+    '<div class="label" style="margin-bottom:6px;">' + (isNew ? (EN ? 'NEW MACRO' : 'NEUES MAKRO') : (EN ? 'EDIT MACRO' : 'MAKRO BEARBEITEN')) + '</div>' +
+    '<div class="h2" style="margin-bottom:16px;">' + (EN ? 'Custom value' : 'Eigener Wert') + '</div>');
+  const mk = (label, val, ph) => {
+    const w = div(''); w.style.cssText = 'margin-bottom:12px;';
+    w.insertAdjacentHTML('beforeend', '<div class="label" style="margin-bottom:4px;">' + label + '</div>');
+    const i = h('input', { type: 'text', value: val != null ? String(val) : '', placeholder: ph || '' }); i.className = 'inp'; i.style.cssText = 'width:100%;font-size:15px;';
+    w.appendChild(i); w._input = i; return w;
+  };
+  const nameW = mk(EN ? 'NAME' : 'NAME', m && m.name, EN ? 'e.g. Fiber' : 'z. B. Ballaststoffe');
+  const icoW = mk('ICON', m && m.ic, '🌾');
+  const unitW = mk(EN ? 'UNIT' : 'EINHEIT', m ? m.unit : 'g', 'g / mg / …');
+  const goalW = mk(EN ? 'DAILY GOAL' : 'TAGESZIEL', m && m.goal, '30');
+  goalW._input.type = 'number'; goalW._input.inputmode = 'decimal';
+  const iconUnitRow = div(''); iconUnitRow.style.cssText = 'display:flex;gap:10px;';
+  icoW.style.cssText = 'flex:1;'; unitW.style.cssText = 'flex:1;'; goalW.style.cssText = 'flex:1;';
+  iconUnitRow.appendChild(icoW); iconUnitRow.appendChild(unitW); iconUnitRow.appendChild(goalW);
+  inner.appendChild(nameW); inner.appendChild(iconUnitRow);
+
+  const save = h('button', { textContent: EN ? '✓ Save' : '✓ Speichern' }); save.className = 'btn btn-gold tap';
+  save.onclick = () => {
+    const name = nameW._input.value.trim();
+    if (!name) { nameW._input.classList.add('anim-shake'); setTimeout(() => nameW._input.classList.remove('anim-shake'), 450); return; }
+    const patch = { name, ic: icoW._input.value.trim() || '🔹', unit: unitW._input.value.trim() || 'g', goal: parseFloat(goalW._input.value) || 0 };
+    if (isNew) addMacro(patch); else updateMacro(m.id, patch);
+    haptic('success'); showToast(EN ? 'Macro saved' : 'Makro gespeichert', '✓'); openNutritionSettings(s);
+  };
+  inner.appendChild(save);
+  openOverlay();
+}
+
+// ─── ZULETZT GEGESSEN (Schnell-Log) ───────────────────
+// Merkt sich die zuletzt geloggten Lebensmittel für Ein-Tipp-Wiederholung.
+function getRecentFoods() { return ls('los_recent_foods') || []; }
+function pushRecentFood(f) {
+  if (!f || f.custom && !f.id) return;
+  let a = getRecentFoods().filter(x => x.id !== f.id);
+  a.unshift({ id: f.id, n: f.n, ic: f.ic || '🍽', kcal: f.kcal, p: f.p, c: f.c, f: f.f });
+  ls('los_recent_foods', a.slice(0, 10));
 }
 
 // Collapsible "own meal" form
@@ -619,16 +825,23 @@ function renderMealAdd(s) {
   const kI = mkNum('kcal'), pI = mkNum('Protein g'), cI = mkNum('Carbs g'), fI = mkNum('Fett g');
   const r1 = div(''); r1.style.cssText = 'display:flex;gap:8px;margin-bottom:8px;'; r1.appendChild(kI); r1.appendChild(pI);
   const r2 = div(''); r2.style.cssText = 'display:flex;gap:8px;margin-bottom:8px;'; r2.appendChild(cI); r2.appendChild(fI);
+  // Eigene Makros (falls definiert)
+  const macros = getMacros();
+  const xInputs = {};
+  const r3 = div(''); r3.style.cssText = 'display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px;';
+  macros.forEach(m2 => { const i = mkNum((m2.ic ? m2.ic + ' ' : '') + m2.name + ' ' + (m2.unit || 'g')); i.style.flex = '1 1 45%'; i.classList.add('notranslate'); xInputs[m2.id] = i; r3.appendChild(i); });
   const save = h('button', { textContent: 'Hinzufügen & loggen' }, ''); save.className = 'btn btn-gold tap';
   save.onclick = () => {
     const n = nI.value.trim(); const kcal = parseInt(kI.value) || 0;
     if (!n || !kcal) { nI.classList.add('anim-shake'); setTimeout(() => nI.classList.remove('anim-shake'), 450); return; }
-    const food = { id: 'c' + Date.now(), n, kcal, p: parseInt(pI.value) || 0, c: parseInt(cI.value) || 0, f: parseInt(fI.value) || 0, ic: '🍽', custom: true };
+    const x = {};
+    macros.forEach(m2 => { const v = parseFloat(xInputs[m2.id].value); if (v > 0) x[m2.id] = Math.round(v * 10) / 10; });
+    const food = { id: 'c' + Date.now(), n, kcal, p: parseInt(pI.value) || 0, c: parseInt(cI.value) || 0, f: parseInt(fI.value) || 0, ic: '🍽', custom: true, x };
     addCustomFood(food);
     STATE.day.meals.push(Object.assign({}, food, { id: Date.now() })); saveDay(); updateStatusBar();
     haptic('success'); renderVitals(s);
   };
-  form.appendChild(nI); form.appendChild(r1); form.appendChild(r2); form.appendChild(save);
+  form.appendChild(nI); form.appendChild(r1); form.appendChild(r2); if (macros.length) form.appendChild(r3); form.appendChild(save);
   btn.onclick = () => { form.style.display = form.style.display === 'none' ? 'block' : 'none'; };
   wrap.appendChild(btn); wrap.appendChild(form);
   return wrap;

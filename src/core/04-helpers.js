@@ -103,10 +103,18 @@ function subXP(n, cat) {
 }
 
 function getTotals() {
-  return STATE.day.meals.reduce(
-    (a, m) => ({ kcal: a.kcal + m.kcal, p: a.p + m.p, c: a.c + m.c, f: a.f + m.f }),
+  const base = STATE.day.meals.reduce(
+    (a, m) => ({ kcal: a.kcal + (m.kcal || 0), p: a.p + (m.p || 0), c: a.c + (m.c || 0), f: a.f + (m.f || 0) }),
     { kcal: 0, p: 0, c: 0, f: 0 }
   );
+  // Eigene, frei definierte Makros (Ballaststoffe, Zucker …) aus meal.x summieren.
+  base.x = {};
+  if (typeof getMacros === 'function') {
+    getMacros().forEach(mac => {
+      base.x[mac.id] = STATE.day.meals.reduce((a, m) => a + ((m.x && m.x[mac.id]) || 0), 0);
+    });
+  }
+  return base;
 }
 
 function getCats() {
@@ -169,7 +177,7 @@ function avatarStyle(box) {
 }
 
 // User-configurable daily targets (with sensible defaults)
-function getCfg() { return Object.assign({ proteinGoal: 160, waterGoal: 3000, kcalGoal: 2400, sleepGoal: 7.5 }, ls('los_cfg') || {}); }
+function getCfg() { return Object.assign({ proteinGoal: 160, waterGoal: 3000, kcalGoal: 2400, sleepGoal: 7.5, carbsGoal: 250, fatGoal: 70 }, ls('los_cfg') || {}); }
 function saveCfg(patch) { ls('los_cfg', Object.assign(getCfg(), patch)); }
 function goalP() { return GOALS[STATE.profile?.goalId] || GOALS.custom; }
 

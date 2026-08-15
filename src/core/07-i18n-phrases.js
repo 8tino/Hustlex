@@ -72,6 +72,8 @@ const I18N_PHRASES = {
     'Supplements': 'Supplements', 'Recovery': 'Recovery', 'TAGESZIELE': 'DAILY GOALS', 'Ziele': 'Goals', '⚙ Ziele': '⚙ Goals',
     'Schlaf (7.5h)': 'Sleep (7.5h)', 'Schlaf-Check': 'Sleep check', 'Aufgewacht': 'Woke up', 'Eingeschlafen': 'Fell asleep',
     'FETT': 'FAT', 'CARBS': 'CARBS', 'KCAL': 'KCAL', 'Carbs': 'Carbs', 'Carbs g': 'Carbs g', 'Fett g': 'Fat g', 'Protein g': 'Protein g',
+    'Fett': 'Fat', 'Kohlenhydrate': 'Carbs', '⚙ Makros & Ziele verwalten': '⚙ Manage macros & goals', 'ZULETZT': 'RECENT',
+    'Backwaren': 'Baked goods', 'Fast Food & Fertig': 'Fast food & ready', 'EIGENE MAKROS · PRO PORTION': 'YOUR MACROS · PER SERVING',
     'Frühstück': 'Breakfast', 'Mittag': 'Lunch', 'Abend': 'Dinner', 'Snack': 'Snack', 'Morgen': 'Morning',
     '🌅 Morgen': '🌅 Morning', '☀️ Mittag': '☀️ Noon', '🌙 Abend': '🌙 Evening',
     '🌅 Morgens': '🌅 Morning', '☀️ Mittags': '☀️ Noon', '🌙 Abends': '🌙 Evening',
